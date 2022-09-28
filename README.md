@@ -19,3 +19,8 @@ To be determined
 ## Scrum comments & team responses
 ### Sept.13, 2022 (Tim)
 Tim and other SSE faculty mentors will provide scrum comments here for your team to reflect on. The expectation is the team will provide responses here as well, addressing any mentor questions or concerns
+### Sept.27, 2022 (Tim)
+Project status: Yellow
+Project issues/changes: N/A
+Next up: Finalize architecture, pick tech stack, prototype
+Tim's notes: Alish was not well last week. Put things a little behind. It might be good to separate responsibilities (RACI). Plans for a cross-platform app. What is the age, do you think, of your users? e.g. I might want to use your app on my desktop?? Get the project initialization docs done. Think about the idea of a progressive web ap to give the user choice on how they want to connect to the app (desktop or mobile)
