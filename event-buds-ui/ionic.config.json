@@ -1,0 +1,7 @@
+{
+  "name": "EventBuds.UI",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
