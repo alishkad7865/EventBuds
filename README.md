@@ -9,6 +9,8 @@ There are many event planning or event management applications and websites for 
 ## Vlogs
 Vlog 1- https://youtu.be/ZJWsHm-ejQE
 
+Vlog 2- https://youtu.be/dZlXtW6vU_8
+
 
 ## Members
 Alish Kadiwal, Ria Chevli
