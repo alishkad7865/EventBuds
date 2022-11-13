@@ -1,6 +1,7 @@
 
 from fastapi import FastAPI
 import sys
+import uvicorn
 sys.path.append("")
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -60,3 +61,5 @@ async def root():
 # controller = DemoController(service)
 
 
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="192.168.0.87", port=8000, log_level="info")

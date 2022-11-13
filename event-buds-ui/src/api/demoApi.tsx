@@ -1,6 +1,6 @@
 import axios from "axios"
 export async function getDemoTotal(pageName: string){
-    let baseUrl= "http://localhost:8000/Demo/Result?pageName="+pageName
+    let baseUrl= "http://192.168.0.87:8000/Demo/Result?pageName="+pageName
     return axios.get(`${baseUrl}`, {
         headers: {
             Accept : "application/json",

@@ -20,7 +20,13 @@ ionic serve
  
  # We need to add above command once to add andriod tool into capacitor and it might needed
  ```
+ 
+ ```
+ # This will build the changes 
 
+ ionic build 
+ 
+ ```
 
  ```
  # This will copy the changes made on UI and pass it on Andriod application
