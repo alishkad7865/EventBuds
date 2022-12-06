@@ -7,6 +7,7 @@ from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from Controller.DemoController import DemoController
+from Controller.UserController import UserController
 
 app = FastAPI()
 # app = FastAPI(dependencies=[Depends(get_query_token)])
@@ -23,6 +24,7 @@ app.add_middleware(
 )
 
 app.include_router(DemoController.router)
+app.include_router(UserController.router)
 # app.include_router(items.router)
 # app.include_router(
 #     admin.router,
@@ -62,4 +64,8 @@ async def root():
 
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="192.168.0.87", port=8000, log_level="info")
+    # uncomment for production
+    uvicorn.run("main:app", host="140.238.138.230", port=8000, log_level="info")
+    
+    # uncomment for dev region
+    # uvicorn.run("main:app", host="192.168.0.87", port=8000, log_level="info")
