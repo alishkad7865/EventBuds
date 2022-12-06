@@ -1,23 +1,19 @@
-import mysql.connector
+import os
+import cx_Oracle
 from mysql.connector import Error
+cx_Oracle.init_oracle_client(lib_dir=os.getenv('OracleClientLocation'))
+ConnectionString = os.getenv('connectionString')
+
 def connection():
     try:
-        connection = mysql.connector.connect(
-            host = "localhost",
-            user = "eventbud",
-            password = "Thi5i5My5qlPa55word!",
-            database = "eventbuds"
-        )
-        query = """CREATE TABLE IF NOT EXISTS Click( 
-                                Id int(11) NOT NULL AUTO_INCREMENT,
-                                click varchar(250) NOT NULL,
-                                TotalClick int(11) NOT NULL,
-                                PRIMARY KEY (Id)) """
+        connection = cx_Oracle.connect(user=os.getenv('OracleUserName'), password=os.getenv('oraclePassword'), dsn= ConnectionString,
+                               encoding="UTF-8")
+        # query = 'SELECT * FROM "ADMIN"."USER"'
         
-        db_Info = connection.get_server_info()
+        db_Info = connection.version
         print("Connected to MySQL Server version ", db_Info)
         cursor = connection.cursor()
-        result = cursor.execute(query)
+        # cursor.execute(query)
         return connection
     except Error as e:
         print("Error while connecting to MySQL", e)

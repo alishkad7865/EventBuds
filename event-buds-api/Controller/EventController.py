@@ -9,8 +9,8 @@ demoService = DemoService(demoRep)
 
 class DemoController:
     router = APIRouter(
-        prefix="/Demo",
-        tags=["Demo"],
+        prefix="/Event",
+        tags=["Event"],
         responses={404: {"description": "Not found"}},
     )
     
@@ -18,10 +18,10 @@ class DemoController:
     def __init__(self, service):
         self.service = service
         
-    @router.get("/Result")
-    def getResult(pageName):
-        return demoService.get(pageName)
+    @router.get("/getEvent")
+    def getEvent(EventId):
+        return eventService.getEvent(EventId)
     
-    @router.post("/addClick")
-    def addClick(pageName, TotalClick):
-        return demoService.add(pageName,TotalClick)
+    @router.post("/insertEvent")
+    def addEvent(Event):
+        return eventService.addEvent(Event)
