@@ -11,7 +11,7 @@ from Controller.UserController import UserController
 
 app = FastAPI()
 # app = FastAPI(dependencies=[Depends(get_query_token)])
-
+   
 
 origins = ["*"]
 
@@ -64,8 +64,4 @@ async def root():
 
 
 if __name__ == "__main__":
-    # uncomment for production
-    uvicorn.run("main:app", host="140.238.138.230", port=8000, log_level="info")
-    
-    # uncomment for dev region
-    # uvicorn.run("main:app", host="192.168.0.87", port=8000, log_level="info")
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, log_level="info")

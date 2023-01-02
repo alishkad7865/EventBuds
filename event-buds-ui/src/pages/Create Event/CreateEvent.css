@@ -1,0 +1,31 @@
+.container{
+    width: 85%;
+    left:5%;
+    right:5%;
+}
+
+.dateLabel, .ionLabel{
+    padding-bottom: 2%;
+}
+
+.backButton{
+    float: left;
+}
+
+.memberTitleDiv{
+    display: flex;
+}
+
+.memberTitleHeader{
+    align-items: flex-start;
+    width: 75%;
+    text-align: left;
+    padding-left: 5%;
+}
+.addChip{
+    padding-top: 10px;
+    width: 25%;
+    align-items: flex-end;
+    display: flex;
+    flex-direction: row-reverse;
+}

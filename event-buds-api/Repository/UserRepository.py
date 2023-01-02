@@ -19,9 +19,8 @@ class UserRepository:
     
     def editUser(self, userId, user):
         try:
-            query = """ DELETE FROM click
-                            WHERE click = %s """
-            data = (pageName,)
+            query = """ SELECT FROM "ADMIN"."USER" WHERE USERID = :userId """
+            data = (user,)
             self.connection.cursor().execute(query, data)
             self.connection.commit()
             return OK
