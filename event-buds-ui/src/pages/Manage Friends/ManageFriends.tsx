@@ -10,18 +10,18 @@ export default function ManageFriends(props:any) {
 
   return (
     <IonPage>
-      {/* <IonHeader>
+      <IonHeader>
         <IonToolbar>
-          <IonTitle>Create Event</IonTitle>
+          <IonTitle>Add Friends</IonTitle>
         </IonToolbar>
-      </IonHeader> */}
+      </IonHeader>
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Manage Friends</IonTitle>
+            <IonTitle size="large">Add Friends</IonTitle>
           </IonToolbar>
         </IonHeader>
-        
+        {/* <ExploreContainer name="Tab 2 page" /> */}
       </IonContent>
     </IonPage>
   );
