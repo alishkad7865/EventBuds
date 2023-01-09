@@ -34,7 +34,6 @@ import "@ionic/react/css/display.css";
 /* Theme variables */
 import "./theme/variables.css";
 import CreateEvent from "./pages/Create Event/CreateEvent";
-import AddMembers from "./pages/Create Event/AddMembers";
 import Home from "./pages/Home/Home";
 
 setupIonicReact();
@@ -55,9 +54,6 @@ const App: React.FC = () => (
           </Route>
           <Route exact path="/CreateEvent">
             <CreateEvent />
-          </Route>
-          <Route exact path="/AddMembers">
-            <AddMembers />
           </Route>
           <Route exact path="/Events">
             <Tab1 />
