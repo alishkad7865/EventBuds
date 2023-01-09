@@ -1,13 +1,13 @@
 import sys
 sys.path.append('')
-from Repository.DemoRepository import DemoRepository
-from Service.DemoService import DemoService
+from Repository.EventRepository import EventRepository
+from Service.EventService import EventService
 from fastapi import APIRouter, Depends, HTTPException
 
-demoRep = DemoRepository()
-demoService = DemoService(demoRep)
+eventRep = EventRepository()
+eventService = EventService(eventRep)
 
-class DemoController:
+class EventController:
     router = APIRouter(
         prefix="/Event",
         tags=["Event"],
@@ -18,10 +18,10 @@ class DemoController:
     def __init__(self, service):
         self.service = service
         
-    @router.get("/getEvent")
-    def getEvent(EventId):
-        return eventService.getEvent(EventId)
+    @router.get("/getUserEvent")
+    def getUserEvent(userId):
+        return eventService.getUserEvents(userId)
     
-    @router.post("/insertEvent")
-    def addEvent(Event):
-        return eventService.addEvent(Event)
+    @router.post("/createEvent")
+    def createEvent(Event):
+        return eventService.createEvent(Event)

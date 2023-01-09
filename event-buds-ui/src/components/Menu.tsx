@@ -59,7 +59,7 @@ function Menu() {
               <IonIcon icon={notifications}/>
             </IonTabButton>
             </IonButtons>
-            <IonButtons slot="end">
+            <IonButtons slot="start">
               <IonMenuButton></IonMenuButton>
             </IonButtons>
             <IonTitle>EventBuds</IonTitle>

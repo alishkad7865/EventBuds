@@ -21,6 +21,10 @@ class UserController:
     @router.get("/getUser")
     def getUser(userId):
         return userService.getUser(userId)
+
+    @router.get("/getAllUsers")
+    def getAllUsers(userId):
+        return userService.getAllUsers(userId)
     
     @router.post("/editUser")
     def editUser(userId,user):

@@ -17,11 +17,22 @@ class UserRepository:
         except NameError as e:
             return e
     
+    def getAllUsers(self, userId=0):
+        try:
+            cursor = self.connection.cursor()
+            query = """ SELECT * FROM "ADMIN"."USER" WHERE :userId NOT IN USERID """
+            data = dict(userId = int(userId))
+            cursor.execute(query,data)
+            print(query,data)
+            rows= cursor.fetchall()
+            return rows
+        except NameError as e:
+            return e
+    
     def editUser(self, userId, user):
         try:
-            query = """ DELETE FROM click
-                            WHERE click = %s """
-            data = (pageName,)
+            query = """ SELECT FROM "ADMIN"."USER" WHERE USERID = :userId """
+            data = (user,)
             self.connection.cursor().execute(query, data)
             self.connection.commit()
             return OK
