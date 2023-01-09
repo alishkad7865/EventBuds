@@ -1,87 +1,120 @@
-import { IonButton, IonContent, IonDatetime, IonDatetimeButton, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonModal, IonNote, IonPage, IonRouterOutlet, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
-import { IonReactRouter } from '@ionic/react-router';
-import { arrowForwardCircle } from 'ionicons/icons';
-import { Route } from 'react-router';
-import AddMembers from './AddMembers';
+import { useEffect, useState } from "react";
+import { getAllUsers, getUser } from "../../api/userApi";
+import AddMembers from "./AddMembers";
 import "./CreateEvent.css";
+import EventInfo from "./EventInfo";
 
-export default function CreateEvent(props:any) {
-//   const [demoData, setDemoData] = useState([]);
-//   useEffect(()=>{
-//     //use logs for hooks
-//   },[demoData]);
+export default function CreateEvent(props: any) {
+  let initialState = {
+    step: 1,
+    eventTitle: "",
+    eventStartTime: new Date(),
+    eventEndTime: new Date(),
+    location: "",
+    eventType: undefined,
+    description: "",
+    capacity: 0,
+    price: 0,
+  };
+  const [state, setState] = useState(initialState);
+  const [friends, setFriends] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
+  const [modalData, setModalData] = useState([]);
+  const [helpers, setHelpers] = useState<any>([]);
+  const [guests, setGuests] = useState<any>([]);
+  const [toastMessage, setToastMessage] = useState("");
 
-  return (
-    <IonPage>
-      {/* <IonHeader>
-        <IonToolbar>
-          <IonTitle>Create Event</IonTitle>
-        </IonToolbar>
-      </IonHeader> */}
-      <IonReactRouter>
-      <IonRouterOutlet>
-        <Route exact path="/AddMembers" component={AddMembers} />
-      </IonRouterOutlet>
-      </IonReactRouter>
-      <IonContent className='container'>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Create Event</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <h2>CREATE EVENT</h2>
-        <IonItem>
-          <IonLabel position="stacked" className='ionLabel'>Event title</IonLabel>
-          <IonInput clearInput={true} placeholder="Enter event title"></IonInput>
-          <IonNote slot="helper">Enter a valid Title</IonNote>
-          <IonNote slot="error">Invalid Title</IonNote> 
-        </IonItem>
-      {/* <IonDatetime presentation="date-time" preferWheel={true}><span slot="title">Select a Starting Date Time</span></IonDatetime> */}
-        <IonItem>
-          <IonLabel position="stacked" className='dateLabel'>Start Time</IonLabel>
-          <IonDatetimeButton datetime="datetime"></IonDatetimeButton>
-          
-          <IonModal keepContentsMounted={true}>
-            <IonDatetime id="datetime"><span slot="title">End Time</span></IonDatetime>
-          </IonModal>
-        </IonItem>
-        <IonItem>
-          <IonLabel position="stacked" className='dateLabel'>End Time</IonLabel>
-          <IonDatetimeButton datetime="EndTime"></IonDatetimeButton>
-          
-          <IonModal keepContentsMounted={true}>
-            <IonDatetime id="EndTime"><span slot="title">End Time</span></IonDatetime>
-          </IonModal>
-        </IonItem>
-        <IonItem>
-          <IonLabel position="stacked" className='ionLabel'>Location</IonLabel>
-          <IonInput clearInput={true} placeholder="Enter full location"></IonInput>
-          <IonNote slot="error">Invalid Location</IonNote> 
-        </IonItem>
-        <IonItem >
-          <IonLabel position="stacked" className='ionLabel'>Event Type</IonLabel>
-            <IonSelect interface="action-sheet" placeholder="Event Type">
-              <IonSelectOption value="public">Public</IonSelectOption>
-              <IonSelectOption value="private">Private</IonSelectOption>
-            </IonSelect>
-          <IonNote slot="error">Invalid Location</IonNote> 
-        </IonItem>
-        <IonItem counter={true}>
-          <IonLabel position="stacked" className='ionLabel'>Description</IonLabel>
-          <IonTextarea
-            placeholder="Type something here"
-            autoGrow={true}
-            value=""
-            maxlength={200}
-          ></IonTextarea>
-          <IonNote slot="error">Description Cant be null</IonNote> 
-        </IonItem>
-        <IonButton expand='full' href="/AddMembers">
-          Next
-          <IonIcon slot="end" icon={arrowForwardCircle}></IonIcon>
-        </IonButton>
-      </IonContent>
-    </IonPage>
-  );
-};
+  useEffect(() => {
+    async function loadUserData() {
+      let result = await getUser(1);
+      if (result) {
+        setFriends(JSON.parse(result.FRIENDS));
+      }
+    }
+    async function loadAllUsers() {
+      let result = await getAllUsers(1);
+      if (result) {
+        setAllUsers(result);
+      }
+    }
+    loadUserData();
+    loadAllUsers();
+  }, []);
 
+  const nextStep = () => {
+    const { step } = state;
+    setState({
+      ...state,
+      step: step + 1,
+    });
+  };
+
+  // Go back to prev step
+  const prevStep = () => {
+    const { step } = state;
+    setState({
+      ...state,
+      step: step - 1,
+    });
+  };
+
+  const handleChange = (input: any) => (e: any) => {
+    setState({ ...state, [input]: e.target.value });
+  };
+
+  const { step } = state;
+  const {
+    eventTitle,
+    eventStartTime,
+    eventEndTime,
+    location,
+    eventType,
+    description,
+    capacity,
+    price,
+  } = state;
+  const values = {
+    eventTitle,
+    eventStartTime,
+    eventEndTime,
+    location,
+    eventType,
+    description,
+    capacity,
+    price,
+  };
+  switch (step) {
+    case 1:
+      return (
+        <EventInfo
+          nextStep={nextStep}
+          handleChange={handleChange}
+          values={values}
+          toastMessage={toastMessage}
+          setToastMessage={setToastMessage}
+        />
+      );
+    case 2:
+      return (
+        <AddMembers
+          nextStep={nextStep}
+          prevStep={prevStep}
+          setState={setState}
+          handleChange={handleChange}
+          values={values}
+          friends={friends}
+          allUsers={allUsers}
+          helpers={helpers}
+          guests={guests}
+          setHelpers={setHelpers}
+          setGuests={setGuests}
+          modalData={modalData}
+          setModalData={setModalData}
+          setToastMessage={setToastMessage}
+          initialState={initialState}
+        />
+      );
+    default:
+      return <></>;
+  }
+}

@@ -1,31 +1,56 @@
-.container{
-    width: 85%;
-    left:5%;
-    right:5%;
+.container {
+  width: 85%;
+  left: 5%;
+  right: 5%;
 }
 
-.dateLabel, .ionLabel{
-    padding-bottom: 2%;
+.dateLabel,
+.ionLabel {
+  padding-bottom: 2%;
 }
 
-.backButton{
-    float: left;
+.backButton {
+  float: left;
 }
 
-.memberTitleDiv{
-    display: flex;
+.memberTitleDiv {
+  display: flex;
 }
 
-.memberTitleHeader{
-    align-items: flex-start;
-    width: 75%;
-    text-align: left;
-    padding-left: 5%;
+.memberTitleHeader {
+  align-items: flex-start;
+  width: 75%;
+  text-align: left;
+  padding-left: 5%;
 }
-.addChip{
-    padding-top: 10px;
-    width: 25%;
-    align-items: flex-end;
-    display: flex;
-    flex-direction: row-reverse;
+.addChip {
+  padding-top: 10px;
+  width: 25%;
+  align-items: flex-end;
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+ion-modal#custom-modal {
+  --height: 50%;
+  --border-radius: 16px;
+  --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+    0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+ion-modal#custom-modal::part(backdrop) {
+  background: rgba(209, 213, 219);
+  opacity: 1;
+}
+
+ion-modal#custom-modal ion-header > ion-toolbar {
+  --background: rgb(43, 132, 191);
+  --color: white;
+}
+.saveModalButton {
+  width: 100%;
+}
+
+.addSpaceAbove {
+  margin-top: 2%;
 }

@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from Controller.DemoController import DemoController
 from Controller.UserController import UserController
+from Controller.EventController import EventController
 
 app = FastAPI()
 # app = FastAPI(dependencies=[Depends(get_query_token)])
@@ -25,6 +26,7 @@ app.add_middleware(
 
 app.include_router(DemoController.router)
 app.include_router(UserController.router)
+app.include_router(EventController.router)
 # app.include_router(items.router)
 # app.include_router(
 #     admin.router,
