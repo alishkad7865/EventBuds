@@ -15,18 +15,6 @@ export async function getUser(userId: number) {
     })
     .catch((e: any) => console.log(e));
   return response.data;
-  // return axios
-  //   .get(`${baseUrl}`, {
-  //     headers: {
-  //       Accept: "application/json",
-  //     },
-  //   })
-  //   .then((response: any) => {
-  //     if (response.status >= 200 && response.status < 300) {
-  //       return response.data;
-  //     }
-  //   })
-  //   .catch((e: any) => console.log(e));
 }
 
 export async function getAllUsers(userId: number) {
