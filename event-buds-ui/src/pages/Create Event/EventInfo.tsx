@@ -34,8 +34,8 @@ export default function EventInfo(props: any) {
     if (props.toastMessage) {
       setShowToast(true);
     }
-    console.log("in event info start");
   }, []);
+
   return (
     <IonPage>
       <IonToast
