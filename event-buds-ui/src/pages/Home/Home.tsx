@@ -1,4 +1,10 @@
 import {
+  IonButton,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
   IonContent,
   IonHeader,
   IonPage,
@@ -7,8 +13,8 @@ import {
 } from "@ionic/react";
 import { useEffect, useState } from "react";
 import { getUser } from "../../api/userApi";
-
-export default function Home(props: any) {
+import "./Home.css";
+export default function Home() {
   const [user, setUser] = useState({
     ADDRESS: String,
     BIODATA: String,
@@ -29,17 +35,92 @@ export default function Home(props: any) {
   useEffect(() => {
     loadUserData();
   }, []);
+
   return (
     <IonPage>
-      <IonContent className="container">
+      <IonContent>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Create Event</IonTitle>
+            <IonTitle size="large">Home</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <h2>
-          Welcome <>{user.FIRSTNAME}</>
-        </h2>
+        <h1 className="ion-text-center ion-text-capitalize">
+          {"Welcome" + " " + user.FIRSTNAME ?? ""}
+        </h1>
+        <div className="ion-text-start ion-padding-start">
+          <h2>My Private Events</h2>
+        </div>
+        <div className="eventCardsDiv">
+          <IonCard class="eventCard">
+            <IonCardHeader>
+              <IonCardTitle>Private Event Placeholder</IonCardTitle>
+              <IonCardSubtitle>Card Subtitle</IonCardSubtitle>
+            </IonCardHeader>
+
+            <IonCardContent>
+              Here's a small text description for the card content. Nothing
+              more, nothing less.
+            </IonCardContent>
+            <IonButton fill="clear">View</IonButton>
+          </IonCard>
+          <IonCard class="eventCard">
+            <IonCardHeader>
+              <IonCardTitle>Private Event Placeholder</IonCardTitle>
+              <IonCardSubtitle>Card Subtitle</IonCardSubtitle>
+            </IonCardHeader>
+
+            <IonCardContent>
+              Here's a small text description for the card content. Nothing
+              more, nothing less.
+            </IonCardContent>
+            <IonButton fill="clear">View</IonButton>
+          </IonCard>
+        </div>
+
+        {/*  START OF PUBLIC EVENT SECTION */}
+        <div className="ion-text-start ion-padding-start">
+          <h2>My Public Events</h2>
+        </div>
+        <div className="eventCardsDiv">
+          <IonCard class="eventCard">
+            <IonCardHeader>
+              <IonCardTitle>Public Event Placeholder</IonCardTitle>
+              <IonCardSubtitle>Card Subtitle</IonCardSubtitle>
+            </IonCardHeader>
+
+            <IonCardContent>
+              Here's a small text description for the card content. Nothing
+              more, nothing less.
+            </IonCardContent>
+            <IonButton fill="clear">View</IonButton>
+          </IonCard>
+          <IonCard class="eventCard">
+            <IonCardHeader>
+              <IonCardTitle>Public Event Placeholder</IonCardTitle>
+              <IonCardSubtitle>Card Subtitle</IonCardSubtitle>
+            </IonCardHeader>
+
+            <IonCardContent>
+              Here's a small text description for the card content. Nothing
+              more, nothing less.
+            </IonCardContent>
+            <IonButton fill="clear">View</IonButton>
+          </IonCard>
+          <IonCard class="eventCard">
+            <IonCardHeader>
+              <IonCardTitle>Public Event Placeholder</IonCardTitle>
+              <IonCardSubtitle>Card Subtitle</IonCardSubtitle>
+            </IonCardHeader>
+
+            <IonCardContent>
+              Here's a small text description for the card content. Nothing
+              more, nothing less.
+            </IonCardContent>
+            <IonButton fill="clear" shape="round">
+              View
+            </IonButton>
+          </IonCard>
+        </div>
       </IonContent>
     </IonPage>
   );

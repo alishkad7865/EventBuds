@@ -35,6 +35,8 @@ import "@ionic/react/css/display.css";
 import "./theme/variables.css";
 import CreateEvent from "./pages/Create Event/CreateEvent";
 import Home from "./pages/Home/Home";
+import Profile from "./pages/My Profile/Profile";
+import PublicEvents from "./pages/Public Event/PublicEvent";
 
 setupIonicReact();
 
@@ -55,14 +57,11 @@ const App: React.FC = () => (
           <Route exact path="/CreateEvent">
             <CreateEvent />
           </Route>
-          <Route exact path="/Events">
-            <Tab1 />
+          <Route exact path="/PublicEvents">
+            <PublicEvents />
           </Route>
           <Route exact path="/Profile">
-            <Tab2 />
-          </Route>
-          <Route exact path="/">
-            <Redirect to="/Home" />
+            <Profile />
           </Route>
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
@@ -81,7 +80,7 @@ const App: React.FC = () => (
             <IonLabel>Create</IonLabel>
           </IonTabButton>
 
-          <IonTabButton tab="Events" href="/Events">
+          <IonTabButton tab="PublicEvents" href="/PublicEvents">
             <IonIcon icon={calendar} />
             <IonLabel>Events</IonLabel>
           </IonTabButton>

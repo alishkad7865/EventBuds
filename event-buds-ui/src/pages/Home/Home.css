@@ -1,0 +1,12 @@
+.eventCardsDiv {
+  display: flex;
+  flex-wrap: wrap;
+}
+ion-card-header.ios {
+  display: flex;
+  flex-flow: column-reverse;
+}
+
+.eventCard {
+  max-width: 450px;
+}
