@@ -10,3 +10,13 @@ ion-card-header.ios {
 .eventCard {
   max-width: 450px;
 }
+
+ion-item-divider {
+  --background: #078f94;
+  --color: #fff;
+  border-radius: 25px;
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+  --padding-start: 20px;
+  --padding-end: 20px;
+}

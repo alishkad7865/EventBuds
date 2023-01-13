@@ -7,6 +7,8 @@ import {
   IonCardTitle,
   IonContent,
   IonHeader,
+  IonItemDivider,
+  IonLabel,
   IonPage,
   IonTitle,
   IonToolbar,
@@ -47,9 +49,11 @@ export default function Home() {
         <h1 className="ion-text-center ion-text-capitalize">
           {"Welcome" + " " + user.FIRSTNAME ?? ""}
         </h1>
-        <div className="ion-text-start ion-padding-start">
-          <h2>My Private Events</h2>
-        </div>
+        <IonItemDivider>
+          <IonLabel>
+            <h2>My Private Events</h2>
+          </IonLabel>
+        </IonItemDivider>
         <div className="eventCardsDiv">
           <IonCard class="eventCard">
             <IonCardHeader>
@@ -78,9 +82,12 @@ export default function Home() {
         </div>
 
         {/*  START OF PUBLIC EVENT SECTION */}
-        <div className="ion-text-start ion-padding-start">
-          <h2>My Public Events</h2>
-        </div>
+        <IonItemDivider>
+          <IonLabel>
+            <h2>My Public Events</h2>
+          </IonLabel>
+        </IonItemDivider>
+
         <div className="eventCardsDiv">
           <IonCard class="eventCard">
             <IonCardHeader>
