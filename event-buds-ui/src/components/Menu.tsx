@@ -1,5 +1,5 @@
-import React from 'react';
-import { 
+import React from "react";
+import {
   IonButtons,
   IonContent,
   IonHeader,
@@ -11,10 +11,10 @@ import {
   IonPage,
   IonTabButton,
   IonTitle,
-  IonToolbar
-} from '@ionic/react';
-import App from '../App';
-import { notifications } from 'ionicons/icons';
+  IonToolbar,
+} from "@ionic/react";
+import App from "../App";
+import { notifications } from "ionicons/icons";
 
 function Menu() {
   return (
@@ -26,27 +26,27 @@ function Menu() {
           </IonToolbar>
         </IonHeader>
         <IonContent className="ion-padding">
-            <IonItem href="/Home">
-              <IonLabel>Home</IonLabel>
-            </IonItem>
+          <IonItem href="/Home">
+            <IonLabel>Home</IonLabel>
+          </IonItem>
 
-            <IonItem href="/ManageFriends">
-              <IonLabel>Friends</IonLabel>
-            </IonItem>
+          <IonItem href="/ManageFriends">
+            <IonLabel>Friends</IonLabel>
+          </IonItem>
 
-            <IonItem href="/CreateEvent">
-              {/* <FontAwesomeIcon icon="fa-sharp fa-solid fa-circle-plus" /> */}
-              <IonLabel>Create</IonLabel>
-            </IonItem>
+          <IonItem href="/CreateEvent">
+            {/* <FontAwesomeIcon icon="fa-sharp fa-solid fa-circle-plus" /> */}
+            <IonLabel>Create</IonLabel>
+          </IonItem>
 
-            <IonItem href="/Events">
-              <IonLabel>Events</IonLabel>
-            </IonItem>
+          <IonItem href="/PublicEvents">
+            <IonLabel>Public Events</IonLabel>
+          </IonItem>
 
-            <IonItem href="/Profile">
-              <IonLabel>My Profile</IonLabel>
-            </IonItem>
-            {/* <IonItem button tab="home">
+          <IonItem href="/Profile">
+            <IonLabel>My Profile</IonLabel>
+          </IonItem>
+          {/* <IonItem button tab="home">
                 <IonLabel>Home</IonLabel>
             </IonItem> */}
         </IonContent>
@@ -55,9 +55,9 @@ function Menu() {
         <IonHeader>
           <IonToolbar>
             <IonButtons slot="end">
-            <IonTabButton >
-              <IonIcon icon={notifications}/>
-            </IonTabButton>
+              <IonTabButton>
+                <IonIcon icon={notifications} />
+              </IonTabButton>
             </IonButtons>
             <IonButtons slot="start">
               <IonMenuButton></IonMenuButton>
@@ -66,7 +66,7 @@ function Menu() {
           </IonToolbar>
         </IonHeader>
         <IonContent className="ion-padding">
-            <App />
+          <App />
         </IonContent>
       </IonPage>
     </>
