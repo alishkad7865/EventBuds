@@ -13,6 +13,7 @@ import { IonReactRouter } from "@ionic/react-router";
 import { addCircle, calendar, home, people, person } from "ionicons/icons";
 import Tab1 from "./pages/Tab1";
 import Tab2 from "./pages/Tab2";
+import React from 'react';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 /* Core CSS required for Ionic components to work properly */
@@ -35,13 +36,14 @@ import "@ionic/react/css/display.css";
 import "./theme/variables.css";
 import CreateEvent from "./pages/Create Event/CreateEvent";
 import Home from "./pages/Home/Home";
+import ManageFriends from "./pages/Manage Friends/ManageFriends";
 
 setupIonicReact();
 
 const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
-      <IonTabs>
+      <IonTabs >
         <IonRouterOutlet>
           <Route exact path="/">
             <Home />
@@ -50,7 +52,7 @@ const App: React.FC = () => (
             <Home />
           </Route>
           <Route exact path="/ManageFriends">
-            <Tab2 />
+            <ManageFriends />
           </Route>
           <Route exact path="/CreateEvent">
             <CreateEvent />
