@@ -5,6 +5,11 @@ const config: CapacitorConfig = {
   appName: 'EventBuds.UI',
   webDir: 'build',
   bundledWebRuntime: false,
+  plugins: {
+    CapacitorHttp: {
+      enabled: true,
+    },
+  },
   server: {
     androidScheme: "http",
     allowNavigation: [

@@ -1,4 +1,5 @@
 import {
+  IonContent,
   IonHeader,
   IonPage,
   IonTitle,
@@ -6,7 +7,6 @@ import {
   IonLabel,
   IonSegment,
   IonSegmentButton,
-  IonContent,
 } from "@ionic/react";
 import { useState } from "react";
 
@@ -22,14 +22,11 @@ import AddFriends from "./AddFriends";
 
 export default function ManageFriends(props: any) {
   const [segment, setSegment] = useState("Friends");
-  //   useEffect(()=>{
-  //     //use logs for hooks
-  //   },[demoData]);
   function handleSegmentChange(value: any) {
     if (value === "Friends") {
       return <MyFriends />;
     } else if (value === "Add") {
-      return <AddFriends/>;
+      return <AddFriends />;
     }
   }
 
@@ -53,4 +50,3 @@ export default function ManageFriends(props: any) {
     </IonPage>
   );
 }
-
