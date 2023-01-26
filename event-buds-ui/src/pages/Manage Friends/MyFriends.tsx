@@ -1,4 +1,5 @@
 import {
+  IonAvatar,
   IonButton,
   IonHeader,
   IonItem,
@@ -42,10 +43,18 @@ export default function MyFriends(props: any) {
         {friendsList.map((list: any) => {
           return (
             <IonItem class="itemBackground" key={list.EMAIL + props.title}>
-              <IonLabel >
-                <h2 className= "labelColour ion-text-capitalize">
+              <IonAvatar slot= "start">
+                <img
+                  alt="Silhouette of a person's head"
+                  src="https://ionicframework.com/docs/img/demos/avatar.svg"
+                />
+              </IonAvatar>
+              <IonLabel>
+                <h2 className="labelColour ion-text-capitalize">
                   {" "}
-                  <b  className= "labelColour">{list.FIRSTNAME + " " + list.LASTNAME} </b>
+                  <b className="labelColour">
+                    {list.FIRSTNAME + " " + list.LASTNAME}{" "}
+                  </b>
                 </h2>
                 <p>{list.EMAIL}</p>
               </IonLabel>

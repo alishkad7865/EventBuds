@@ -1,4 +1,5 @@
 import {
+  IonAvatar,
   IonButton,
   IonHeader,
   IonIcon,
@@ -44,6 +45,12 @@ export default function AddFriends(props: any) {
           {otherUsersList.map((list: any) => {
             return (
               <IonItem class="itemBackground" key={list.EMAIL + props.title}>
+                <IonAvatar slot= "start">
+                  <img
+                    alt="Silhouette of a person's head"
+                    src="https://ionicframework.com/docs/img/demos/avatar.svg"
+                  />
+                </IonAvatar>
                 <IonLabel>
                   <h2 className="ion-text-capitalize">
                     {" "}

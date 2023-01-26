@@ -38,6 +38,7 @@ export default function ManageFriends(props: any) {
               console.log(e.detail.value);
               setSegment(e.detail.value);
             }}
+            mode="ios"
           >
             <IonSegmentButton class="FriendsTabs" value="Friends">
               {" "}
