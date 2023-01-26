@@ -1,18 +1,17 @@
 
+from Controller.EventController import EventController
+from Controller.UserController import UserController
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi import Depends, FastAPI
 from fastapi import FastAPI
 import sys
 import uvicorn
 sys.path.append("")
-from fastapi import Depends, FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 
-from Controller.DemoController import DemoController
-from Controller.UserController import UserController
-from Controller.EventController import EventController
 
 app = FastAPI()
 # app = FastAPI(dependencies=[Depends(get_query_token)])
-   
+
 
 origins = ["*"]
 
@@ -24,7 +23,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(DemoController.router)
 app.include_router(UserController.router)
 app.include_router(EventController.router)
 # app.include_router(items.router)
@@ -40,9 +38,6 @@ app.include_router(EventController.router)
 @app.get("/")
 async def root():
     return {"message": "Hello Event App Applications!"}
-
-
-
 
 
 # from Repository.DemoRepository import DemoRepository

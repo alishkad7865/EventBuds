@@ -1,19 +1,32 @@
 import {
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardSubtitle,
-  IonCardContent,
-  IonButton,
   IonPage,
   IonContent,
   IonHeader,
   IonSearchbar,
   IonTitle,
   IonToolbar,
+  IonButton,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
 } from "@ionic/react";
+import { useEffect, useState } from "react";
+import { getPublicEvents } from "../../api/eventApi";
 import "./publicEvent.css";
 export default function PublicEvents() {
+  const [publicEvents, setPublicEvents] = useState([]);
+  async function loadUserEvents() {
+    let result = await getPublicEvents(1);
+    if (result) {
+      console.log(result);
+      setPublicEvents(result);
+    }
+  }
+  useEffect(() => {
+    loadUserEvents();
+  }, []);
   return (
     <IonPage>
       <IonHeader>
@@ -26,126 +39,28 @@ export default function PublicEvents() {
       </IonHeader>
       <IonContent>
         <div className="eventCards">
-          <IonCard>
-            <IonCardHeader>
-              <IonCardTitle>Card Title</IonCardTitle>
-              <IonCardSubtitle>Card Subtitle</IonCardSubtitle>
-            </IonCardHeader>
+          {publicEvents?.map((list: any) => {
+            if (list.ISPUBLIC) {
+              return (
+                <IonCard class="eventCard">
+                  <IonCardHeader>
+                    <IonCardTitle className="ion-text-capitalize">
+                      {list.EVENTTITLE}
+                    </IonCardTitle>
+                    <IonCardSubtitle>
+                      Time: {new Date(list.STARTDATETIME).toString()}
+                    </IonCardSubtitle>
+                    <IonCardSubtitle>
+                      Venue: {list.LOCATION} at{" "}
+                    </IonCardSubtitle>
+                  </IonCardHeader>
 
-            <IonCardContent>
-              Here's a small text description for the card content. Nothing
-              more, nothing less.
-            </IonCardContent>
-            <IonButton fill="clear">Action 2</IonButton>
-          </IonCard>
-          <IonCard>
-            <IonCardHeader>
-              <IonCardTitle>Card Title</IonCardTitle>
-              <IonCardSubtitle>Card Subtitle</IonCardSubtitle>
-            </IonCardHeader>
-
-            <IonCardContent>
-              Here's a small text description for the card content. Nothing
-              more, nothing less.
-            </IonCardContent>
-            <IonButton fill="clear">Action 2</IonButton>
-          </IonCard>
-          <IonCard>
-            <IonCardHeader>
-              <IonCardTitle>Card Title</IonCardTitle>
-              <IonCardSubtitle>Card Subtitle</IonCardSubtitle>
-            </IonCardHeader>
-
-            <IonCardContent>
-              Here's a small text description for the card content. Nothing
-              more, nothing less.
-            </IonCardContent>
-            <IonButton fill="clear">Action 2</IonButton>
-          </IonCard>
-          <IonCard>
-            <IonCardHeader>
-              <IonCardTitle>Card Title</IonCardTitle>
-              <IonCardSubtitle>Card Subtitle</IonCardSubtitle>
-            </IonCardHeader>
-
-            <IonCardContent>
-              Here's a small text description for the card content. Nothing
-              more, nothing less.
-            </IonCardContent>
-            <IonButton fill="clear">Action 2</IonButton>
-          </IonCard>
-          <IonCard>
-            <IonCardHeader>
-              <IonCardTitle>Card Title</IonCardTitle>
-              <IonCardSubtitle>Card Subtitle</IonCardSubtitle>
-            </IonCardHeader>
-
-            <IonCardContent>
-              Here's a small text description for the card content. Nothing
-              more, nothing less.
-            </IonCardContent>
-            <IonButton fill="clear">Action 2</IonButton>
-          </IonCard>
-          <IonCard>
-            <IonCardHeader>
-              <IonCardTitle>Card Title</IonCardTitle>
-              <IonCardSubtitle>Card Subtitle</IonCardSubtitle>
-            </IonCardHeader>
-
-            <IonCardContent>
-              Here's a small text description for the card content. Nothing
-              more, nothing less.
-            </IonCardContent>
-            <IonButton fill="clear">Action 2</IonButton>
-          </IonCard>
-          <IonCard>
-            <IonCardHeader>
-              <IonCardTitle>Card Title</IonCardTitle>
-              <IonCardSubtitle>Card Subtitle</IonCardSubtitle>
-            </IonCardHeader>
-
-            <IonCardContent>
-              Here's a small text description for the card content. Nothing
-              more, nothing less.
-            </IonCardContent>
-            <IonButton fill="clear">Action 2</IonButton>
-          </IonCard>
-          <IonCard>
-            <IonCardHeader>
-              <IonCardTitle>Card Title</IonCardTitle>
-              <IonCardSubtitle>Card Subtitle</IonCardSubtitle>
-            </IonCardHeader>
-
-            <IonCardContent>
-              Here's a small text description for the card content. Nothing
-              more, nothing less.
-            </IonCardContent>
-            <IonButton fill="clear">Action 2</IonButton>
-          </IonCard>
-          <IonCard>
-            <IonCardHeader>
-              <IonCardTitle>Card Title</IonCardTitle>
-              <IonCardSubtitle>Card Subtitle</IonCardSubtitle>
-            </IonCardHeader>
-
-            <IonCardContent>
-              Here's a small text description for the card content. Nothing
-              more, nothing less.
-            </IonCardContent>
-            <IonButton fill="clear">Action 2</IonButton>
-          </IonCard>
-          <IonCard>
-            <IonCardHeader>
-              <IonCardTitle>Card Title</IonCardTitle>
-              <IonCardSubtitle>Card Subtitle</IonCardSubtitle>
-            </IonCardHeader>
-
-            <IonCardContent>
-              Here's a small text description for the card content. Nothing
-              more, nothing less.
-            </IonCardContent>
-            <IonButton fill="clear">Action 2</IonButton>
-          </IonCard>
+                  <IonCardContent>{list.DESCRIPTION}</IonCardContent>
+                  <IonButton fill="clear">View</IonButton>
+                </IonCard>
+              );
+            }
+          })}
         </div>
       </IonContent>
     </IonPage>
