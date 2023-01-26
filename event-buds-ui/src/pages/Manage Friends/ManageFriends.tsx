@@ -2,9 +2,7 @@ import {
   IonContent,
   IonHeader,
   IonPage,
-  IonTitle,
   IonToolbar,
-  IonLabel,
   IonSegment,
   IonSegmentButton,
 } from "@ionic/react";
@@ -41,8 +39,14 @@ export default function ManageFriends(props: any) {
               setSegment(e.detail.value);
             }}
           >
-            <IonSegmentButton value="Friends"> My Friends</IonSegmentButton>
-            <IonSegmentButton value="Add">Add Friends</IonSegmentButton>
+            <IonSegmentButton class="FriendsTabs" value="Friends">
+              {" "}
+              <b>My Friends</b>{" "}
+            </IonSegmentButton>
+            <IonSegmentButton class="FriendsTabs" value="Add">
+              {" "}
+              <b>Add Friends</b>{" "}
+            </IonSegmentButton>
           </IonSegment>
         </IonToolbar>
       </IonHeader>
