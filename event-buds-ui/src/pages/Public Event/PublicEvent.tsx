@@ -30,11 +30,11 @@ export default function PublicEvents() {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar>
+        <IonToolbar class="toolbarMargin">
           <IonTitle>Public Events</IonTitle>
         </IonToolbar>
         <IonToolbar>
-          <IonSearchbar></IonSearchbar>
+          <IonSearchbar class="searchbarBorder"></IonSearchbar>
         </IonToolbar>
       </IonHeader>
       <IonContent>
@@ -42,7 +42,7 @@ export default function PublicEvents() {
           {publicEvents?.map((list: any) => {
             if (list.ISPUBLIC) {
               return (
-                <IonCard class="eventCard">
+                <IonCard class="PublicEventCard">
                   <IonCardHeader>
                     <IonCardTitle className="ion-text-capitalize">
                       {list.EVENTTITLE}

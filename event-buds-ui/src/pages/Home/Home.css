@@ -7,16 +7,28 @@ ion-card-header.ios {
   flex-flow: column-reverse;
 }
 
-.eventCard {
+.PrivateEventCard {
   max-width: 450px;
+  background: #a7baf480;
+}
+
+.PublicEventCard {
+  max-width: 450px;
+  background: #f7d56cbf;
 }
 
 ion-item-divider {
-  --background: #078f94;
+  --background: #319396;
   --color: #fff;
   border-radius: 25px;
   --padding-top: 10px;
   --padding-bottom: 10px;
   --padding-start: 20px;
   --padding-end: 20px;
+  width: 300px;
+}
+
+.tabButton {
+  /* --color: #92949c; */
+  -webkit-text-fill-color: #fff;
 }

@@ -85,7 +85,7 @@ export default function Home() {
             if (!list.ISPUBLIC) {
               console.log(list.DESCRIPTION, list);
               return (
-                <IonCard class="eventCard">
+                <IonCard class="PrivateEventCard">
                   <IonCardHeader>
                     <IonCardTitle className="ion-text-capitalize">
                       {list.EVENTTITLE}
@@ -117,7 +117,7 @@ export default function Home() {
           {events?.map((list: any) => {
             if (list.ISPUBLIC) {
               return (
-                <IonCard class="eventCard">
+                <IonCard class="PublicEventCard">
                   <IonCardHeader>
                     <IonCardTitle className="ion-text-capitalize">
                       {list.EVENTTITLE}

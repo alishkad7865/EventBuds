@@ -11,9 +11,7 @@ import {
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { addCircle, calendar, home, people, person } from "ionicons/icons";
-import Tab1 from "./pages/Tab1";
-import Tab2 from "./pages/Tab2";
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import React from "react";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -35,6 +33,7 @@ import "@ionic/react/css/display.css";
 import "./theme/variables.css";
 import CreateEvent from "./pages/Create Event/CreateEvent";
 import Home from "./pages/Home/Home";
+import ManageFriends from "./pages/Manage Friends/ManageFriends";
 import Profile from "./pages/My Profile/Profile";
 import PublicEvents from "./pages/Public Event/PublicEvent";
 
@@ -52,7 +51,7 @@ const App: React.FC = () => (
             <Home />
           </Route>
           <Route exact path="/ManageFriends">
-            <Tab2 />
+            <ManageFriends />
           </Route>
           <Route exact path="/CreateEvent">
             <CreateEvent />
@@ -65,27 +64,27 @@ const App: React.FC = () => (
           </Route>
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
-          <IonTabButton tab="Home" href="/Home">
+          <IonTabButton class= "tabButton" tab="Home" href="/Home">
             <IonIcon icon={home} />
             <IonLabel>Home</IonLabel>
           </IonTabButton>
 
-          <IonTabButton tab="Add Friends" href="/ManageFriends">
+          <IonTabButton class= "tabButton" tab="Add Friends" href="/ManageFriends">
             <IonIcon icon={people} />
             <IonLabel>Friends</IonLabel>
           </IonTabButton>
 
-          <IonTabButton tab="CreateEvent" href="/CreateEvent">
+          <IonTabButton class= "tabButton" tab="CreateEvent" href="/CreateEvent">
             <IonIcon icon={addCircle} />
             <IonLabel>Create</IonLabel>
           </IonTabButton>
 
-          <IonTabButton tab="PublicEvents" href="/PublicEvents">
+          <IonTabButton class= "tabButton" tab="PublicEvents" href="/PublicEvents">
             <IonIcon icon={calendar} />
             <IonLabel>Events</IonLabel>
           </IonTabButton>
 
-          <IonTabButton tab="Profile" href="/Profile">
+          <IonTabButton class= "tabButton" tab="Profile" href="/Profile">
             <IonIcon icon={person} />
             <IonLabel>My Profile</IonLabel>
           </IonTabButton>

@@ -68,7 +68,7 @@ export default function Profile(props: any) {
                   </IonCardTitle>
                   <IonCardSubtitle class="ion-text-center ion-text-capitalize">
                     <h6>
-                      Bio:<b>This is my biodata</b>
+                      Bio:<b>{user.BIODATA.toString()}</b>
                     </h6>
                   </IonCardSubtitle>
                 </IonCardHeader>

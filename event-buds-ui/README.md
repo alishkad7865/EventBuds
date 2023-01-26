@@ -3,7 +3,8 @@
 ##### _1. Run the project on local machine run the command mentioned below_
 
 ```
-ionic serve -h 0.0.0.0 -l
+ionic serve
+ionic serve -host 0.0.0.0 -l --external
 ```
 
 ###### _Note: In case of runtime error after pulling files from git-hub, delete node-modulus from UI folder and reinstall using:_ `npm install`
