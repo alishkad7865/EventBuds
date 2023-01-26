@@ -1,0 +1,19 @@
+.FriendsTabs {
+  --color: #7cafb1;
+  --indicator-color: #7cafb1;
+}
+.searchbarBorder {
+  background-color: #7cafb1;
+  --border-radius: 10px;
+}
+.itemBackground {
+  --border-color: #7cafb1;
+  --border-width: 0.2px;
+  --padding-top: 5px;
+}
+.toolbarMargin {
+  margin-top: 2%;
+}
+.labelColour {
+  color: #37383a;
+}

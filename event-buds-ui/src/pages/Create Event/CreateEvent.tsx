@@ -27,9 +27,11 @@ export default function CreateEvent(props: any) {
   useEffect(() => {
     async function loadUserData() {
       let result = await getUser(1);
+      console.log(result);
       if (result) {
         setFriends(JSON.parse(result.FRIENDS));
       }
+      console.log(friends)
     }
     async function loadAllUsers() {
       let result = await getAllUsers(1);

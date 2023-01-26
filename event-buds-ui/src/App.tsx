@@ -11,10 +11,7 @@ import {
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { addCircle, calendar, home, people, person } from "ionicons/icons";
-import Tab1 from "./pages/Tab1";
-import Tab2 from "./pages/Tab2";
 import React from "react";
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -67,27 +64,27 @@ const App: React.FC = () => (
           </Route>
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
-          <IonTabButton tab="Home" href="/Home">
+          <IonTabButton class= "tabButton" tab="Home" href="/Home">
             <IonIcon icon={home} />
             <IonLabel>Home</IonLabel>
           </IonTabButton>
 
-          <IonTabButton tab="Add Friends" href="/ManageFriends">
+          <IonTabButton class= "tabButton" tab="Add Friends" href="/ManageFriends">
             <IonIcon icon={people} />
             <IonLabel>Friends</IonLabel>
           </IonTabButton>
 
-          <IonTabButton tab="CreateEvent" href="/CreateEvent">
+          <IonTabButton class= "tabButton" tab="CreateEvent" href="/CreateEvent">
             <IonIcon icon={addCircle} />
             <IonLabel>Create</IonLabel>
           </IonTabButton>
 
-          <IonTabButton tab="PublicEvents" href="/PublicEvents">
+          <IonTabButton class= "tabButton" tab="PublicEvents" href="/PublicEvents">
             <IonIcon icon={calendar} />
             <IonLabel>Events</IonLabel>
           </IonTabButton>
 
-          <IonTabButton tab="Profile" href="/Profile">
+          <IonTabButton class= "tabButton" tab="Profile" href="/Profile">
             <IonIcon icon={person} />
             <IonLabel>My Profile</IonLabel>
           </IonTabButton>

@@ -1,177 +1,80 @@
 import {
-    IonApp,
-    IonButton,
-    IonCheckbox,
-    IonHeader,
-    IonIcon,
-    IonItem,
-    IonLabel,
-    IonList,
-    IonRouterOutlet,
-    IonSearchbar,
-    IonTabBar,
-    IonTabButton,
-    IonTabs,
-    IonTitle,
-    IonToolbar,
-    setupIonicReact,
-    useIonAlert,
-  } from "@ionic/react";
-  import { IonReactRouter } from "@ionic/react-router";
-  import { people, person, star } from "ionicons/icons";
-  import { useState } from "react";
-  import { Route, withRouter } from "react-router";
-  import Tab2 from "../Tab2";
-  import UserProfile from "./UserProfile";
-  import { addCircle } from "ionicons/icons"
-  
-  setupIonicReact();
-  
-  
-  
-  
-  
-  export default function AddFriends() {
-    const [presentAlert] = useIonAlert();
-    const [segment, setSegment] = useState("uProfile");
-    
-    function handleSegmentChange(value: any) {
-      if (value === "uProfile") {
-        return <UserProfile />;
-      } else if (value === "abc") {
-        return 
+  IonButton,
+  IonHeader,
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonSearchbar,
+  IonToolbar,
+  setupIonicReact,
+  useIonAlert,
+} from "@ionic/react";
+
+import { addCircle } from "ionicons/icons";
+import { useEffect, useState } from "react";
+import { getAllUsers, getUser } from "../../api/userApi";
+import "./ManageFriends.css";
+setupIonicReact();
+
+export default function AddFriends(props: any) {
+  const [presentAlert] = useIonAlert();
+  const [otherUsersList, setotherUsersList] = useState([]);
+
+  useEffect(() => {
+    async function loadAllUsers() {
+      let result = await getAllUsers(1);
+      console.log(result);
+      if (result) {
+        setotherUsersList(result);
       }
+      console.log(otherUsersList);
     }
-    return (
-      <>
-        <IonHeader>
-          <IonToolbar></IonToolbar>
-          <IonToolbar>
-            <IonSearchbar></IonSearchbar>
-          </IonToolbar>
-  
-          
-  
-          <IonList>
-            <IonItem>
-              <IonLabel> John</IonLabel>
-              <IonButton
-                onClick={() =>
-                  presentAlert({
-                    header: "Are you sure?",
-                    cssClass: "custom-alert",
-                    buttons: [
-                      {
-                        text: "Yes",
-                      },
-  
-                      {
-                        text: "Cancel",
-                      },
-                    ],
-                  })
-                }
-              >
-                Add Friend
-              </IonButton>
-            </IonItem>
-  
-           
-              
-            <IonItem>
-              <IonLabel>Jenny</IonLabel>
-              <IonButton
-                onClick={() =>
-                  presentAlert({
-                    header: "Are you sure?",
-                    cssClass: "custom-alert",
-                    buttons: [
-                      {
-                        text: "Yes",
-                      },
-  
-                      {
-                        text: "Cancel",
-                      },
-                    ],
-                  })
-                }
-              >
-                Add Friend
-              </IonButton>
-            </IonItem>
-  
-            <IonItem>
-              <IonLabel>Jackie</IonLabel>
-              <IonButton
-                onClick={() =>
-                  presentAlert({
-                    header: "Are you sure?",
-                    cssClass: "custom-alert",
-                    buttons: [
-                      {
-                        text: "Yes",
-                      },
-  
-                      {
-                        text: "Cancel",
-                      },
-                    ],
-                  })
-                }
-              >
-                Add Friend
-              </IonButton>
-            </IonItem>
-            <IonItem>
-              <IonLabel>Jia</IonLabel>
-              <IonButton
-                onClick={() =>
-                  presentAlert({
-                    header: "Are you sure?",
-                    cssClass: "custom-alert",
-                    buttons: [
-                      {
-                        text: "Yes",
-                      },
-  
-                      {
-                        text: "Cancel",
-                      },
-                    ],
-                  })
-                }
-              >
-                Add Friend
-              </IonButton>
-            </IonItem>
-            <IonItem>
-                
-              <IonLabel>Jordan</IonLabel>
-              <IonButton
-                onClick={() =>
-                  presentAlert({
-                    header: "Are you sure?",
-                    cssClass: "custom-alert",
-                    buttons: [
-                      {
-                        text: "Yes",
-                      },
-  
-                      {
-                        text: "Cancel",
-                      },
-                    ],
-                  })
-                }
-              >
-                
-               <IonIcon src="/path/to/external/file.svg" name="add-circle"></IonIcon> Add Friend
-              </IonButton>
-            </IonItem>
-          </IonList>
-        </IonHeader>
-      </>
-    );
-  }
-  
+
+    loadAllUsers();
+  }, []);
+  return (
+    <>
+      <IonHeader>
+        <IonToolbar class="toolbarMargin">
+          <IonSearchbar class="searchbarBorder"></IonSearchbar>
+        </IonToolbar>
+
+        <IonList class="itemBackground">
+          {otherUsersList.map((list: any) => {
+            return (
+              <IonItem class="itemBackground" key={list.EMAIL + props.title}>
+                <IonLabel>
+                  <h2 className="ion-text-capitalize">
+                    {" "}
+                    <b>{list.FIRSTNAME + " " + list.LASTNAME} </b>
+                  </h2>
+                  <p>{list.EMAIL}</p>{" "}
+                </IonLabel>
+                <IonButton
+                  onClick={() =>
+                    presentAlert({
+                      header: "Are you sure?",
+                      cssClass: "custom-alert",
+                      buttons: [
+                        {
+                          text: "Yes",
+                        },
+
+                        {
+                          text: "Cancel",
+                        },
+                      ],
+                    })
+                  }
+                >
+                  Add Friend
+                </IonButton>
+              </IonItem>
+            );
+          })}
+        </IonList>
+      </IonHeader>
+    </>
+  );
+}

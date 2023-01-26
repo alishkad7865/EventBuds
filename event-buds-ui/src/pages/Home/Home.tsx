@@ -55,7 +55,7 @@ export default function Home() {
           </IonLabel>
         </IonItemDivider>
         <div className="eventCardsDiv">
-          <IonCard class="eventCard">
+          <IonCard class="PrivateEventCard">
             <IonCardHeader>
               <IonCardTitle>Private Event Placeholder</IonCardTitle>
               <IonCardSubtitle>Card Subtitle</IonCardSubtitle>
@@ -67,7 +67,7 @@ export default function Home() {
             </IonCardContent>
             <IonButton fill="clear">View</IonButton>
           </IonCard>
-          <IonCard class="eventCard">
+          <IonCard class="PrivateEventCard">
             <IonCardHeader>
               <IonCardTitle>Private Event Placeholder</IonCardTitle>
               <IonCardSubtitle>Card Subtitle</IonCardSubtitle>
@@ -89,7 +89,7 @@ export default function Home() {
         </IonItemDivider>
 
         <div className="eventCardsDiv">
-          <IonCard class="eventCard">
+          <IonCard class="PublicEventCard">
             <IonCardHeader>
               <IonCardTitle>Public Event Placeholder</IonCardTitle>
               <IonCardSubtitle>Card Subtitle</IonCardSubtitle>
@@ -101,7 +101,7 @@ export default function Home() {
             </IonCardContent>
             <IonButton fill="clear">View</IonButton>
           </IonCard>
-          <IonCard class="eventCard">
+          <IonCard class="PublicEventCard">
             <IonCardHeader>
               <IonCardTitle>Public Event Placeholder</IonCardTitle>
               <IonCardSubtitle>Card Subtitle</IonCardSubtitle>
@@ -113,7 +113,7 @@ export default function Home() {
             </IonCardContent>
             <IonButton fill="clear">View</IonButton>
           </IonCard>
-          <IonCard class="eventCard">
+          <IonCard class="PublicEventCard">
             <IonCardHeader>
               <IonCardTitle>Public Event Placeholder</IonCardTitle>
               <IonCardSubtitle>Card Subtitle</IonCardSubtitle>
