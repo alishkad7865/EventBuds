@@ -1,11 +1,13 @@
+from fastapi import APIRouter, Depends, HTTPException
+from Service.EventService import EventService
+from Repository.EventRepository import EventRepository
+from Repository.EventRepository import EventRepository
 import sys
 sys.path.append('')
-from Repository.EventRepository import EventRepository
-from Service.EventService import EventService
-from fastapi import APIRouter, Depends, HTTPException
 
 eventRep = EventRepository()
 eventService = EventService(eventRep)
+
 
 class EventController:
     router = APIRouter(
@@ -13,15 +15,22 @@ class EventController:
         tags=["Event"],
         responses={404: {"description": "Not found"}},
     )
-    
 
     def __init__(self, service):
         self.service = service
-        
-    @router.get("/getUserEvent")
+
+    @router.get("/getUserEvents")
     def getUserEvent(userId):
         return eventService.getUserEvents(userId)
-    
+
+    @router.get("/getPublicEvents")
+    def getOtherPublicEvents(userId):
+        return eventService.getOtherPublicEvents(userId)
+
+    @router.get("/getAllPublicEvents")
+    def getAllPublicEvents(self):
+        return eventService.getAllPublicEvents()
+
     @router.post("/createEvent")
     def createEvent(Event):
         return eventService.createEvent(Event)

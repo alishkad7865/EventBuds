@@ -10,8 +10,41 @@ import {
   IonRow,
   IonCol,
 } from "@ionic/react";
+import { useEffect, useState } from "react";
+import { getUserEvent } from "../../api/eventApi";
+import { getUser } from "../../api/userApi";
 import "./profile.css";
-export default function Profile() {
+export default function Profile(props: any) {
+  const [user, setUser] = useState({
+    ADDRESS: String,
+    BIODATA: String,
+    EMAIL: String,
+    FIRSTNAME: String,
+    FRIENDS: String,
+    LASTNAME: String,
+    SEX: String,
+    USERID: Number,
+  });
+
+  const [eventCount, setEventCount] = useState(0);
+  const [friendsCount, setFriendsCount] = useState(0);
+  async function loadUserData() {
+    let result = await getUser(1);
+    if (result) {
+      setUser(result);
+      setFriendsCount(JSON.parse(result.FRIENDS).length);
+    }
+  }
+  async function loadUserEvents() {
+    let result = await getUserEvent(1);
+    if (result) {
+      setEventCount(result.length);
+    }
+  }
+  useEffect(() => {
+    loadUserData();
+    loadUserEvents();
+  }, []);
   return (
     <IonPage>
       <IonContent>
@@ -53,17 +86,17 @@ export default function Profile() {
 
                 <IonCardContent>
                   <h3>
-                    Email: <b>a@g.ca</b>
+                    Email: <b>{user.EMAIL.toString()}</b>
                   </h3>
                   <br />
                   <br />
                   <h3>
-                    Address: <b>128 Regina Ave</b>
+                    Address: <b>{user.ADDRESS.toString()}</b>
                   </h3>
                   <br />
                   <br />
                   <h3>
-                    Sex: <b>Male</b>
+                    Sex: <b>{user.SEX.toString()}</b>
                   </h3>
                   <br />
                   <br />
@@ -80,7 +113,7 @@ export default function Profile() {
                   </IonCardHeader>
 
                   <IonCardContent>
-                    <b>7</b>
+                    <b>{eventCount}</b>
                   </IonCardContent>
                 </IonCard>
               </IonCol>
@@ -94,7 +127,7 @@ export default function Profile() {
                   </IonCardHeader>
 
                   <IonCardContent>
-                    <b>6</b>
+                    <b>{friendsCount}</b>
                   </IonCardContent>
                 </IonCard>
               </IonCol>

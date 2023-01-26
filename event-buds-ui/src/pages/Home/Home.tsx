@@ -14,6 +14,7 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { useEffect, useState } from "react";
+import { getUserEvent } from "../../api/eventApi";
 import { getUser } from "../../api/userApi";
 import "./Home.css";
 export default function Home() {
@@ -27,15 +28,40 @@ export default function Home() {
     SEX: String,
     USERID: Number,
   });
-
+  // {
+  //   eventId: Number,
+  //   createdBy: String,
+  //   ownerId: Number,
+  //   eventTitle: String,
+  //   eventRegEndDateTime: Date,
+  //   eventStartDateTime: Date,
+  //   eventEndDateTime: Date,
+  //   location: String,
+  //   isPublic: Number,
+  //   description: String,
+  //   capacity: Number,
+  //   price: Number,
+  //   status: String,
+  //   helpers: [],
+  // }
+  const [events, setEvents] = useState([]);
   async function loadUserData() {
     let result = await getUser(1);
     if (result) {
       setUser(result);
     }
   }
+  async function loadUserEvents() {
+    let result = await getUserEvent(1);
+    if (result) {
+      console.log(result);
+      setEvents(result);
+    }
+  }
   useEffect(() => {
     loadUserData();
+    loadUserEvents();
+    console.log(events, "Events");
   }, []);
 
   return (
@@ -55,30 +81,29 @@ export default function Home() {
           </IonLabel>
         </IonItemDivider>
         <div className="eventCardsDiv">
-          <IonCard class="eventCard">
-            <IonCardHeader>
-              <IonCardTitle>Private Event Placeholder</IonCardTitle>
-              <IonCardSubtitle>Card Subtitle</IonCardSubtitle>
-            </IonCardHeader>
+          {events?.map((list: any) => {
+            if (!list.ISPUBLIC) {
+              console.log(list.DESCRIPTION, list);
+              return (
+                <IonCard class="eventCard">
+                  <IonCardHeader>
+                    <IonCardTitle className="ion-text-capitalize">
+                      {list.EVENTTITLE}
+                    </IonCardTitle>
+                    <IonCardSubtitle>
+                      Time: {new Date(list.STARTDATETIME).toString()}
+                    </IonCardSubtitle>
+                    <IonCardSubtitle>
+                      Venue: {list.LOCATION} at{" "}
+                    </IonCardSubtitle>
+                  </IonCardHeader>
 
-            <IonCardContent>
-              Here's a small text description for the card content. Nothing
-              more, nothing less.
-            </IonCardContent>
-            <IonButton fill="clear">View</IonButton>
-          </IonCard>
-          <IonCard class="eventCard">
-            <IonCardHeader>
-              <IonCardTitle>Private Event Placeholder</IonCardTitle>
-              <IonCardSubtitle>Card Subtitle</IonCardSubtitle>
-            </IonCardHeader>
-
-            <IonCardContent>
-              Here's a small text description for the card content. Nothing
-              more, nothing less.
-            </IonCardContent>
-            <IonButton fill="clear">View</IonButton>
-          </IonCard>
+                  <IonCardContent>{list.DESCRIPTION}</IonCardContent>
+                  <IonButton fill="clear">View</IonButton>
+                </IonCard>
+              );
+            }
+          })}
         </div>
 
         {/*  START OF PUBLIC EVENT SECTION */}
@@ -89,44 +114,28 @@ export default function Home() {
         </IonItemDivider>
 
         <div className="eventCardsDiv">
-          <IonCard class="eventCard">
-            <IonCardHeader>
-              <IonCardTitle>Public Event Placeholder</IonCardTitle>
-              <IonCardSubtitle>Card Subtitle</IonCardSubtitle>
-            </IonCardHeader>
+          {events?.map((list: any) => {
+            if (list.ISPUBLIC) {
+              return (
+                <IonCard class="eventCard">
+                  <IonCardHeader>
+                    <IonCardTitle className="ion-text-capitalize">
+                      {list.EVENTTITLE}
+                    </IonCardTitle>
+                    <IonCardSubtitle>
+                      Time: {new Date(list.STARTDATETIME).toString()}
+                    </IonCardSubtitle>
+                    <IonCardSubtitle>
+                      Venue: {list.LOCATION} at{" "}
+                    </IonCardSubtitle>
+                  </IonCardHeader>
 
-            <IonCardContent>
-              Here's a small text description for the card content. Nothing
-              more, nothing less.
-            </IonCardContent>
-            <IonButton fill="clear">View</IonButton>
-          </IonCard>
-          <IonCard class="eventCard">
-            <IonCardHeader>
-              <IonCardTitle>Public Event Placeholder</IonCardTitle>
-              <IonCardSubtitle>Card Subtitle</IonCardSubtitle>
-            </IonCardHeader>
-
-            <IonCardContent>
-              Here's a small text description for the card content. Nothing
-              more, nothing less.
-            </IonCardContent>
-            <IonButton fill="clear">View</IonButton>
-          </IonCard>
-          <IonCard class="eventCard">
-            <IonCardHeader>
-              <IonCardTitle>Public Event Placeholder</IonCardTitle>
-              <IonCardSubtitle>Card Subtitle</IonCardSubtitle>
-            </IonCardHeader>
-
-            <IonCardContent>
-              Here's a small text description for the card content. Nothing
-              more, nothing less.
-            </IonCardContent>
-            <IonButton fill="clear" shape="round">
-              View
-            </IonButton>
-          </IonCard>
+                  <IonCardContent>{list.DESCRIPTION}</IonCardContent>
+                  <IonButton fill="clear">View</IonButton>
+                </IonCard>
+              );
+            }
+          })}
         </div>
       </IonContent>
     </IonPage>
