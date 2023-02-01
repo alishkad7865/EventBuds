@@ -1,11 +1,15 @@
 import {
   IonAvatar,
   IonButton,
+  IonButtons,
+  IonContent,
   IonHeader,
   IonItem,
   IonLabel,
   IonList,
+  IonModal,
   IonSearchbar,
+  IonTitle,
   IonToolbar,
   setupIonicReact,
   useIonAlert,
@@ -13,12 +17,14 @@ import {
 import { useEffect, useState } from "react";
 import { getUser } from "../../api/userApi";
 import "./ManageFriends.css";
+
 setupIonicReact();
 
 export default function MyFriends(props: any) {
   const [presentAlert] = useIonAlert();
 
   const [friendsList, setfriendsList] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     async function loadUserData() {
@@ -43,21 +49,23 @@ export default function MyFriends(props: any) {
         {friendsList.map((list: any) => {
           return (
             <IonItem class="itemBackground" key={list.EMAIL + props.title}>
-              <IonAvatar slot= "start">
+              <IonAvatar slot="start" onClick={() => setIsOpen(true)}>
                 <img
                   alt="Silhouette of a person's head"
                   src="https://ionicframework.com/docs/img/demos/avatar.svg"
                 />
               </IonAvatar>
-              <IonLabel>
-                <h2 className="labelColour ion-text-capitalize">
+
+              <IonLabel onClick={() => setIsOpen(true)}>
+                <h6 className="labelColour ion-text-capitalize">
                   {" "}
                   <b className="labelColour">
                     {list.FIRSTNAME + " " + list.LASTNAME}{" "}
                   </b>
-                </h2>
+                </h6>
                 <p>{list.EMAIL}</p>
               </IonLabel>
+
               <IonButton
                 onClick={() =>
                   presentAlert({
@@ -77,6 +85,38 @@ export default function MyFriends(props: any) {
               >
                 Remove Friend
               </IonButton>
+              <IonModal isOpen={isOpen}>
+                <IonHeader>
+                  <IonToolbar>
+                    <IonTitle>Profile</IonTitle>
+                    <IonButtons slot="end">
+                      <IonButton onClick={() => setIsOpen(false)}>
+                        Close
+                      </IonButton>
+                    </IonButtons>
+                  </IonToolbar>
+                </IonHeader>
+                <IonContent>
+                  <div className="GiantAvatar">
+                    {" "}
+                    <img
+                      style={{
+                        height: "200px",
+                        borderRadius: "50%",
+                      }}
+                      alt="Silhouette of a person's head"
+                      src="https://ionicframework.com/docs/img/demos/avatar.svg"
+                    />
+                  </div>
+                  <h1 className="ion-text-center ion-text-capitalize">
+                    {" "}
+                    <b className="ion-text-center ion-text-capitalize">
+                      {list.FIRSTNAME + " " + list.LASTNAME}{" "}
+                    </b>
+                  </h1>
+                  <h6 className="ion-text-center"> Email: {list.EMAIL} </h6>
+                </IonContent>
+              </IonModal>
             </IonItem>
           );
         })}

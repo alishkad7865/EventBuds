@@ -17,3 +17,14 @@
 .labelColour {
   color: #37383a;
 }
+
+.ProfileLableCenter {
+  align-content: center;
+}
+
+.GiantAvatar {
+  padding-top: 10%;
+  display: flex;
+  justify-content: center;
+  
+}
