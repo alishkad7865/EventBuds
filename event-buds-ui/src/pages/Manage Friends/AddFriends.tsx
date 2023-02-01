@@ -25,11 +25,9 @@ export default function AddFriends(props: any) {
   useEffect(() => {
     async function loadAllUsers() {
       let result = await getAllUsers(1);
-      console.log(result);
       if (result) {
         setotherUsersList(result);
       }
-      console.log(otherUsersList);
     }
 
     loadAllUsers();
@@ -45,7 +43,7 @@ export default function AddFriends(props: any) {
           {otherUsersList.map((list: any) => {
             return (
               <IonItem class="itemBackground" key={list.EMAIL + props.title}>
-                <IonAvatar slot= "start">
+                <IonAvatar slot="start">
                   <img
                     alt="Silhouette of a person's head"
                     src="https://ionicframework.com/docs/img/demos/avatar.svg"

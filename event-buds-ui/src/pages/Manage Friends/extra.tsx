@@ -21,7 +21,6 @@ import { IonReactRouter } from "@ionic/react-router";
 import { people, person, star } from "ionicons/icons";
 import { useState } from "react";
 import { Route, withRouter } from "react-router";
-import Tab2 from "../Tab2";
 import UserProfile from "./UserProfile";
 
 setupIonicReact();
@@ -29,38 +28,30 @@ setupIonicReact();
 const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
-      <IonTabs >
+      <IonTabs>
         <IonRouterOutlet>
-          
-          
           <Route exact path="/UserProfile">
-            <Tab2 />
+            <UserProfile />
           </Route>
-          
-          </IonRouterOutlet>
-          <IonTabButton tab="UserProfile" href="/UserProfile">
-            <IonIcon icon={person} />
-            <IonLabel>My Profile</IonLabel>
-          </IonTabButton>
-       
+        </IonRouterOutlet>
+        <IonTabButton tab="UserProfile" href="/UserProfile">
+          <IonIcon icon={person} />
+          <IonLabel>My Profile</IonLabel>
+        </IonTabButton>
       </IonTabs>
-      
     </IonReactRouter>
   </IonApp>
 );
 
-
-
-
 export default function MyFriends() {
   const [presentAlert] = useIonAlert();
   const [segment, setSegment] = useState("uProfile");
-  
+
   function handleSegmentChange(value: any) {
     if (value === "uProfile") {
       return <UserProfile />;
     } else if (value === "abc") {
-      return 
+      return;
     }
   }
   return (
@@ -97,12 +88,9 @@ export default function MyFriends() {
             </IonButton>
           </IonItem>
 
-
-          <IonTabButton  href="/UserProfile">
-            
+          <IonTabButton href="/UserProfile">
             <IonLabel>Megan</IonLabel>
           </IonTabButton>
-
 
           <IonItem>
             <IonLabel>Morgan</IonLabel>
