@@ -29,11 +29,9 @@ export default function MyFriends(props: any) {
   useEffect(() => {
     async function loadUserData() {
       let result = await getUser(1);
-      console.log(result);
       if (result) {
         setfriendsList(JSON.parse(result.FRIENDS));
       }
-      console.log(friendsList);
     }
 
     loadUserData();

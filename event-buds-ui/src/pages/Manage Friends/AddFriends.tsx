@@ -30,11 +30,9 @@ const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
     async function loadAllUsers() {
       let result = await getAllUsers(1);
-      console.log(result);
       if (result) {
         setotherUsersList(result);
       }
-      
       console.log(otherUsersList);
     }
 
@@ -51,7 +49,7 @@ const [isOpen, setIsOpen] = useState(false);
           {otherUsersList.map((list: any) => {
             return (
               <IonItem class="itemBackground" key={list.EMAIL + props.title}>
-                <IonAvatar slot= "start" onClick={() => setIsOpen(true)}>
+                <IonAvatar slot= "start">
                   <img
                     alt="Silhouette of a person's head"
                     src="https://ionicframework.com/docs/img/demos/avatar.svg"

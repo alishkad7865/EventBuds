@@ -1,9 +1,6 @@
 import {
   IonPage,
   IonContent,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
   IonItem,
   IonLabel,
   IonInput,
@@ -20,10 +17,11 @@ import {
 } from "@ionic/react";
 import { arrowForwardCircle } from "ionicons/icons";
 import { useEffect, useState } from "react";
+import Menu from "../Menu";
 
-import "./CreateEvent.css";
+import "../../pages/Create Event/CreateEvent.css";
 
-export default function EventInfo(props: any) {
+export default function EventInfoForm(props: any) {
   function Continue(e: any) {
     e.preventDefault();
     props.nextStep();
@@ -34,7 +32,7 @@ export default function EventInfo(props: any) {
     if (props.toastMessage) {
       setShowToast(true);
     }
-  }, []);
+  }, [props.toastMessage]);
 
   return (
     <IonPage>
@@ -48,23 +46,9 @@ export default function EventInfo(props: any) {
         message={props.toastMessage}
         duration={3000}
       />
-      {/* <IonHeader>
-        <IonToolbar>
-          <IonTitle>Create Event</IonTitle>
-        </IonToolbar>
-      </IonHeader> */}
-      {/* <IonReactRouter>
-        <IonRouterOutlet>
-          <Route exact path="/AddMembers" component={AddMembers} />
-        </IonRouterOutlet>
-      </IonReactRouter> */}
+
+      <Menu page={"create event"} />
       <IonContent className="container">
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Create Event</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <h2>CREATE EVENT</h2>
         <IonItem className="addSpaceAbove">
           <IonLabel position="stacked" className="ionLabel">
             Event title
@@ -74,6 +58,7 @@ export default function EventInfo(props: any) {
             placeholder="Enter event title"
             onIonChange={handleChange("eventTitle")}
             defaultValue={values.eventTitle}
+            value={values.eventTitle}
           ></IonInput>
           <IonNote slot="helper">Enter a valid Title</IonNote>
           <IonNote slot="error">Invalid Title</IonNote>
@@ -90,6 +75,7 @@ export default function EventInfo(props: any) {
               id="datetime"
               onIonChange={handleChange("eventStartTime")}
               defaultValue={values.eventStartTime}
+              value={new Date(values.eventStartTime).toISOString() ?? undefined}
             >
               <span slot="title">Event Start Time</span>
             </IonDatetime>
@@ -106,6 +92,7 @@ export default function EventInfo(props: any) {
               id="EndTime"
               onIonChange={handleChange("eventEndTime")}
               defaultValue={values.eventEndTime}
+              value={new Date(values.eventEndTime).toISOString() ?? undefined}
             >
               <span slot="title">EventEnd Time</span>
             </IonDatetime>
@@ -120,6 +107,7 @@ export default function EventInfo(props: any) {
             placeholder="Enter full location"
             onIonChange={handleChange("location")}
             defaultValue={values.location}
+            value={values.location}
           ></IonInput>
           <IonNote slot="error">Invalid Location</IonNote>
         </IonItem>
@@ -132,6 +120,7 @@ export default function EventInfo(props: any) {
             placeholder="Event Type"
             onIonChange={handleChange("eventType")}
             defaultValue={values.eventType}
+            value={values.eventType}
           >
             <IonSelectOption value="1">Public</IonSelectOption>
             <IonSelectOption value="0">Private</IonSelectOption>
@@ -149,6 +138,7 @@ export default function EventInfo(props: any) {
             maxlength={200}
             onIonChange={handleChange("description")}
             defaultValue={values.description}
+            value={values.description}
           ></IonTextarea>
           <IonNote slot="error">Description Cant be null</IonNote>
         </IonItem>

@@ -35,11 +35,12 @@ class Event(BaseModel):
 
 class EventInvitation(BaseModel):
     eventId: int
-    inviteId: int
+    inviteId: Optional[int] = None
+    userId: int
     ownerId: int
-    sentDate: datetime
+    sentDate: Optional[datetime] = None
     invitationResponse: Optional[str] = ""
-    textResponse: Optional[str] = ""
+    isHelper: Optional[int] = 0
     RespondDate: Optional[datetime] = None
     Notified:  Optional[int] = 0
 

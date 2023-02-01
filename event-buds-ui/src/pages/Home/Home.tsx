@@ -6,17 +6,19 @@ import {
   IonCardSubtitle,
   IonCardTitle,
   IonContent,
-  IonHeader,
   IonItemDivider,
   IonLabel,
   IonPage,
-  IonTitle,
-  IonToolbar,
+  IonRouterOutlet,
 } from "@ionic/react";
 import { useEffect, useState } from "react";
 import { getUserEvent } from "../../api/eventApi";
 import { getUser } from "../../api/userApi";
 import "./Home.css";
+import Event from "../Event/Event";
+import { Route } from "react-router";
+import Menu from "../../components/Menu";
+
 export default function Home() {
   const [user, setUser] = useState({
     ADDRESS: String,
@@ -28,23 +30,8 @@ export default function Home() {
     SEX: String,
     USERID: Number,
   });
-  // {
-  //   eventId: Number,
-  //   createdBy: String,
-  //   ownerId: Number,
-  //   eventTitle: String,
-  //   eventRegEndDateTime: Date,
-  //   eventStartDateTime: Date,
-  //   eventEndDateTime: Date,
-  //   location: String,
-  //   isPublic: Number,
-  //   description: String,
-  //   capacity: Number,
-  //   price: Number,
-  //   status: String,
-  //   helpers: [],
-  // }
   const [events, setEvents] = useState([]);
+  const [event, setEvent] = useState({});
   async function loadUserData() {
     let result = await getUser(1);
     if (result) {
@@ -54,90 +41,110 @@ export default function Home() {
   async function loadUserEvents() {
     let result = await getUserEvent(1);
     if (result) {
-      console.log(result);
       setEvents(result);
     }
   }
   useEffect(() => {
     loadUserData();
     loadUserEvents();
-    console.log(events, "Events");
   }, []);
 
+  function viewEvent(list: any) {
+    setEvent(list);
+  }
   return (
-    <IonPage>
-      <IonContent>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Home</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <h1 className="ion-text-center ion-text-capitalize">
-          {"Welcome" + " " + user.FIRSTNAME ?? ""}
-        </h1>
-        <IonItemDivider>
-          <IonLabel>
-            <h2>My Private Events</h2>
-          </IonLabel>
-        </IonItemDivider>
-        <div className="eventCardsDiv">
-          {events?.map((list: any) => {
-            if (!list.ISPUBLIC) {
-              console.log(list.DESCRIPTION, list);
-              return (
-                <IonCard class="PrivateEventCard">
-                  <IonCardHeader>
-                    <IonCardTitle className="ion-text-capitalize">
-                      {list.EVENTTITLE}
-                    </IonCardTitle>
-                    <IonCardSubtitle>
-                      Time: {new Date(list.STARTDATETIME).toString()}
-                    </IonCardSubtitle>
-                    <IonCardSubtitle>
-                      Venue: {list.LOCATION} at{" "}
-                    </IonCardSubtitle>
-                  </IonCardHeader>
+    <>
+      <IonRouterOutlet>
+        <Route path="/event/:id" render={() => <Event list={event} />} />
+      </IonRouterOutlet>
+      <IonPage>
+        <Menu page={"home"} />
+        <IonContent>
+          <h1 className="ion-text-center ion-text-capitalize">
+            {`Welcome ${user.FIRSTNAME}`}
+          </h1>
+          {events?.filter((list: any) => !list.ISPUBLIC).length > 0 && (
+            <IonItemDivider>
+              <IonLabel>
+                <h2>My Private Events</h2>
+              </IonLabel>
+            </IonItemDivider>
+          )}
+          <div className="eventCardsDiv">
+            {events?.map((list: any) => {
+              if (!list.ISPUBLIC) {
+                return (
+                  <IonCard class="PrivateEventCard" key={list.EVENTID}>
+                    <IonCardHeader>
+                      <IonCardTitle className="ion-text-capitalize">
+                        {list.EVENTTITLE}
+                      </IonCardTitle>
+                      <IonCardSubtitle>
+                        Time: {new Date(list.STARTDATETIME).toString()}
+                      </IonCardSubtitle>
+                      <IonCardSubtitle>
+                        Venue: {list.LOCATION} at{" "}
+                      </IonCardSubtitle>
+                    </IonCardHeader>
 
-                  <IonCardContent>{list.DESCRIPTION}</IonCardContent>
-                  <IonButton fill="clear">View</IonButton>
-                </IonCard>
-              );
-            }
-          })}
-        </div>
+                    <IonCardContent>{list.DESCRIPTION}</IonCardContent>
+                    <IonButton
+                      fill="solid"
+                      shape="round"
+                      size="small"
+                      onClick={(e) => viewEvent(list)}
+                      routerLink={"/event/" + list.EVENTID}
+                    >
+                      View
+                    </IonButton>
+                  </IonCard>
+                );
+              } else return "";
+            })}
+          </div>
 
-        {/*  START OF PUBLIC EVENT SECTION */}
-        <IonItemDivider>
-          <IonLabel>
-            <h2>My Public Events</h2>
-          </IonLabel>
-        </IonItemDivider>
+          {/*  START OF PUBLIC EVENT SECTION */}
+          {events?.filter((list: any) => list.ISPUBLIC).length > 0 && (
+            <IonItemDivider>
+              <IonLabel>
+                <h2>My Public Events</h2>
+              </IonLabel>
+            </IonItemDivider>
+          )}
+          <div className="eventCardsDiv">
+            {events?.map((list: any) => {
+              if (list.ISPUBLIC) {
+                return (
+                  <IonCard class="PublicEventCard" key={list.EVENTID}>
+                    <IonCardHeader>
+                      <IonCardTitle className="ion-text-capitalize">
+                        {list.EVENTTITLE}
+                      </IonCardTitle>
+                      <IonCardSubtitle>
+                        Time: {new Date(list.STARTDATETIME).toString()}
+                      </IonCardSubtitle>
+                      <IonCardSubtitle>
+                        Venue: {list.LOCATION} at{" "}
+                      </IonCardSubtitle>
+                    </IonCardHeader>
 
-        <div className="eventCardsDiv">
-          {events?.map((list: any) => {
-            if (list.ISPUBLIC) {
-              return (
-                <IonCard class="PublicEventCard">
-                  <IonCardHeader>
-                    <IonCardTitle className="ion-text-capitalize">
-                      {list.EVENTTITLE}
-                    </IonCardTitle>
-                    <IonCardSubtitle>
-                      Time: {new Date(list.STARTDATETIME).toString()}
-                    </IonCardSubtitle>
-                    <IonCardSubtitle>
-                      Venue: {list.LOCATION} at{" "}
-                    </IonCardSubtitle>
-                  </IonCardHeader>
-
-                  <IonCardContent>{list.DESCRIPTION}</IonCardContent>
-                  <IonButton fill="clear">View</IonButton>
-                </IonCard>
-              );
-            }
-          })}
-        </div>
-      </IonContent>
-    </IonPage>
+                    <IonCardContent>{list.DESCRIPTION}</IonCardContent>
+                    <IonButton
+                      fill="solid"
+                      shape="round"
+                      size="small"
+                      onClick={(e) => viewEvent(list)}
+                      routerLink={"/event/" + list.EVENTID}
+                    >
+                      View
+                    </IonButton>
+                  </IonCard>
+                );
+              } else return "";
+            })}
+          </div>
+        </IonContent>
+      </IonPage>
+    </>
   );
 }
