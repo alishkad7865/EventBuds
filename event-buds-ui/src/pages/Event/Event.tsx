@@ -45,6 +45,7 @@ export default function Event(props: any) {
   }
   useEffect(() => {
     loadEventInvitations();
+    // eslint-disable-next-line
   }, [props.list.EVENTID]);
 
   return (
