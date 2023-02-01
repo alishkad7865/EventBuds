@@ -18,8 +18,6 @@ import Menu from "../../components/Menu";
 export default function Event(props: any) {
   const history = useHistory();
   const [segment, setSegment] = useState("eventInfo");
-  // const [invitationList, setInvitationList] = useState<any>([]);
-  // const helpersList: any[] = [];
   const [guestsList, setGuestsList] = useState<any>([]);
   const [helpersList, setHelpersList] = useState<any>([]);
   function handleSegmentChange(value: any) {
