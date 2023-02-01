@@ -13,6 +13,7 @@ import {
 import { useEffect, useState } from "react";
 import { getUserEvent } from "../../api/eventApi";
 import { getUser } from "../../api/userApi";
+import Menu from "../../components/Menu";
 import "./profile.css";
 export default function Profile(props: any) {
   const [user, setUser] = useState({
@@ -47,6 +48,7 @@ export default function Profile(props: any) {
   }, []);
   return (
     <IonPage>
+      <Menu page={"profile"} />
       <IonContent>
         <IonGrid>
           <IonRow class="ion-justify-content-center">

@@ -1,6 +1,7 @@
 import axios from "axios";
 export async function createEvent(event: any) {
-  let baseUrl = "http://140.238.138.230:8000/Event/createEvent?Event=" + event;
+  let baseUrl =
+    `${process.env.REACT_APP_BASE_URL}/Event/createEvent?Event=` + event;
   return axios
     .post(`${baseUrl}`, {
       headers: {
@@ -18,7 +19,8 @@ export async function createEvent(event: any) {
 }
 
 export async function getUserEvent(userId: number) {
-  let baseUrl = "http://localhost:8000/Event/getUserEvents?userId=" + userId;
+  let baseUrl =
+    `${process.env.REACT_APP_BASE_URL}/Event/getUserEvents?userId=` + userId;
   return axios
     .get(`${baseUrl}`, {
       headers: {
@@ -34,7 +36,60 @@ export async function getUserEvent(userId: number) {
 }
 
 export async function getPublicEvents(userId: number) {
-  let baseUrl = "http://127.0.0.1:8000/Event/getPublicEvents?userId=" + userId;
+  let baseUrl =
+    `${process.env.REACT_APP_BASE_URL}/Event/getPublicEvents?userId=` + userId;
+  return axios
+    .get(`${baseUrl}`, {
+      headers: {
+        Accept: "application/json",
+      },
+    })
+    .then((response: any) => {
+      if (response.status >= 200 && response.status < 300) {
+        return response.data;
+      }
+    })
+    .catch((e: any) => console.log(e));
+}
+
+export async function getEventInvitations(eventId: number) {
+  let baseUrl =
+    `${process.env.REACT_APP_BASE_URL}/Event/eventInvitations?event_id=` +
+    eventId;
+  return axios
+    .get(`${baseUrl}`, {
+      headers: {
+        Accept: "application/json",
+      },
+    })
+    .then((response: any) => {
+      if (response.status >= 200 && response.status < 300) {
+        return response.data;
+      }
+    })
+    .catch((e: any) => console.log(e));
+}
+
+export async function getEventHelpers(eventId: number) {
+  let baseUrl =
+    `${process.env.REACT_APP_BASE_URL}/Event/eventHelpers?event_id=` + eventId;
+  return axios
+    .get(`${baseUrl}`, {
+      headers: {
+        Accept: "application/json",
+      },
+    })
+    .then((response: any) => {
+      if (response.status >= 200 && response.status < 300) {
+        return response.data;
+      }
+    })
+    .catch((e: any) => console.log(e));
+}
+
+export async function getEventGuests(eventId: number) {
+  let baseUrl =
+    `${process.env.REACT_APP_BASE_URL}/Event/eventGuests?event_id=` + eventId;
   return axios
     .get(`${baseUrl}`, {
       headers: {

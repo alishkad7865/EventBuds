@@ -1,9 +1,7 @@
 import {
   IonPage,
   IonContent,
-  IonHeader,
   IonSearchbar,
-  IonTitle,
   IonToolbar,
   IonButton,
   IonCard,
@@ -14,13 +12,13 @@ import {
 } from "@ionic/react";
 import { useEffect, useState } from "react";
 import { getPublicEvents } from "../../api/eventApi";
+import Menu from "../../components/Menu";
 import "./publicEvent.css";
 export default function PublicEvents() {
   const [publicEvents, setPublicEvents] = useState([]);
   async function loadUserEvents() {
     let result = await getPublicEvents(1);
     if (result) {
-      console.log(result);
       setPublicEvents(result);
     }
   }
@@ -29,15 +27,16 @@ export default function PublicEvents() {
   }, []);
   return (
     <IonPage>
-      <IonHeader>
+      <Menu page={"public events"} />
+      {/* <IonHeader>
         <IonToolbar class="toolbarMargin">
           <IonTitle>Public Events</IonTitle>
         </IonToolbar>
-        <IonToolbar>
-          <IonSearchbar class="searchbarBorder"></IonSearchbar>
-        </IonToolbar>
-      </IonHeader>
+      </IonHeader> */}
       <IonContent>
+        <IonToolbar>
+          <IonSearchbar class="searchbarBorder toolbarMargin"></IonSearchbar>
+        </IonToolbar>
         <div className="eventCards">
           {publicEvents?.map((list: any) => {
             if (list.ISPUBLIC) {
@@ -59,7 +58,7 @@ export default function PublicEvents() {
                   <IonButton fill="clear">View</IonButton>
                 </IonCard>
               );
-            }
+            } else return <></>;
           })}
         </div>
       </IonContent>

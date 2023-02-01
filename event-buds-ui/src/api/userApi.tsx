@@ -1,7 +1,7 @@
 import axios from "axios";
 import { CapacitorHttp, HttpResponse } from "@capacitor/core";
 export async function getUser(userId: number) {
-  let baseUrl = "http://140.238.138.230:8000/User/getUser";
+  let baseUrl = `${process.env.REACT_APP_BASE_URL}/User/getUser`;
   const options = {
     url: baseUrl,
     headers: {},
@@ -18,7 +18,8 @@ export async function getUser(userId: number) {
 }
 
 export async function getAllUsers(userId: number) {
-  let baseUrl = "http://140.238.138.230:8000/User/getAllUsers?userId=" + userId;
+  let baseUrl =
+    `${process.env.REACT_APP_BASE_URL}/User/getAllUsers?userId=` + userId;
   return axios
     .get(`${baseUrl}`, {
       headers: {

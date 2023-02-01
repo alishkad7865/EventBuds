@@ -1,12 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException
 from Service.EventService import EventService
 from Repository.EventRepository import EventRepository
-from Repository.EventRepository import EventRepository
+from Service.EventInvitationService import EventInvitationService
 import sys
 sys.path.append('')
 
 eventRep = EventRepository()
 eventService = EventService(eventRep)
+eventInvitationService = EventInvitationService()
 
 
 class EventController:
@@ -22,6 +23,18 @@ class EventController:
     @router.get("/getUserEvents")
     def getUserEvent(userId):
         return eventService.getUserEvents(userId)
+
+    @router.get("/eventInvitations")
+    def getEventInvitation(event_id):
+        return eventInvitationService.getEventInvitations(event_id)
+
+    @router.get("/eventHelpers")
+    def getEventHelpers(event_id):
+        return eventInvitationService.getEventHelpers(event_id)
+
+    @router.get("/eventGuests")
+    def getEventGuests(event_id):
+        return eventInvitationService.getEventGuests(event_id)
 
     @router.get("/getPublicEvents")
     def getOtherPublicEvents(userId):

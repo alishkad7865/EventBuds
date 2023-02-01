@@ -4,20 +4,18 @@ import {
   IonButtons,
   IonChip,
   IonContent,
-  IonHeader,
   IonIcon,
   IonInput,
   IonItem,
   IonLabel,
   IonPage,
-  IonTitle,
-  IonToolbar,
 } from "@ionic/react";
 import { arrowBack, closeCircle } from "ionicons/icons";
 import { useRef, useState } from "react";
 import { createEvent } from "../../api/eventApi";
-import CustomModal from "../../components/CustomModal";
-import "./CreateEvent.css";
+import CustomModal from "../Modal/CustomModal";
+import Menu from "../Menu";
+import "../../pages/Create Event/CreateEvent.css";
 
 export default function AddMembers(props: any) {
   const [title, setTitle] = useState("");
@@ -54,6 +52,8 @@ export default function AddMembers(props: any) {
         props.setGuests([]);
         props.setToastMessage("Event Created Successfully!");
         props.setState(props.initialState);
+      } else {
+        props.setToastMessage("Event Creation Failed, Try Again!");
       }
     });
   }
@@ -71,12 +71,8 @@ export default function AddMembers(props: any) {
   }
   return (
     <IonPage>
+      <Menu page={"create event"} />
       <IonContent className="container">
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Add Members</IonTitle>
-          </IonToolbar>
-        </IonHeader>
         <CustomModal
           helpers={props.helpers}
           guests={props.guests}
@@ -190,7 +186,8 @@ export default function AddMembers(props: any) {
             type="number"
             placeholder="000"
             onIonChange={props.handleChange("capacity")}
-            defaultValue={props.values.capacity}
+            defaultValue={capacity}
+            value={capacity}
           ></IonInput>
         </IonItem>
 
@@ -203,6 +200,7 @@ export default function AddMembers(props: any) {
             placeholder="000"
             onIonChange={props.handleChange("price")}
             defaultValue={price}
+            value={price}
           ></IonInput>
         </IonItem>
 

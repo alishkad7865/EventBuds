@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { getAllUsers, getUser } from "../../api/userApi";
-import AddMembers from "./AddMembers";
+import AddMembers from "../../components/EventForm/AddMembers";
 import "./CreateEvent.css";
-import EventInfo from "./EventInfo";
+import EventInfoForm from "../../components/EventForm/EventInfoForm";
 
 export default function CreateEvent(props: any) {
   let initialState = {
@@ -27,11 +27,9 @@ export default function CreateEvent(props: any) {
   useEffect(() => {
     async function loadUserData() {
       let result = await getUser(1);
-      console.log(result);
       if (result) {
         setFriends(JSON.parse(result.FRIENDS));
       }
-      console.log(friends)
     }
     async function loadAllUsers() {
       let result = await getAllUsers(1);
@@ -88,7 +86,7 @@ export default function CreateEvent(props: any) {
   switch (step) {
     case 1:
       return (
-        <EventInfo
+        <EventInfoForm
           nextStep={nextStep}
           handleChange={handleChange}
           values={values}
