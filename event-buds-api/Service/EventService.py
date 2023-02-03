@@ -41,15 +41,16 @@ class EventService:
             for guest in parsedEvent["guests"]:
                 invitation: EventInvitation = EventInvitation(
                     eventId=eventId, inviteId=int(round(time.time() * 1000)), invitationResponse="sent", isHelper=0, Notified=0, ownerId=int(parsedEvent["ownerId"]), RespondDate=None, userId=guest['USERID'])
-
                 self.invitation_service.sendEventInvitation(
                     invitation)
+
             for helper in parsedEvent["helpers"]:
                 invitation: EventInvitation = EventInvitation(
                     eventId=eventId, inviteId=int(round(time.time() * 1000)), invitationResponse="sent", isHelper=1, Notified=0, ownerId=int(parsedEvent["ownerId"]), RespondDate=None, userId=helper['USERID'])
 
                 self.invitation_service.sendEventInvitation(
                     invitation)
+
             return "Success"
         except NameError as e:
             return e

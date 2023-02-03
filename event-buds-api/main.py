@@ -1,6 +1,7 @@
 
 from Controller.EventController import EventController
 from Controller.UserController import UserController
+from Controller.TaskController import TaskController
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import Depends, FastAPI
 from fastapi import FastAPI
@@ -25,6 +26,7 @@ app.add_middleware(
 
 app.include_router(UserController.router)
 app.include_router(EventController.router)
+app.include_router(TaskController.router)
 # app.include_router(items.router)
 # app.include_router(
 #     admin.router,

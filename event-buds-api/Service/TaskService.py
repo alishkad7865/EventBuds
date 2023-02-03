@@ -15,26 +15,30 @@ class TaskService:
         return tasks
 
     def createTask(self, rawTask):
-        parsedEvent = json.loads(rawTask)
-        eventId = int(round(time.time() * 1000))
-        event: Event = Event(eventId=eventId, eventTitle=parsedEvent["eventTitle"], eventStartDateTime=parsedEvent["eventStartTime"], eventEndDateTime=parsedEvent["eventEndTime"], location=parsedEvent["location"],  isPublic=parsedEvent["eventType"],
-                             description=parsedEvent["description"],
-                             capacity=parsedEvent["capacity"],
-                             price=parsedEvent["price"],
-                             helpers=parsedEvent["helpers"],
-                             createdBy=parsedEvent["createdBy"],
-                             ownerId=parsedEvent["ownerId"],
-                             status="Ongoing",
-                             eventRegEndDateTime=parsedEvent["eventStartTime"])
+        parsedTask = json.loads(rawTask)
+        print(rawTask, parsedTask)
+        task: Task = Task(eventId=parsedTask["eventId"], taskName=parsedTask["taskName"], description=parsedTask["description"], assignedTo=parsedTask["assignedTo"],
+                          notes=parsedTask["notes"],
+                          endTime=parsedTask["endTime"],
+                          startTime=parsedTask["startTime"],
+                          taskStatus=parsedTask["taskStatus"])
 
         try:
-            self.repository.createTask(event)
+            self.repository.createTask(task)
             return "Success"
         except NameError as e:
             return e
 
     def UpdateTask(self, task_id, task):
-        self.repository.UpdateTask(task_id, task)
+        try:
+            self.repository.UpdateTask(task_id, task)
+            return "Success"
+        except NameError as e:
+            return e
 
     def deleteTask(self, task_id):
-        self.repository.deleteTask(task_id)
+        try:
+            self.repository.deleteTask(task_id)
+            return "Success"
+        except NameError as e:
+            return e
