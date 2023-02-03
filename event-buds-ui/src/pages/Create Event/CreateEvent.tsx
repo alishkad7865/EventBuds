@@ -8,6 +8,7 @@ export default function CreateEvent(props: any) {
   let initialState = {
     step: 1,
     eventTitle: "",
+    lastRegDate: new Date(),
     eventStartTime: new Date(),
     eventEndTime: new Date(),
     location: "",
@@ -65,6 +66,7 @@ export default function CreateEvent(props: any) {
   const { step } = state;
   const {
     eventTitle,
+    lastRegDate,
     eventStartTime,
     eventEndTime,
     location,
@@ -75,6 +77,7 @@ export default function CreateEvent(props: any) {
   } = state;
   const values = {
     eventTitle,
+    lastRegDate,
     eventStartTime,
     eventEndTime,
     location,
