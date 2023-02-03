@@ -1,16 +1,18 @@
 import sys
 sys.path.append('')
 from Repository.UserRepository import UserRepository
+from Repository.FriendsRepository import FriendsRepository
 from Service.UserService import UserService
 from fastapi import APIRouter, Depends, HTTPException
 
 userRep = UserRepository()
 userService = UserService(userRep)
-
-class UserController:
+friendsRep = FriendsRepository()
+friendsService = FriendsService(friendRep)
+class FriendsController:
     router = APIRouter(
-        prefix="/User",
-        tags=["User"],
+        prefix="/Friends",
+        tags=["Friends"],
         responses={404: {"description": "Not found"}},
     )
     
@@ -22,13 +24,11 @@ class UserController:
     def getUser(userId):
         return userService.getUser(userId)
 
-    @router.get("/getAllUsers")
-    def getAllUsers(userId):
-        return userService.getAllUsers(userId)
-    
-    @router.post("/editUser")
-    def editUser(userId,user):
-        return userService.editUser(userId,user)
+    @router.get("/getFriends")
+    def getFriends(FriendsId):
+        return friendsService.getFriends(FriendsId)
+        
+
 
 
 

@@ -1,33 +1,38 @@
 import {
   IonAvatar,
   IonButton,
+  IonButtons,
+  IonContent,
   IonHeader,
   IonItem,
   IonLabel,
   IonList,
+  IonModal,
   IonSearchbar,
+  IonTitle,
   IonToolbar,
   setupIonicReact,
   useIonAlert,
 } from "@ionic/react";
 import { useEffect, useState } from "react";
 import { getUser } from "../../api/userApi";
+import FriendsModal from "../../components/FriendsModal";
 import "./ManageFriends.css";
+
 setupIonicReact();
 
 export default function MyFriends(props: any) {
   const [presentAlert] = useIonAlert();
 
   const [friendsList, setfriendsList] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     async function loadUserData() {
       let result = await getUser(1);
-      console.log(result);
       if (result) {
         setfriendsList(JSON.parse(result.FRIENDS));
       }
-      console.log(friendsList);
     }
 
     loadUserData();
@@ -43,21 +48,23 @@ export default function MyFriends(props: any) {
         {friendsList.map((list: any) => {
           return (
             <IonItem class="itemBackground" key={list.EMAIL + props.title}>
-              <IonAvatar slot= "start">
+              <IonAvatar slot="start" onClick={() => setIsOpen(true)}>
                 <img
                   alt="Silhouette of a person's head"
                   src="https://ionicframework.com/docs/img/demos/avatar.svg"
                 />
               </IonAvatar>
-              <IonLabel>
-                <h2 className="labelColour ion-text-capitalize">
+
+              <IonLabel onClick={() => setIsOpen(true)}>
+                <h6 className="labelColour ion-text-capitalize">
                   {" "}
                   <b className="labelColour">
                     {list.FIRSTNAME + " " + list.LASTNAME}{" "}
                   </b>
-                </h2>
+                </h6>
                 <p>{list.EMAIL}</p>
               </IonLabel>
+
               <IonButton
                 onClick={() =>
                   presentAlert({
@@ -77,6 +84,7 @@ export default function MyFriends(props: any) {
               >
                 Remove Friend
               </IonButton>
+              <FriendsModal expand="block" isOpen={isOpen} />
             </IonItem>
           );
         })}
