@@ -14,6 +14,8 @@ import { getEventGuests, getEventHelpers } from "../../api/eventApi";
 
 import EventText from "../../components/EventText";
 import Menu from "../../components/Menu";
+import Task from "../../components/Tasks";
+import "./Event.css";
 
 export default function Event(props: any) {
   const history = useHistory();
@@ -30,7 +32,7 @@ export default function Event(props: any) {
         />
       );
     } else if (value === "task") {
-      return <>This is Task</>;
+      return <Task event={props.list} helpers={helpersList} />;
     }
   }
   async function loadEventInvitations() {

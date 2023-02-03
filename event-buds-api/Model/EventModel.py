@@ -16,6 +16,13 @@ class User(BaseModel):
     userRowId: Optional[int] = None
 
 
+class UserObject(BaseModel):
+    userId: int
+    firstName: str
+    lastName: str
+    email: str
+
+
 class Event(BaseModel):
     eventId: Optional[int] = None
     createdBy: str
@@ -47,12 +54,10 @@ class EventInvitation(BaseModel):
 
 class Task(BaseModel):
     eventId: int
-    taskId: int
     taskName: Optional[str] = ""
-    assignedTo: Optional[User] = None
+    assignedTo: Optional[str] = ""
     startTime: Optional[datetime] = None
     endTime: Optional[datetime] = None
     notes: Optional[str] = ""
     taskStatus: Optional[str] = ""
     description: Optional[str] = ""
-    creationDate: datetime

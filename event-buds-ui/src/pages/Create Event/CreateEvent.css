@@ -44,7 +44,7 @@ ion-modal#custom-modal::part(backdrop) {
 }
 
 ion-modal#custom-modal ion-header > ion-toolbar {
-  --background: rgb(43, 132, 191);
+  --background: #319396;
   --color: white;
 }
 .saveModalButton {

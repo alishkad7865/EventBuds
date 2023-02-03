@@ -1,4 +1,4 @@
-from Model.EventModel import Event
+from Model.EventModel import Task
 from Connection import connection
 import datetime
 from http.client import OK
@@ -6,7 +6,7 @@ import sys
 sys.path.append('../event-buds-api/')
 
 
-class EventRepository:
+class TaskRepository:
     def __init__(self):
         self.connection = connection()
 
@@ -21,13 +21,13 @@ class EventRepository:
         except NameError as e:
             return e
 
-    def createTask(self, event: Event):
+    def createTask(self, task: Task):
         try:
-            query = 'INSERT INTO "ADMIN"."EVENT" (EVENTID, EVENTTITLE, DESCRIPTION, CREATEDBY, REGENDDATE,STARTDATETIME, ENDDATETIME, LOCATION, ISPUBLIC, CAPACITY, PRICE, OWNERID, STATUS, HELPERS) VALUES(:eventId, :eventTitle, :description, :createdBy, :regEndDate, :startDateTime, :endDateTime, :location, :isPublic, :capacity, :price, :ownerId, :status, :helpers)'
+            query = 'INSERT INTO "ADMIN"."TASK" (EVENTID, TASKNAME, DESCRIPTION, ASSIGNEDTO, STARTTIME ,ENDTIME, NOTES, TASKSTATUS) VALUES(:eventId, :taskName, :description, :assignedTo, :startTime , :endTime, :notes, :taskStatus)'
 
             with self.connection.cursor() as cursor:
-                cursor.execute(query, [event.eventId, event.eventTitle, event.description, event.createdBy, event.eventStartDateTime, event.eventStartDateTime,
-                               event.eventEndDateTime, event.location, event.isPublic, event.capacity, event.price, event.ownerId, event.status, str(event.helpers)])
+                cursor.execute(query, [task.eventId, task.taskName, task.description,
+                               task.assignedTo, task.startTime, task.endTime, str(task.notes), task.taskStatus])
                 self.connection.commit()
             return OK
         except NameError as e:
@@ -35,9 +35,9 @@ class EventRepository:
 
     def deleteTask(self, task_id):
         try:
-            query = """ DELETE FROM click
-                            WHERE click = %s """
-            data = (task_id,)
+            query = """ DELETE FROM "ADMIN"."TASK"
+                            WHERE "ADMIN"."TASK"."TASKID" = :task_id """
+            data = dict(task_id=int(task_id),)
             self.connection.cursor().execute(query, data)
             self.connection.commit()
             return OK
@@ -46,17 +46,18 @@ class EventRepository:
 
     def getTasks(self, event_id):
         try:
-            query = """ SELECT * FROM "ADMIN"."EVENT" WHERE ISPUBLIC=1 """
+            query = """ SELECT * FROM "ADMIN"."TASK" WHERE EVENTID= :event_id """
             with self.connection.cursor() as cursor:
-                cursor.execute(query)
+                data = dict(event_id=int(event_id),)
+                cursor.execute(query, data)
                 rows = cursor.fetchall()
-                eventList = []
+                taskList = []
                 for row in rows:
                     tempObj = {}
                     for index, column in enumerate(cursor.description, start=0):
                         tempObj[str(column[0])] = row[index]
-                    eventList.append(tempObj)
+                    taskList.append(tempObj)
                     tempObj = {}
-                return eventList
+                return taskList
         except NameError as e:
             return e

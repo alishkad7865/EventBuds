@@ -8,10 +8,10 @@ sys.path.append('')
 taskService = TaskService()
 
 
-class EventController:
+class TaskController:
     router = APIRouter(
-        prefix="/Event",
-        tags=["Event"],
+        prefix="/Task",
+        tags=["Task"],
         responses={404: {"description": "Not found"}},
     )
 

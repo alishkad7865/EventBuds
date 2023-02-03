@@ -64,6 +64,24 @@ export default function EventInfoForm(props: any) {
           <IonNote slot="error">Invalid Title</IonNote>
         </IonItem>
         {/* <IonDatetime presentation="date-time" preferWheel={true}><span slot="title">Select a Starting Date Time</span></IonDatetime> */}
+
+        <IonItem className="addSpaceAbove">
+          <IonLabel position="stacked" className="dateLabel">
+            Last Registration Date
+          </IonLabel>
+          <IonDatetimeButton datetime="lastRegDate"></IonDatetimeButton>
+
+          <IonModal keepContentsMounted={true}>
+            <IonDatetime
+              id="lastRegDate"
+              onIonChange={handleChange("lastRegDate")}
+              defaultValue={values.lastRegDate}
+              value={new Date(values.lastRegDate).toISOString() ?? undefined}
+            >
+              <span slot="title">Last Registration Date</span>
+            </IonDatetime>
+          </IonModal>
+        </IonItem>
         <IonItem className="addSpaceAbove">
           <IonLabel position="stacked" className="dateLabel">
             Event Start Time
