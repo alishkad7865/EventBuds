@@ -18,6 +18,7 @@ import "./Home.css";
 import Event from "../Event/Event";
 import { Route } from "react-router";
 import Menu from "../../components/Menu";
+import { format, parseISO } from "date-fns";
 
 export default function Home() {
   const [user, setUser] = useState({
@@ -33,13 +34,13 @@ export default function Home() {
   const [events, setEvents] = useState([]);
   const [event, setEvent] = useState({});
   async function loadUserData() {
-    let result = await getUser(1);
+    let result = await getUser(2);
     if (result) {
       setUser(result);
     }
   }
   async function loadUserEvents() {
-    let result = await getUserEvent(1);
+    let result = await getUserEvent(2);
     if (result) {
       setEvents(result);
     }
@@ -80,14 +81,18 @@ export default function Home() {
                         {list.EVENTTITLE}
                       </IonCardTitle>
                       <IonCardSubtitle>
-                        Time: {new Date(list.STARTDATETIME).toString()}
+                        Time:{" "}
+                        {format(
+                          parseISO(list.STARTDATETIME),
+                          "MMM d, yyyy, K:m a "
+                        )}
                       </IonCardSubtitle>
-                      <IonCardSubtitle>
-                        Venue: {list.LOCATION} at{" "}
-                      </IonCardSubtitle>
+                      <IonCardSubtitle>Venue: {list.LOCATION}</IonCardSubtitle>
                     </IonCardHeader>
 
-                    <IonCardContent>{list.DESCRIPTION}</IonCardContent>
+                    <IonCardContent>
+                      Description: {list.DESCRIPTION}
+                    </IonCardContent>
                     <IonButton
                       fill="solid"
                       shape="round"
@@ -121,14 +126,18 @@ export default function Home() {
                         {list.EVENTTITLE}
                       </IonCardTitle>
                       <IonCardSubtitle>
-                        Time: {new Date(list.STARTDATETIME).toString()}
+                        Time:{" "}
+                        {format(
+                          parseISO(list.STARTDATETIME),
+                          "MMM d, yyyy, K:m a "
+                        )}
                       </IonCardSubtitle>
-                      <IonCardSubtitle>
-                        Venue: {list.LOCATION} at{" "}
-                      </IonCardSubtitle>
+                      <IonCardSubtitle>Venue: {list.LOCATION}</IonCardSubtitle>
                     </IonCardHeader>
 
-                    <IonCardContent>{list.DESCRIPTION}</IonCardContent>
+                    <IonCardContent>
+                      Description: {list.DESCRIPTION}
+                    </IonCardContent>
                     <IonButton
                       fill="solid"
                       shape="round"

@@ -8,9 +8,9 @@ export default function CreateEvent(props: any) {
   let initialState = {
     step: 1,
     eventTitle: "",
-    lastRegDate: new Date(),
-    eventStartTime: new Date(),
-    eventEndTime: new Date(),
+    lastRegDate: "",
+    eventStartTime: "",
+    eventEndTime: "",
     location: "",
     eventType: undefined,
     description: "",
