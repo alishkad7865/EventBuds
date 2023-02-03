@@ -34,7 +34,7 @@ class EventService:
                              createdBy=parsedEvent["createdBy"],
                              ownerId=parsedEvent["ownerId"],
                              status="Ongoing",
-                             eventRegEndDateTime=parsedEvent["eventStartTime"])
+                             eventRegEndDateTime=parsedEvent["lastRegDate"])
 
         try:
             self.repository.createEvent(event)

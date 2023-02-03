@@ -18,7 +18,6 @@ import {
 import { arrowForwardCircle } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import Menu from "../Menu";
-
 import "../../pages/Create Event/CreateEvent.css";
 
 export default function EventInfoForm(props: any) {
@@ -76,7 +75,6 @@ export default function EventInfoForm(props: any) {
               id="lastRegDate"
               onIonChange={handleChange("lastRegDate")}
               defaultValue={values.lastRegDate}
-              value={new Date(values.lastRegDate).toISOString() ?? undefined}
             >
               <span slot="title">Last Registration Date</span>
             </IonDatetime>
@@ -93,7 +91,6 @@ export default function EventInfoForm(props: any) {
               id="datetime"
               onIonChange={handleChange("eventStartTime")}
               defaultValue={values.eventStartTime}
-              value={new Date(values.eventStartTime).toISOString() ?? undefined}
             >
               <span slot="title">Event Start Time</span>
             </IonDatetime>
@@ -110,7 +107,6 @@ export default function EventInfoForm(props: any) {
               id="EndTime"
               onIonChange={handleChange("eventEndTime")}
               defaultValue={values.eventEndTime}
-              value={new Date(values.eventEndTime).toISOString() ?? undefined}
             >
               <span slot="title">EventEnd Time</span>
             </IonDatetime>
