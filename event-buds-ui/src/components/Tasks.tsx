@@ -16,6 +16,7 @@ import { add, trashBin } from "ionicons/icons";
 import { useEffect, useRef, useState } from "react";
 import { getTasks } from "../api/taskApi";
 import TaskModal from "./Modal/TaskModal";
+import { format, parseISO } from "date-fns";
 
 export default function Task(props: any) {
   const [triggerId, setTriggerId] = useState("");
@@ -27,8 +28,8 @@ export default function Task(props: any) {
   const [toastMessage, setToastMessage] = useState("");
   let initialState = {
     taskName: "",
-    startDate: new Date(),
-    endDate: new Date(),
+    startDate: "",
+    endDate: "",
     description: "",
     assignedTo: "",
     status: "",
@@ -153,10 +154,12 @@ export default function Task(props: any) {
                   <b>Notes:</b> {task.NOTES}
                 </p>
                 <p>
-                  <b>Start Period:</b> {task.STARTTIME}
+                  <b>Start Period:</b>{" "}
+                  {format(parseISO(task.STARTTIME), "MMM d, yyyy, K:m a ")}
                 </p>
                 <p>
-                  <b>Completion Date:</b> {task.ENDTIME}
+                  <b>Completion Date:</b>{" "}
+                  {format(parseISO(task.ENDTIME), "MMM d, yyyy, K:m a ")}
                 </p>
               </IonCardContent>
               <IonButton

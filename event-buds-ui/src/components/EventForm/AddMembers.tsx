@@ -23,6 +23,7 @@ export default function AddMembers(props: any) {
   const [open, setOpen] = useState(false);
   const {
     eventTitle,
+    lastRegDate,
     eventStartTime,
     eventEndTime,
     location,
@@ -35,6 +36,7 @@ export default function AddMembers(props: any) {
   async function SubmitEvent() {
     let Event = {
       eventTitle: eventTitle,
+      lastRegDate: new Date(lastRegDate).toISOString(),
       eventStartTime: new Date(eventStartTime).toISOString(),
       eventEndTime: new Date(eventEndTime).toISOString(),
       location: location,
@@ -42,8 +44,8 @@ export default function AddMembers(props: any) {
       description: description,
       capacity: capacity,
       price: price,
-      createdBy: "a@g.ca", // update to user info
-      ownerId: 1, // update to user info
+      createdBy: "test@gmail.com", // update to user info
+      ownerId: 2, // update to user info
       helpers: props.helpers,
       guests: props.guests,
     };

@@ -28,8 +28,8 @@ export default function TaskModal(props: any) {
       taskName: values.taskName,
       description: values.description,
       assignedTo: values.assignedTo,
-      startTime: new Date(values.startDate).toISOString(),
-      endTime: new Date(values.endDate).toISOString(),
+      startTime: values.startDate,
+      endTime: values.endDate,
       taskStatus: values.status,
       notes: values.notes,
     };
@@ -141,7 +141,6 @@ export default function TaskModal(props: any) {
                 id="startDate"
                 onIonChange={handleChange("startDate")}
                 defaultValue={values.startDate}
-                value={new Date(values.startDate).toISOString() ?? undefined}
               >
                 <span slot="title">Start Date</span>
               </IonDatetime>
@@ -158,7 +157,6 @@ export default function TaskModal(props: any) {
                 id="endDate"
                 onIonChange={handleChange("endDate")}
                 defaultValue={values.endDate}
-                value={new Date(values.endDate).toISOString() ?? undefined}
               >
                 <span slot="title">Completion Date</span>
               </IonDatetime>

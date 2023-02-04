@@ -26,7 +26,7 @@ class EventRepository:
             query = 'INSERT INTO "ADMIN"."EVENT" (EVENTID, EVENTTITLE, DESCRIPTION, CREATEDBY, REGENDDATE,STARTDATETIME, ENDDATETIME, LOCATION, ISPUBLIC, CAPACITY, PRICE, OWNERID, STATUS, HELPERS) VALUES(:eventId, :eventTitle, :description, :createdBy, :regEndDate, :startDateTime, :endDateTime, :location, :isPublic, :capacity, :price, :ownerId, :status, :helpers)'
 
             with self.connection.cursor() as cursor:
-                cursor.execute(query, [event.eventId, event.eventTitle, event.description, event.createdBy, event.eventStartDateTime, event.eventStartDateTime,
+                cursor.execute(query, [event.eventId, event.eventTitle, event.description, event.createdBy, event.eventRegEndDateTime, event.eventStartDateTime,
                                event.eventEndDateTime, event.location, event.isPublic, event.capacity, event.price, event.ownerId, event.status, str(event.helpers)])
                 self.connection.commit()
             return OK
