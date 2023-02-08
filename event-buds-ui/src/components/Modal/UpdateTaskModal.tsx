@@ -18,35 +18,36 @@ import {
   IonSelect,
   IonSelectOption,
 } from "@ionic/react";
-import { createTask } from "../../api/taskApi";
+import { updateTask } from "../../api/taskApi";
 
 export default function TaskModal(props: any) {
-  const { values, handleChange } = props;
-  async function saveTask() {
+  const { task, handleUpdateChange } = props;
+  async function updateTaskHandler() {
     let Task = {
       eventId: props.event.EVENTID,
-      taskName: values.TASKNAME,
-      description: values.DESCRIPTION,
-      assignedTo: values.ASSIGNEDTO,
-      startTime: values.STARTTIME,
-      endTime: values.ENDTIME,
-      taskStatus: values.TASKSTATUS,
-      notes: values.NOTES,
+      taskName: task.TASKNAME,
+      description: task.DESCRIPTION,
+      assignedTo: task.ASSIGNEDTO,
+      startTime: task.STARTTIME,
+      endTime: task.ENDTIME,
+      taskStatus: task.TASKSTATUS,
+      notes: task.NOTES,
     };
 
-    await createTask(JSON.stringify(Task)).then((response: any) => {
-      if (response.status >= 200 && response.status < 300) {
-        props.setToastMessage("Task Created Successfully!");
-        // props.setTaskList([...props.taskList, Task]);
-        props.dismiss();
-      } else {
-        props.setToastMessage("Task Creation Failed, Try Again!");
+    await updateTask(task.TASKID, JSON.stringify(Task)).then(
+      (response: any) => {
+        if (response === "Success") {
+          props.setToastMessage("Task Updated!");
+          props.dismiss();
+        } else {
+          props.setToastMessage("Task Update Failed, Try Again!");
+        }
       }
-    });
+    );
   }
   return (
     <IonModal
-      id="task-modal"
+      id={"taskUpdate-modal" + task.TASKID}
       ref={props.modal}
       trigger={props.triggerId}
       enterAnimation={props.enterAnimation}
@@ -71,9 +72,9 @@ export default function TaskModal(props: any) {
             <IonInput
               clearInput={true}
               placeholder="Enter event title"
-              onIonChange={handleChange("TASKNAME")}
-              defaultValue={values.TASKNAME}
-              value={values.TASKNAME}
+              onIonChange={handleUpdateChange("TASKNAME")}
+              defaultValue={task.TASKNAME}
+              value={task.TASKNAME}
             ></IonInput>
             <IonNote slot="helper">Enter a Task Name</IonNote>
             <IonNote slot="error">Invalid Title</IonNote>
@@ -86,9 +87,9 @@ export default function TaskModal(props: any) {
               placeholder="Type something here"
               autoGrow={true}
               maxlength={200}
-              onIonChange={handleChange("DESCRIPTION")}
-              defaultValue={values.DESCRIPTION}
-              value={values.DESCRIPTION}
+              onIonChange={handleUpdateChange("DESCRIPTION")}
+              defaultValue={task.DESCRIPTION}
+              value={task.DESCRIPTION}
             ></IonTextarea>
             <IonNote slot="error">Description Cant be null</IonNote>
           </IonItem>
@@ -99,7 +100,9 @@ export default function TaskModal(props: any) {
             <IonSelect
               interface="popover"
               placeholder="Select Helper"
-              onIonChange={handleChange("ASSIGNEDTO")}
+              onIonChange={handleUpdateChange("ASSIGNEDTO")}
+              defaultValue={task.ASSIGNEDTO}
+              value={task.ASSIGNEDTO}
             >
               {props.helpers?.map((list: any) => {
                 return (
@@ -122,7 +125,9 @@ export default function TaskModal(props: any) {
             <IonSelect
               interface="popover"
               placeholder="Select Status"
-              onIonChange={handleChange("TASKSTATUS")}
+              onIonChange={handleUpdateChange("TASKSTATUS")}
+              defaultValue={task.TASKSTATUS}
+              value={task.TASKSTATUS}
             >
               <IonSelectOption value="Ongoing">Ongoing</IonSelectOption>
               <IonSelectOption value="Completed">Completed</IonSelectOption>
@@ -139,8 +144,9 @@ export default function TaskModal(props: any) {
             <IonModal keepContentsMounted={true}>
               <IonDatetime
                 id="startDate"
-                onIonChange={handleChange("STARTTIME")}
-                defaultValue={values.STARTTIME}
+                onIonChange={handleUpdateChange("STARTTIME")}
+                defaultValue={task.STARTTIME}
+                value={task.STARTTIME}
               >
                 <span slot="title">Start Date</span>
               </IonDatetime>
@@ -155,8 +161,9 @@ export default function TaskModal(props: any) {
             <IonModal keepContentsMounted={true}>
               <IonDatetime
                 id="endDate"
-                onIonChange={handleChange("ENDTIME")}
-                defaultValue={values.ENDTIME}
+                onIonChange={handleUpdateChange("ENDTIME")}
+                defaultValue={task.ENDTIME}
+                value={task.ENDTIME}
               >
                 <span slot="title">Completion Date</span>
               </IonDatetime>
@@ -170,9 +177,9 @@ export default function TaskModal(props: any) {
               placeholder="Add Notes here"
               autoGrow={true}
               maxlength={200}
-              onIonChange={handleChange("NOTES")}
-              defaultValue={values.NOTES}
-              value={values.NOTES}
+              onIonChange={handleUpdateChange("NOTES")}
+              defaultValue={task.NOTES}
+              value={task.NOTES}
             ></IonTextarea>
           </IonItem>
         </IonList>
@@ -185,10 +192,10 @@ export default function TaskModal(props: any) {
             expand="block"
             shape="round"
             onClick={() => {
-              saveTask();
+              updateTaskHandler();
             }}
           >
-            Save
+            save
           </IonButton>
         </IonToolbar>
       </IonFooter>

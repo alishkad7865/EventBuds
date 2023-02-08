@@ -5,8 +5,7 @@ from Service.EventInvitationService import EventInvitationService
 import sys
 sys.path.append('')
 
-eventRep = EventRepository()
-eventService = EventService(eventRep)
+eventService = EventService()
 eventInvitationService = EventInvitationService()
 
 

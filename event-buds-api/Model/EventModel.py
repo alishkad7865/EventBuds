@@ -54,6 +54,7 @@ class EventInvitation(BaseModel):
 
 class Task(BaseModel):
     eventId: int
+    taskId: Optional[int] = None
     taskName: Optional[str] = ""
     assignedTo: Optional[str] = ""
     startTime: Optional[datetime] = None

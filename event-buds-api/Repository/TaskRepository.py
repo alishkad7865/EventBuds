@@ -10,11 +10,11 @@ class TaskRepository:
     def __init__(self):
         self.connection = connection()
 
-    def UpdateTask(self, task_id, task):
+    def UpdateTask(self, task_id, task: Task):
         try:
-            query = """ INSERT INTO "ADMIN"."EVENT"
-                            (click, TotalClick) VALUES (%s,%s)"""
-            data = (pageName, number)
+            query = """ UPDATE "ADMIN"."TASK" SET "ADMIN"."TASK"."TASKNAME" =:taskName , "ADMIN"."TASK"."DESCRIPTION" = :description , "ADMIN"."TASK"."ASSIGNEDTO"= :assignedTo , "ADMIN"."TASK"."STARTTIME" = :startTime , "ADMIN"."TASK"."ENDTIME"= :endTime , "ADMIN"."TASK"."NOTES" = :notes , "ADMIN"."TASK"."TASKSTATUS" = :taskStatus WHERE "ADMIN"."TASK"."TASKID" = :taskId """
+            data = [task.taskName, task.description,
+                    task.assignedTo, task.startTime, task.endTime, str(task.notes), task.taskStatus, task_id]
             self.connection.cursor().execute(query, data)
             self.connection.commit()
             return OK

@@ -16,7 +16,6 @@ class TaskService:
 
     def createTask(self, rawTask):
         parsedTask = json.loads(rawTask)
-        print(rawTask, parsedTask)
         task: Task = Task(eventId=parsedTask["eventId"], taskName=parsedTask["taskName"], description=parsedTask["description"], assignedTo=parsedTask["assignedTo"],
                           notes=parsedTask["notes"],
                           endTime=parsedTask["endTime"],
@@ -29,7 +28,13 @@ class TaskService:
         except NameError as e:
             return e
 
-    def UpdateTask(self, task_id, task):
+    def updateTask(self, task_id, rawTask):
+        parsedTask = json.loads(rawTask)
+        task: Task = Task(eventId=parsedTask["eventId"], taskName=parsedTask["taskName"], description=parsedTask["description"], assignedTo=parsedTask["assignedTo"],
+                          notes=parsedTask["notes"],
+                          endTime=parsedTask["endTime"],
+                          startTime=parsedTask["startTime"],
+                          taskStatus=parsedTask["taskStatus"])
         try:
             self.repository.UpdateTask(task_id, task)
             return "Success"

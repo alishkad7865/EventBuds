@@ -1,6 +1,6 @@
 from Service import EventInvitationService
 from Model.EventModel import Event, EventInvitation
-from Repository import EventRepository
+from Repository.EventRepository import EventRepository
 import json
 import sys
 import time
@@ -8,8 +8,8 @@ sys.path.append('')
 
 
 class EventService:
-    def __init__(self, repository):
-        self.repository = repository
+    def __init__(self):
+        self.repository = EventRepository()
         self.invitation_service = EventInvitationService.EventInvitationService()
 
     def getAllPublicEvents(self):

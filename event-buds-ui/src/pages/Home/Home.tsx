@@ -10,9 +10,15 @@ import {
   IonLabel,
   IonPage,
   IonRouterOutlet,
+  useIonViewWillEnter,
+  useIonViewWillLeave,
 } from "@ionic/react";
 import { useEffect, useState } from "react";
-import { getUserEvent } from "../../api/eventApi";
+import {
+  getEventGuests,
+  getEventHelpers,
+  getUserEvent,
+} from "../../api/eventApi";
 import { getUser } from "../../api/userApi";
 import "./Home.css";
 import Event from "../Event/Event";
@@ -32,31 +38,63 @@ export default function Home() {
     USERID: Number,
   });
   const [events, setEvents] = useState([]);
-  const [event, setEvent] = useState({});
+  const [event, setEvent] = useState<any>({});
+  const [guestsList, setGuestsList] = useState<any>([]);
+  const [helpersList, setHelpersList] = useState<any>([]);
+  const [acceptedhelpersList, setAcceptedHelpersList] = useState<any>([]);
   async function loadUserData() {
     let result = await getUser(2);
     if (result) {
       setUser(result);
     }
   }
+
   async function loadUserEvents() {
-    let result = await getUserEvent(2);
+    let result = await getUserEvent(1); // update this list for actual data
     if (result) {
       setEvents(result);
     }
   }
-  useEffect(() => {
+  useIonViewWillEnter(() => {
     loadUserData();
     loadUserEvents();
-  }, []);
+  });
 
   function viewEvent(list: any) {
     setEvent(list);
   }
+
+  useEffect(() => {
+    async function loadEventInvitations(eventId: number) {
+      let helpers = await getEventHelpers(eventId);
+      if (helpers) {
+        setHelpersList(helpers.helpersList);
+        setAcceptedHelpersList(helpers.acceptedhelpersList);
+      }
+      let guests = await getEventGuests(eventId);
+      if (guests) {
+        setGuestsList(guests);
+      }
+    }
+    if (event.EVENTID) {
+      loadEventInvitations(event.EVENTID);
+    }
+    // eslint-disable-next-line
+  }, [event]);
+
   return (
     <>
       <IonRouterOutlet>
-        <Route path="/event/:id" render={() => <Event list={event} />} />
+        <Route path="/event/:id">
+          <Event
+            event={event}
+            isHelperOrOwner={true}
+            helpersList={helpersList}
+            guestsList={guestsList}
+            acceptedhelpersList={acceptedhelpersList}
+            setAcceptedhelpersList={setAcceptedHelpersList}
+          />
+        </Route>
       </IonRouterOutlet>
       <IonPage>
         <Menu page={"home"} />
