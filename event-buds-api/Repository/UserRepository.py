@@ -22,9 +22,8 @@ class UserRepository:
     def getAllUsers(self, userId=0):
         try:
             cursor = self.connection.cursor()
-            query = """ SELECT * FROM "ADMIN"."USER" WHERE :userId NOT IN USERID """
-            data = dict(userId=int(userId))
-            cursor.execute(query, data)
+            query = """ SELECT * FROM "ADMIN"."USER" """
+            cursor.execute(query)
             rows = cursor.fetchall()
             return rows
         except NameError as e:

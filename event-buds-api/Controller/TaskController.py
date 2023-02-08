@@ -22,11 +22,11 @@ class TaskController:
     def getTasks(event_id):
         return taskService.getTasks(event_id)
 
-    @router.get("/updateTask")
+    @router.patch("/updateTask")
     def updateTask(task_id, task):
         return taskService.updateTask(task_id, task)
 
-    @router.get("/deleteTask")
+    @router.delete("/deleteTask")
     def deleteTask(task_id):
         return taskService.deleteTask(task_id)
 

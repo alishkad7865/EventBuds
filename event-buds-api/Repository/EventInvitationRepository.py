@@ -59,13 +59,21 @@ class EventInvitationRepository:
                 cursor.execute(query, data)
                 rows = cursor.fetchall()
                 helperList = []
+                acceptedhelpersList = []
                 for row in rows:
                     tempObj = {}
                     for index, column in enumerate(cursor.description, start=0):
                         tempObj[str(column[0])] = row[index]
                     helperList.append(tempObj)
+                    if tempObj['INVITATIONRESPONSE'] == 'accepted':
+                        acceptedhelpersList.append(tempObj)
                     tempObj = {}
-                return helperList
+
+                owner = self.getEventOwner(int(event_id))
+                if owner:
+                    acceptedhelpersList.append(owner)
+
+                return {"helpersList": helperList, "acceptedhelpersList": acceptedhelpersList}
         except NameError as e:
             return e
 
@@ -84,5 +92,21 @@ class EventInvitationRepository:
                     guestsList.append(tempObj)
                     tempObj = {}
                 return guestsList
+        except NameError as e:
+            return e
+
+    def getEventOwner(self, event_id):
+        try:
+            query = """SELECT * FROM "ADMIN"."EVENT" left join "ADMIN"."USER" on "ADMIN"."EVENT"."OWNERID" = "ADMIN"."USER"."USERID" WHERE "ADMIN"."EVENT"."EVENTID" = :event_id """
+            with self.connection.cursor() as cursor:
+                data = dict(event_id=int(event_id),)
+                cursor.execute(query, data)
+                rows = cursor.fetchall()
+                ownerObj = {}
+                for row in rows:
+                    for index, column in enumerate(cursor.description, start=0):
+                        ownerObj[str(column[0])] = row[index]
+
+                return ownerObj
         except NameError as e:
             return e

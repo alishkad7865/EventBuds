@@ -1,16 +1,16 @@
-ion-modal#task-modal {
+ion-modal {
   --height: 50%;
   --border-radius: 16px;
   --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
     0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
 
-ion-modal#task-modal::part(backdrop) {
+ion-modal::part(backdrop) {
   background: rgba(209, 213, 219);
   opacity: 1;
 }
 
-ion-modal#task-modal ion-header > ion-toolbar {
+ion-modal ion-header > ion-toolbar {
   --background: #319396;
   --color: white;
 }
@@ -24,7 +24,11 @@ ion-modal#task-modal ion-header > ion-toolbar {
 .taskCardCompleted {
   width: 450px;
   min-width: 320px;
-  background-color: lightgreen;
+  background-color: #cbefcb;
+}
+
+.item-backgroundColor {
+  --ion-item-background: transparent;
 }
 
 .taskEditButton {

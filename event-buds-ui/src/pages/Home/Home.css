@@ -9,11 +9,13 @@ ion-card-header.ios {
 
 .PrivateEventCard {
   max-width: 450px;
+  min-width: 320px;
   background: #a7baf480;
 }
 
 .PublicEventCard {
   max-width: 450px;
+  min-width: 320px;
   background: #f7d56cbf;
 }
 
