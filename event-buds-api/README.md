@@ -11,6 +11,11 @@ pip install fastapi
 pip install uvicorn
 pip install cx_Oracle
 pip install mysql-connector-python
+pip install python-multipart
+pip install python-jose[cryptography]
+pip install passlib[bcrypt]
+pip install PyJWT python-decouple
+
 ```
 
 ---

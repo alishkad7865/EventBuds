@@ -3,8 +3,17 @@ from pydantic import BaseModel
 from typing import Optional
 
 
+class UserLogin(BaseModel):
+    userId: int
+    userName: str
+    email: str
+    password: str
+    authenticated: Optional[int] = 1
+
+
 class User(BaseModel):
     userId: int
+    userName: str
     firstName: str
     lastName: str
     email: str
