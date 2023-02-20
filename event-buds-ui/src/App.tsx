@@ -1,4 +1,3 @@
-import { Route } from "react-router-dom";
 import {
   IonApp,
   IonIcon,
@@ -10,8 +9,7 @@ import {
   setupIonicReact,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import { calendar, create, home, people, person } from "ionicons/icons";
-import React from "react";
+import React, { useContext } from "react";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -31,67 +29,85 @@ import "@ionic/react/css/display.css";
 
 /* Theme variables */
 import "./theme/variables.css";
-import CreateEvent from "./pages/Create Event/CreateEvent";
+import { Route } from "react-router";
+import Login from "./pages/Login SignUp/Login";
 import Home from "./pages/Home/Home";
+import Signup from "./pages/Login SignUp/Signup";
 import ManageFriends from "./pages/Manage Friends/ManageFriends";
-import Profile from "./pages/My Profile/Profile";
+import CreateEvent from "./pages/Create Event/CreateEvent";
 import PublicEvents from "./pages/Public Event/PublicEvent";
+import Profile from "./pages/My Profile/Profile";
+import { home, people, create, calendar, person } from "ionicons/icons";
+import { UserContext } from "./context/UserContext";
 
 setupIonicReact();
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonTabs>
-        <IonRouterOutlet>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <Route exact path="/Home">
-            <Home />
-          </Route>
-          <Route exact path="/ManageFriends">
-            <ManageFriends />
-          </Route>
-          <Route exact path="/CreateEvent">
-            <CreateEvent />
-          </Route>
-          <Route exact path="/PublicEvents">
-            <PublicEvents />
-          </Route>
-          <Route exact path="/Profile">
-            <Profile />
-          </Route>
-        </IonRouterOutlet>
-        <IonTabBar slot="bottom">
-          <IonTabButton tab="Home" href="/Home">
-            <IonIcon icon={home} />
-            <IonLabel>Home</IonLabel>
-          </IonTabButton>
-
-          <IonTabButton tab="Add Friends" href="/ManageFriends">
-            <IonIcon icon={people} />
-            <IonLabel>Friends</IonLabel>
-          </IonTabButton>
-
-          <IonTabButton tab="CreateEvent" href="/CreateEvent">
-            <IonIcon icon={create} />
-            <IonLabel>Create</IonLabel>
-          </IonTabButton>
-
-          <IonTabButton tab="PublicEvents" href="/PublicEvents">
-            <IonIcon icon={calendar} />
-            <IonLabel>Events</IonLabel>
-          </IonTabButton>
-
-          <IonTabButton tab="Profile" href="/Profile">
-            <IonIcon icon={person} />
-            <IonLabel>My Profile</IonLabel>
-          </IonTabButton>
-        </IonTabBar>
-      </IonTabs>
-    </IonReactRouter>
-  </IonApp>
-);
+const App: React.FC = () => {
+  const { userLoggedIn } = useContext(UserContext);
+  return (
+    <IonApp>
+      <IonReactRouter>
+        {userLoggedIn ? (
+          <IonTabs>
+            <IonRouterOutlet>
+              <Route path="/">
+                <Home />
+              </Route>
+              <Route path="/Home">
+                <Home />
+              </Route>
+              <Route path="/ManageFriends">
+                <ManageFriends />
+              </Route>
+              <Route path="/CreateEvent">
+                <CreateEvent />
+              </Route>
+              <Route path="/publicEvents">
+                <PublicEvents />
+              </Route>
+              <Route path="/profile">
+                <Profile />
+              </Route>
+            </IonRouterOutlet>
+            <IonTabBar slot="bottom">
+              <IonTabButton tab="Home" href="/Home">
+                <IonIcon icon={home} />
+                <IonLabel>Home</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="Add Friends" href="/ManageFriends">
+                <IonIcon icon={people} />
+                <IonLabel>Friends</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="CreateEvent" href="/CreateEvent">
+                <IonIcon icon={create} />
+                <IonLabel>Create</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="PublicEvents" href="/PublicEvents">
+                <IonIcon icon={calendar} />
+                <IonLabel>Events</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="Profile" href="/Profile">
+                <IonIcon icon={person} />
+                <IonLabel>My Profile</IonLabel>
+              </IonTabButton>
+            </IonTabBar>
+          </IonTabs>
+        ) : (
+          <IonRouterOutlet>
+            <Route path="/">
+              <Login />
+            </Route>
+            <Route exact path="/Login">
+              <Login />
+            </Route>
+            <Route exact path="/Signup">
+              <Signup />
+            </Route>
+          </IonRouterOutlet>
+        )}
+      </IonReactRouter>
+    </IonApp>
+  );
+};
 
 export default App;
