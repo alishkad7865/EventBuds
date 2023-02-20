@@ -10,7 +10,6 @@ import {
 } from "@ionic/react";
 import { arrowBack } from "ionicons/icons";
 import { useState } from "react";
-import { useHistory } from "react-router-dom";
 
 import EventText from "../../components/EventText";
 import Menu from "../../components/Menu";
@@ -18,7 +17,6 @@ import Task from "../../components/Tasks";
 import "./Event.css";
 
 export default function Event(props: any) {
-  const history = useHistory();
   const [segment, setSegment] = useState("eventInfo");
 
   const { event } = props;
@@ -44,7 +42,7 @@ export default function Event(props: any) {
       <Menu page={"event"} />
       <IonContent className="container">
         <div className="addSpaceAbove">
-          <IonButtons className="" onClick={() => history.goBack()}>
+          <IonButtons className="" onClick={() => props.setEventStepper(1)}>
             <IonIcon slot="end" icon={arrowBack} size="large"></IonIcon>
           </IonButtons>
         </div>

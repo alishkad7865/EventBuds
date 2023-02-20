@@ -1,6 +1,5 @@
 import { CapacitorHttp, HttpResponse } from "@capacitor/core";
 import axios from "axios";
-let token = localStorage.getItem("eventBudsToken");
 export async function CreateEvent(event: any, token: string) {
   let baseUrl =
     `${process.env.REACT_APP_BASE_URL}/Event/createEvent?Event=` + event;
