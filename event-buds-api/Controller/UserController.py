@@ -1,16 +1,17 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
+from jose import JWTError
 from Service.UserService import UserService
-from Model.EventModel import UserLogin, UserSignUp
+from Model.EventModel import UserLogin, UserSignUp, User
 from Auth.AuthBearer import JWTBearer
-from Auth.AuthHandler import signJWT
+from Auth.AuthHandler import signJWT, decodeJWT
 from passlib.context import CryptContext
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordBearer
 
 import sys
 sys.path.append('')
 
 userService = UserService()
-
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
@@ -46,8 +47,8 @@ class UserController:
         return userService.getUser(userId)
 
     @router.get("/getAllUsers", dependencies=[Depends(JWTBearer())])
-    def getAllUsers(userId):
-        return userService.getAllUsers(userId)
+    def getAllUsers():
+        return userService.getAllUsers()
 
     @router.post("/editUser", dependencies=[Depends(JWTBearer())])
     def editUser(userId, user):
@@ -56,12 +57,33 @@ class UserController:
     @router.post("/createUser")
     def createUser(user: UserSignUp):
         return userService.createUser(user)
-# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX25hbWUiOiJhbGlzaCIsImVtYWlsIjoiYUBnbWFpbC5jb20ifQ.NFbMOrSuXtUXStEykdOgy2_qT36L5HH3FSe1vdI8bHo
+
+    async def get_current_user(token: str = Depends(oauth2_scheme)):
+        credentials_exception = HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+        try:
+            payload = decodeJWT(token)
+            user_id: str = payload.get("user_id")
+            if user_id is None:
+                raise credentials_exception
+        except JWTError:
+            raise credentials_exception
+        user = UserController.getUser(userId=user_id)
+        if user is None:
+            raise credentials_exception
+        return user
+
+    @router.get("/me")
+    async def read_users_me(current_user: User = Depends(get_current_user)):
+        return current_user
 
     @router.post("/login")
     async def userLogin(user: UserLogin):
-        if UserController.authenticate_user(user.email, user.password):
-            return signJWT(user.userId, user.userName, user.email)
-        return {
-            "error": "Wrong login details!"
-        }
+        logged_user = UserController.authenticate_user(
+            user.email, user.password)
+        if logged_user:
+            return signJWT(logged_user["USERID"], logged_user["USERNAME"], logged_user["EMAIL"])
+        raise HTTPException(status_code=403, detail="Wrong login details!")

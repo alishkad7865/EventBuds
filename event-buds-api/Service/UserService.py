@@ -1,3 +1,5 @@
+from fastapi import HTTPException
+from Auth.AuthHandler import signJWT
 from Model.EventModel import User
 from Repository.UserRepository import UserRepository
 import sys
@@ -10,10 +12,10 @@ class UserService:
         self.repository = UserRepository()
 
     def getUser(self, userId):
-        return self.repository.getUser(userId)[0]
+        return self.repository.getUser(userId)
 
-    def getAllUsers(self, userId):
-        return self.repository.getAllUsers(userId)
+    def getAllUsers(self):
+        return self.repository.getAllUsers()
 
     def editUser(self, userId, user):
         self.repository.editUser(userId, user)
@@ -26,11 +28,12 @@ class UserService:
             accountExists = self.verifyExistAccount(
                 user.userName, user.email)
             if accountExists == False:
-                user_id = self.repository.register_user(user=user)
-                self.repository.add_user(user=user, user_id=int(user_id))
-                return "Account Created"
+                user_login_id = self.repository.register_user(user=user)
+                user_id = self.repository.add_user(
+                    user=user, user_id=int(user_login_id))
+                return signJWT(user_id, user.userName, user.email)
             else:
-                return accountExists
+                raise HTTPException(status_code=403, detail=accountExists)
         except NameError as e:
             return e
 

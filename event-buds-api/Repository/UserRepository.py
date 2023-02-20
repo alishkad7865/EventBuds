@@ -24,17 +24,20 @@ class UserRepository:
         except NameError as e:
             return e
 
-    def getAllUsers(self, userId=0):
+    def getAllUsers(self):
         try:
             cursor = self.connection.cursor()
             query = """ SELECT * FROM "ADMIN"."USER" """
             cursor.execute(query)
             rows = cursor.fetchall()
-            user: User = {}
+            userList = []
             for row in rows:
+                user = {}
                 for index, column in enumerate(cursor.description, start=0):
                     user[str(column[0])] = row[index]
-            return user
+                userList.append(user)
+                user = {}
+            return userList
         except NameError as e:
             return e
 
@@ -50,7 +53,7 @@ class UserRepository:
 
     def getLoggedInUser(self, email):
         try:
-            query = """ SELECT * FROM "ADMIN"."USERLOGIN" WHERE EMAIL = :email """
+            query = """ SELECT * FROM "ADMIN"."USERLOGIN", "ADMIN"."USER"  WHERE "ADMIN"."USERLOGIN"."EMAIL" = "ADMIN"."USER"."EMAIL" AND "ADMIN"."USERLOGIN"."EMAIL"= :email """
             with self.connection.cursor() as cursor:
                 data = dict(email=str(email),)
                 cursor.execute(query, data)
@@ -82,15 +85,21 @@ class UserRepository:
             return e
 
     def add_user(self, user: User, user_id):
-        print(str(user.userName), str(user.email), str(user.firstName), str(user.lastName),
-              str(user.address), str(user.sex), str(user.bio), user.isActive, user.friends, user_id)
         try:
             query = 'INSERT INTO "ADMIN"."USER" (USERNAME, EMAIL, FIRSTNAME, LASTNAME, ADDRESS, SEX, BIO, ISACTIVE, FRIENDS, USER_ROWID) VALUES(:userName, :email, :firstName, :lastName, :address, :sex, :bio, :isActive, :friends, :userRowId)'
+            get_userid_query = 'SELECT "ADMIN"."USER"."USERID" FROM "ADMIN"."USER" WHERE "ADMIN"."USER"."EMAIL" = :email AND "ADMIN"."USER"."USERNAME" = :userName '
+
             with self.connection.cursor() as cursor:
                 cursor.execute(query, [str(user.userName), str(user.email), str(user.firstName), str(user.lastName),
                                        str(user.address), str(user.sex), str(user.bio), user.isActive, str(user.friends), user_id])
                 self.connection.commit()
-                return OK
+                cursor.execute(get_userid_query, [user.email, user.userName])
+                rows = cursor.fetchall()
+                user: User = {}
+                for row in rows:
+                    for index, column in enumerate(cursor.description, start=0):
+                        user[str(column[0])] = row[index]
+                return user["USERID"]
         except NameError as e:
             return e
 

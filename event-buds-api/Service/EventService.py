@@ -1,10 +1,16 @@
+from fastapi import Depends
+from Auth.AuthBearer import JWTBearer
+from Auth.AuthHandler import decodeJWT
 from Service import EventInvitationService
 from Model.EventModel import Event, EventInvitation
 from Repository.EventRepository import EventRepository
 import json
 import sys
 import time
+from fastapi.security import OAuth2PasswordBearer
 sys.path.append('')
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 class EventService:
@@ -15,12 +21,16 @@ class EventService:
     def getAllPublicEvents(self):
         return self.repository.getAllPublicEvents()
 
-    def getUserEvents(self, userId):
-        events = self.repository.getUserEvent(userId)
+    def getUserEvents(self, token: str):
+        payload = decodeJWT(token)
+        user_id: str = payload.get("user_id")
+        events = self.repository.getUserEvent(user_id)
         return events
 
-    def getOtherPublicEvents(self, userId):
-        events = self.repository.getOtherPublicEvents(userId)
+    def getOtherPublicEvents(self, token: str):
+        payload = decodeJWT(token)
+        user_id: str = payload.get("user_id")
+        events = self.repository.getOtherPublicEvents(user_id)
         return events
 
     def createEvent(self, rawEvent):
