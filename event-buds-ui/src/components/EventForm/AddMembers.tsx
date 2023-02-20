@@ -12,7 +12,7 @@ import {
 } from "@ionic/react";
 import { arrowBack, closeCircle } from "ionicons/icons";
 import { useRef, useState } from "react";
-import { createEvent } from "../../api/eventApi";
+import { CreateEvent } from "../../api/eventApi";
 import CustomModal from "../Modal/CustomModal";
 import Menu from "../Menu";
 import "../../pages/Create Event/CreateEvent.css";
@@ -44,20 +44,22 @@ export default function AddMembers(props: any) {
       description: description,
       capacity: capacity,
       price: price,
-      createdBy: "test@gmail.com", // update to user info
-      ownerId: 2, // update to user info
+      createdBy: props.user.EMAIL,
+      ownerId: props.user.USERID,
       helpers: props.helpers,
       guests: props.guests,
     };
-    await createEvent(JSON.stringify(Event)).then((response: any) => {
-      if (response.status >= 200 && response.status < 300) {
-        props.setGuests([]);
-        props.setToastMessage("Event Created Successfully!");
-        props.setState(props.initialState);
-      } else {
-        props.setToastMessage("Event Creation Failed, Try Again!");
+    await CreateEvent(JSON.stringify(Event), props.token).then(
+      (response: any) => {
+        if (response.status >= 200 && response.status < 300) {
+          props.setGuests([]);
+          props.setToastMessage("Event Created Successfully!");
+          props.setState(props.initialState);
+        } else {
+          props.setToastMessage("Event Creation Failed, Try Again!");
+        }
       }
-    });
+    );
   }
   function Back(e: any) {
     e.preventDefault();
@@ -102,11 +104,13 @@ export default function AddMembers(props: any) {
               expand="block"
               onIonFocus={(e) => setTriggerId(e.target.id)}
               onClick={(e: any) => {
-                props.setModalData(
-                  props.friends.filter((friend: any) => {
-                    return props.helpers.indexOf(friend) === -1;
-                  })
-                );
+                props.friends
+                  ? props.setModalData(
+                      props.friends?.filter((friend: any) => {
+                        return props.helpers.indexOf(friend) === -1;
+                      })
+                    )
+                  : props.setModalData([]);
                 setOpen(true);
                 setTriggerId(e.target.id);
                 setTitle("Add Helpers");

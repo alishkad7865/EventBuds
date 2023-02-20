@@ -6,15 +6,11 @@ import {
   IonLabel,
   IonSegment,
   IonSegmentButton,
-  useIonViewDidEnter,
-  useIonViewWillEnter,
   useIonViewWillLeave,
 } from "@ionic/react";
 import { arrowBack } from "ionicons/icons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { getEventHelpers, getEventGuests } from "../../api/eventApi";
-import { getUser } from "../../api/userApi";
 
 import EventText from "../../components/EventText";
 import Menu from "../../components/Menu";

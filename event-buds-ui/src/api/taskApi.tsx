@@ -1,11 +1,13 @@
 import axios from "axios";
-export async function createTask(task: any) {
+
+export async function createTask(task: any, token: string) {
   let baseUrl =
     `${process.env.REACT_APP_BASE_URL}/Task/createTask?task=` + task;
   return axios
     .post(`${baseUrl}`, {
       headers: {
         Accept: "application/json",
+        Authorization: "Bearer " + token,
       },
     })
     .then((response: any) => {
@@ -16,13 +18,14 @@ export async function createTask(task: any) {
     .catch((e: any) => console.log(e));
 }
 
-export async function getTasks(eventId: number) {
+export async function getTasks(eventId: number, token: string) {
   let baseUrl =
     `${process.env.REACT_APP_BASE_URL}/Task/getTasks?event_id=` + eventId;
   return axios
     .get(`${baseUrl}`, {
       headers: {
         Accept: "application/json",
+        Authorization: "Bearer " + token,
       },
     })
     .then((response: any) => {
@@ -33,13 +36,14 @@ export async function getTasks(eventId: number) {
     .catch((e: any) => console.log(e));
 }
 
-export async function deleteTask(taskId: number) {
+export async function deleteTask(taskId: number, token: string) {
   let baseUrl =
     `${process.env.REACT_APP_BASE_URL}/Task/deleteTask?task_id=` + taskId;
   return axios
     .delete(`${baseUrl}`, {
       headers: {
         Accept: "application/json",
+        Authorization: "Bearer " + token,
       },
     })
     .then((response: any) => {
@@ -50,12 +54,13 @@ export async function deleteTask(taskId: number) {
     .catch((e: any) => console.log(e));
 }
 
-export async function updateTask(taskId: number, task: any) {
+export async function updateTask(taskId: number, task: any, token: string) {
   let baseUrl = `${process.env.REACT_APP_BASE_URL}/Task/updateTask?task_id=${taskId}&task=${task}`;
   return axios
     .patch(`${baseUrl}`, {
       headers: {
         Accept: "application/json",
+        Authorization: "Bearer " + token,
       },
     })
     .then((response: any) => {

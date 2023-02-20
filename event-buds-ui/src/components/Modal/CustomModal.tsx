@@ -66,6 +66,9 @@ export default function CustomModal(props: any) {
       </IonHeader>
       <IonContent>
         <IonList>
+          {props.data.length === 0 && (
+            <h5 className="ion-text-center labelColour">No Friends Added!</h5>
+          )}
           {props.data?.map((list: any) => {
             return (
               <IonItem key={list.EMAIL + props.title}>

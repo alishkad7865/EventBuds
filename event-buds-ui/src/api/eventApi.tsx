@@ -1,13 +1,17 @@
+import { CapacitorHttp, HttpResponse } from "@capacitor/core";
 import axios from "axios";
-export async function createEvent(event: any) {
+let token = localStorage.getItem("eventBudsToken");
+export async function CreateEvent(event: any, token: string) {
   let baseUrl =
     `${process.env.REACT_APP_BASE_URL}/Event/createEvent?Event=` + event;
-  return axios
-    .post(`${baseUrl}`, {
-      headers: {
-        Accept: "application/json",
-      },
-    })
+  const options = {
+    url: baseUrl,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token,
+    },
+  };
+  const response: HttpResponse = await CapacitorHttp.post(options)
     .then((response: any) => {
       if (response.status >= 200 && response.status < 300) {
         return response;
@@ -16,15 +20,17 @@ export async function createEvent(event: any) {
       }
     })
     .catch((e: any) => console.log(e));
+  return response;
 }
 
-export async function getUserEvent(userId: number) {
-  let baseUrl =
-    `${process.env.REACT_APP_BASE_URL}/Event/getUserEvents?userId=` + userId;
+export async function GetUserEvents(token: string) {
+  let baseUrl = `${process.env.REACT_APP_BASE_URL}/Event/getUserEvents`;
+
   return axios
     .get(`${baseUrl}`, {
       headers: {
         Accept: "application/json",
+        Authorization: "Bearer " + token,
       },
     })
     .then((response: any) => {
@@ -35,13 +41,14 @@ export async function getUserEvent(userId: number) {
     .catch((e: any) => console.log(e));
 }
 
-export async function getPublicEvents(userId: number) {
-  let baseUrl =
-    `${process.env.REACT_APP_BASE_URL}/Event/getPublicEvents?userId=` + userId;
+export async function GetPublicEvents(token: string) {
+  let baseUrl = `${process.env.REACT_APP_BASE_URL}/Event/getPublicEvents`;
+
   return axios
     .get(`${baseUrl}`, {
       headers: {
-        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
       },
     })
     .then((response: any) => {
@@ -52,14 +59,16 @@ export async function getPublicEvents(userId: number) {
     .catch((e: any) => console.log(e));
 }
 
-export async function getEventInvitations(eventId: number) {
+export async function GetEventInvitations(eventId: number, token: string) {
   let baseUrl =
     `${process.env.REACT_APP_BASE_URL}/Event/eventInvitations?event_id=` +
     eventId;
+
   return axios
     .get(`${baseUrl}`, {
       headers: {
         Accept: "application/json",
+        Authorization: "Bearer " + token,
       },
     })
     .then((response: any) => {
@@ -70,13 +79,15 @@ export async function getEventInvitations(eventId: number) {
     .catch((e: any) => console.log(e));
 }
 
-export async function getEventHelpers(eventId: number) {
+export async function GetEventHelpers(eventId: number, token: string) {
   let baseUrl =
     `${process.env.REACT_APP_BASE_URL}/Event/eventHelpers?event_id=` + eventId;
+
   return axios
     .get(`${baseUrl}`, {
       headers: {
         Accept: "application/json",
+        Authorization: "Bearer " + token,
       },
     })
     .then((response: any) => {
@@ -87,13 +98,15 @@ export async function getEventHelpers(eventId: number) {
     .catch((e: any) => console.log(e));
 }
 
-export async function getEventGuests(eventId: number) {
+export async function GetEventGuests(eventId: number, token: string) {
   let baseUrl =
     `${process.env.REACT_APP_BASE_URL}/Event/eventGuests?event_id=` + eventId;
+
   return axios
     .get(`${baseUrl}`, {
       headers: {
         Accept: "application/json",
+        Authorization: "Bearer " + token,
       },
     })
     .then((response: any) => {

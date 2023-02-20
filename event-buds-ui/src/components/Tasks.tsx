@@ -12,12 +12,13 @@ import {
   IonToast,
 } from "@ionic/react";
 import { add, trashBin } from "ionicons/icons";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { deleteTask, getTasks } from "../api/taskApi";
 import TaskModal from "./Modal/TaskModal";
 import { format, parseISO } from "date-fns";
 import UpdateTaskModal from "./Modal/UpdateTaskModal";
 import { enterAnimation, leaveAnimation } from "../Utils/ModalUtil";
+import { UserContext } from "../context/UserContext";
 
 export default function Task(props: any) {
   const [triggerId, setTriggerId] = useState("");
@@ -29,6 +30,7 @@ export default function Task(props: any) {
   const updateTaskModal = useRef<HTMLIonModalElement>(null);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const { token } = useContext(UserContext);
   let initialState = {
     TASKNAME: "",
     STARTTIME: "",
@@ -74,7 +76,7 @@ export default function Task(props: any) {
 
   useEffect(() => {
     async function loadTasks() {
-      let result = await getTasks(props.event?.EVENTID);
+      let result = await getTasks(props.event?.EVENTID, token);
       if (result) {
         setTaskList(result);
       }
@@ -84,7 +86,7 @@ export default function Task(props: any) {
 
   useEffect(() => {
     async function loadTasks() {
-      let result = await getTasks(props.event?.EVENTID);
+      let result = await getTasks(props.event?.EVENTID, token);
       if (result) {
         setTaskList(result);
       }
@@ -102,7 +104,7 @@ export default function Task(props: any) {
     else return "taskCard";
   }
   async function deleteTaskHandler(taskId: any) {
-    let result = await deleteTask(taskId);
+    let result = await deleteTask(taskId, token);
     if (result === "Success") {
       const newTask = taskList.filter((task: any) => task.TASKID !== taskId);
       setTaskList([...newTask]);
@@ -218,6 +220,7 @@ export default function Task(props: any) {
         })}
       </div>
       <UpdateTaskModal
+        token={token}
         triggerId={updateModalTriggerId}
         modal={updateTaskModal}
         setState={setState}
@@ -234,6 +237,7 @@ export default function Task(props: any) {
         leaveAnimation={leaveAnimation}
       />
       <TaskModal
+        token={token}
         triggerId={triggerId}
         modal={modal}
         setState={setState}

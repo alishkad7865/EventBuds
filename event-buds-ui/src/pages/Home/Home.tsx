@@ -11,52 +11,35 @@ import {
   IonPage,
   IonRouterOutlet,
   useIonViewWillEnter,
-  useIonViewWillLeave,
 } from "@ionic/react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
-  getEventGuests,
-  getEventHelpers,
-  getUserEvent,
+  GetEventGuests,
+  GetEventHelpers,
+  GetUserEvents,
 } from "../../api/eventApi";
-import { getUser } from "../../api/userApi";
 import "./Home.css";
 import Event from "../Event/Event";
 import { Route } from "react-router";
 import Menu from "../../components/Menu";
 import { format, parseISO } from "date-fns";
+import { UserContext } from "../../context/UserContext";
 
 export default function Home() {
-  const [user, setUser] = useState({
-    ADDRESS: String,
-    BIODATA: String,
-    EMAIL: String,
-    FIRSTNAME: String,
-    FRIENDS: String,
-    LASTNAME: String,
-    SEX: String,
-    USERID: Number,
-  });
+  const { user, token } = useContext(UserContext);
   const [events, setEvents] = useState([]);
   const [event, setEvent] = useState<any>({});
   const [guestsList, setGuestsList] = useState<any>([]);
   const [helpersList, setHelpersList] = useState<any>([]);
   const [acceptedhelpersList, setAcceptedHelpersList] = useState<any>([]);
-  async function loadUserData() {
-    let result = await getUser(2);
-    if (result) {
-      setUser(result);
-    }
-  }
 
   async function loadUserEvents() {
-    let result = await getUserEvent(1); // update this list for actual data
+    let result = await GetUserEvents(token); // update this list for actual data
     if (result) {
       setEvents(result);
     }
   }
   useIonViewWillEnter(() => {
-    loadUserData();
     loadUserEvents();
   });
 
@@ -66,12 +49,12 @@ export default function Home() {
 
   useEffect(() => {
     async function loadEventInvitations(eventId: number) {
-      let helpers = await getEventHelpers(eventId);
+      let helpers = await GetEventHelpers(eventId, token);
       if (helpers) {
         setHelpersList(helpers.helpersList);
         setAcceptedHelpersList(helpers.acceptedhelpersList);
       }
-      let guests = await getEventGuests(eventId);
+      let guests = await GetEventGuests(eventId, token);
       if (guests) {
         setGuestsList(guests);
       }
@@ -100,7 +83,7 @@ export default function Home() {
         <Menu page={"home"} />
         <IonContent>
           <h1 className="ion-text-center ion-text-capitalize">
-            {`Welcome ${user.FIRSTNAME}`}
+            {`Welcome ${user.FIRSTNAME ?? ""}`}
           </h1>
           {events?.filter((list: any) => !list.ISPUBLIC).length > 0 && (
             <IonItemDivider>
@@ -135,7 +118,7 @@ export default function Home() {
                       fill="solid"
                       shape="round"
                       size="small"
-                      onClick={(e) => viewEvent(list)}
+                      onClick={() => viewEvent(list)}
                       routerLink={"/event/" + list.EVENTID}
                     >
                       View
@@ -180,7 +163,7 @@ export default function Home() {
                       fill="solid"
                       shape="round"
                       size="small"
-                      onClick={(e) => viewEvent(list)}
+                      onClick={() => viewEvent(list)}
                       routerLink={"/event/" + list.EVENTID}
                     >
                       View

@@ -2,7 +2,6 @@ import {
   IonAvatar,
   IonButton,
   IonHeader,
-  IonIcon,
   IonItem,
   IonLabel,
   IonList,
@@ -12,19 +11,19 @@ import {
   useIonAlert,
 } from "@ionic/react";
 
-import { addCircle } from "ionicons/icons";
-import { useEffect, useState } from "react";
-import { getAllUsers, getUser } from "../../api/userApi";
+import { useContext, useEffect, useState } from "react";
+import { getAllUsers } from "../../api/userApi";
+import { UserContext } from "../../context/UserContext";
 import "./ManageFriends.css";
 setupIonicReact();
 
 export default function AddFriends(props: any) {
   const [presentAlert] = useIonAlert();
   const [otherUsersList, setotherUsersList] = useState([]);
-
+  const { token } = useContext(UserContext);
   useEffect(() => {
     async function loadAllUsers() {
-      let result = await getAllUsers(1);
+      let result = await getAllUsers(token);
       if (result) {
         setotherUsersList(result);
       }

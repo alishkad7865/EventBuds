@@ -11,10 +11,11 @@ import {
   IonCardTitle,
 } from "@ionic/react";
 import { format, parseISO } from "date-fns";
-import { useEffect, useState } from "react";
-import { getPublicEvents } from "../../api/eventApi";
+import { useContext, useEffect, useState } from "react";
+import { GetPublicEvents } from "../../api/eventApi";
 import Menu from "../../components/Menu";
 import PublicEventInfo from "../../components/PublicEventInfo";
+import { UserContext } from "../../context/UserContext";
 
 import "./publicEvent.css";
 
@@ -22,8 +23,9 @@ function PublicEvents() {
   const [publicEvents, setPublicEvents] = useState([]);
   const [event, setEvent] = useState({});
   const [step, setStep] = useState(1);
+  const { token } = useContext(UserContext);
   async function loadUserEvents() {
-    let result = await getPublicEvents(2);
+    let result = await GetPublicEvents(token);
     if (result) {
       setPublicEvents(result);
     }
