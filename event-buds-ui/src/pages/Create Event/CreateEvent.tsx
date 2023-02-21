@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
-import { getAllUsers, getUser } from "../../api/userApi";
+import { useContext, useEffect, useState } from "react";
+import { getAllUsers } from "../../api/userApi";
 import AddMembers from "../../components/EventForm/AddMembers";
 import "./CreateEvent.css";
 import EventInfoForm from "../../components/EventForm/EventInfoForm";
+import { UserContext } from "../../context/UserContext";
 
 export default function CreateEvent(props: any) {
   let initialState = {
@@ -24,21 +25,15 @@ export default function CreateEvent(props: any) {
   const [helpers, setHelpers] = useState<any>([]);
   const [guests, setGuests] = useState<any>([]);
   const [toastMessage, setToastMessage] = useState("");
-
+  const { user, token } = useContext(UserContext);
   useEffect(() => {
-    async function loadUserData() {
-      let result = await getUser(1);
-      if (result) {
-        setFriends(JSON.parse(result.FRIENDS));
-      }
-    }
+    setFriends(JSON.parse(user.FRIENDS));
     async function loadAllUsers() {
-      let result = await getAllUsers(1);
+      let result = await getAllUsers(token);
       if (result) {
         setAllUsers(result);
       }
     }
-    loadUserData();
     loadAllUsers();
   }, []);
 
@@ -100,9 +95,11 @@ export default function CreateEvent(props: any) {
     case 2:
       return (
         <AddMembers
+          token={token}
           nextStep={nextStep}
           prevStep={prevStep}
           setState={setState}
+          user={user}
           handleChange={handleChange}
           values={values}
           friends={friends}

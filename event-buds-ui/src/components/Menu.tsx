@@ -11,9 +11,11 @@ import {
   checkboxOutline,
   createOutline,
   homeOutline,
+  logInOutline,
   notifications,
   peopleOutline,
 } from "ionicons/icons";
+import Logout from "./Logout";
 
 function Menu(props: any) {
   function getHeaderComponent() {
@@ -82,6 +84,26 @@ function Menu(props: any) {
         </>
       );
     }
+    if (props.page === "login") {
+      return (
+        <>
+          <IonButtons slot="start" className="navButton">
+            <IonIcon icon={logInOutline} size="large" />
+          </IonButtons>
+          <IonTitle>Login</IonTitle>
+        </>
+      );
+    }
+    if (props.page === "signup") {
+      return (
+        <>
+          <IonButtons slot="start" className="navButton">
+            <IonIcon icon={logInOutline} size="large" />
+          </IonButtons>
+          <IonTitle>SignUp</IonTitle>
+        </>
+      );
+    }
   }
   return (
     <IonHeader>
@@ -92,6 +114,7 @@ function Menu(props: any) {
           </IonTabButton>
         </IonButtons>
         {getHeaderComponent()}
+        <Logout pageName={props.page} />
       </IonToolbar>
     </IonHeader>
   );

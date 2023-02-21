@@ -10,40 +10,25 @@ import {
   IonRow,
   IonCol,
 } from "@ionic/react";
-import { useEffect, useState } from "react";
-import { getUserEvent } from "../../api/eventApi";
-import { getUser } from "../../api/userApi";
+import { useContext, useEffect, useState } from "react";
+import { GetUserEvents } from "../../api/eventApi";
 import Menu from "../../components/Menu";
+import { UserContext } from "../../context/UserContext";
 import "./profile.css";
 export default function Profile(props: any) {
-  const [user, setUser] = useState({
-    ADDRESS: String,
-    BIODATA: String,
-    EMAIL: String,
-    FIRSTNAME: String,
-    FRIENDS: String,
-    LASTNAME: String,
-    SEX: String,
-    USERID: Number,
-  });
+  const { user, token } = useContext(UserContext);
 
   const [eventCount, setEventCount] = useState(0);
   const [friendsCount, setFriendsCount] = useState(0);
-  async function loadUserData() {
-    let result = await getUser(1);
-    if (result) {
-      setUser(result);
-      setFriendsCount(JSON.parse(result.FRIENDS).length);
-    }
-  }
+
   async function loadUserEvents() {
-    let result = await getUserEvent(1);
+    let result = await GetUserEvents(token);
     if (result) {
       setEventCount(result.length);
     }
   }
   useEffect(() => {
-    loadUserData();
+    user.FRIENDS && setFriendsCount(JSON.parse(user.FRIENDS)?.length);
     loadUserEvents();
   }, []);
   return (
@@ -66,11 +51,11 @@ export default function Profile(props: any) {
                 </div>
                 <IonCardHeader>
                   <IonCardTitle class="ion-text-center ion-text-capitalize">
-                    <h1>test lastname</h1>
+                    <h1> {`${user.FIRSTNAME} ${user.LASTNAME}`}</h1>
                   </IonCardTitle>
                   <IonCardSubtitle class="ion-text-center ion-text-capitalize">
                     <h6>
-                      Bio:<b>{user.BIODATA.toString()}</b>
+                      Bio:<b>{user?.BIO}</b>
                     </h6>
                   </IonCardSubtitle>
                 </IonCardHeader>
@@ -93,7 +78,7 @@ export default function Profile(props: any) {
                   <br />
                   <br />
                   <h3>
-                    Address: <b>{user.ADDRESS.toString()}</b>
+                    Address: <b>{user.ADDRESS?.toString()}</b>
                   </h3>
                   <br />
                   <br />

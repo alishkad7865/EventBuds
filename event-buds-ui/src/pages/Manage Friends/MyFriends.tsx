@@ -10,25 +10,19 @@ import {
   setupIonicReact,
   useIonAlert,
 } from "@ionic/react";
-import { useEffect, useState } from "react";
-import { getUser } from "../../api/userApi";
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "../../context/UserContext";
 import "./ManageFriends.css";
 setupIonicReact();
 
 export default function MyFriends(props: any) {
   const [presentAlert] = useIonAlert();
-
+  const { user } = useContext(UserContext);
   const [friendsList, setfriendsList] = useState([]);
 
   useEffect(() => {
-    async function loadUserData() {
-      let result = await getUser(1);
-      if (result) {
-        setfriendsList(JSON.parse(result.FRIENDS));
-      }
-    }
-
-    loadUserData();
+    if (JSON.parse(user.FRIENDS).length > 0)
+      setfriendsList(JSON.parse(user.FRIENDS));
   }, []);
   return (
     <>
@@ -38,6 +32,9 @@ export default function MyFriends(props: any) {
         </IonToolbar>
       </IonHeader>
       <IonList>
+        {friendsList.length === 0 && (
+          <h5 className="ion-text-center labelColour">No Friends Added!</h5>
+        )}
         {friendsList.map((list: any) => {
           return (
             <IonItem class="itemBackground" key={list.EMAIL + props.title}>

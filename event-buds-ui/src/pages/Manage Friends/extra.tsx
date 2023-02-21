@@ -20,7 +20,7 @@ import {
 import { IonReactRouter } from "@ionic/react-router";
 import { people, person, star } from "ionicons/icons";
 import { useState } from "react";
-import { Route, withRouter } from "react-router";
+import { Route } from "react-router";
 import UserProfile from "./UserProfile";
 
 setupIonicReact();
@@ -30,7 +30,7 @@ const App: React.FC = () => (
     <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet>
-          <Route exact path="/UserProfile">
+          <Route path="/UserProfile">
             <UserProfile />
           </Route>
         </IonRouterOutlet>

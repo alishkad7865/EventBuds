@@ -1,10 +1,28 @@
 from datetime import datetime
-from pydantic import BaseModel
+import re
+from fastapi import Query
+from pydantic import BaseModel, Required, validator
 from typing import Optional
+from passlib.context import CryptContext
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+
+def get_password_hash(password):
+    return pwd_context.hash(password)
+
+
+class UserLogin(BaseModel):
+    userId: Optional[int] = None
+    userName:  Optional[str] = ""
+    email: str
+    password: str
+    authenticated: Optional[int] = 1
 
 
 class User(BaseModel):
     userId: int
+    userName: str
     firstName: str
     lastName: str
     email: str
@@ -14,6 +32,42 @@ class User(BaseModel):
     isActive: Optional[int] = 1
     friends: Optional[list] = []
     userRowId: Optional[int] = None
+
+
+class UserSignUp(BaseModel):
+    userId: Optional[int] = None
+    userName: str = Query(default=Required)
+    firstName: str = Query(default=Required, max_length=50)
+    lastName: str = Query(default=Required, max_length=50)
+    email: str = Query(default=Required, min_length=5,
+                       max_length=50)
+    password: str = Query(default=Required, min_length=5,
+                          max_length=50)
+    address: Optional[str] = ""
+    sex: Optional[str] = ""
+    bio: Optional[str] = ""
+    isActive: Optional[int] = 1
+    authenticated: Optional[int] = 1
+    friends: Optional[list] = []
+    userRowId: Optional[int] = None
+
+    @validator("email")
+    def email_regex_checker(cls, email):
+        if re.match("^[a-zA-Z0-9-_]+@[a-zA-Z0-9]+\.[a-z]{1,3}$", email):
+            return email
+        raise ValueError(f"Invalid email pattern")
+
+    @validator("password")
+    def password_checker(cls, password):
+        if password == "" or len(password) < 5:
+            raise ValueError(f"password should be atleast 5 character long")
+        return get_password_hash(password)
+
+    @validator("userName")
+    def user_name_checker(cls, user_name):
+        if user_name == "" or len(user_name) < 4:
+            raise ValueError(f"Username should be be atleast 4 character long")
+        return user_name
 
 
 class UserObject(BaseModel):

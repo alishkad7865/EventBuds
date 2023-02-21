@@ -34,15 +34,17 @@ export default function TaskModal(props: any) {
       notes: values.NOTES,
     };
 
-    await createTask(JSON.stringify(Task)).then((response: any) => {
-      if (response.status >= 200 && response.status < 300) {
-        props.setToastMessage("Task Created Successfully!");
-        // props.setTaskList([...props.taskList, Task]);
-        props.dismiss();
-      } else {
-        props.setToastMessage("Task Creation Failed, Try Again!");
+    await createTask(JSON.stringify(Task), props.token).then(
+      (response: any) => {
+        if (response.status >= 200 && response.status < 300) {
+          props.setToastMessage("Task Created Successfully!");
+          // props.setTaskList([...props.taskList, Task]);
+          props.dismiss();
+        } else {
+          props.setToastMessage("Task Creation Failed, Try Again!");
+        }
       }
-    });
+    );
   }
   return (
     <IonModal

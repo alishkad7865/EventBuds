@@ -11,10 +11,11 @@ import {
   IonCardTitle,
 } from "@ionic/react";
 import { format, parseISO } from "date-fns";
-import { useEffect, useState } from "react";
-import { getPublicEvents } from "../../api/eventApi";
+import { useContext, useEffect, useState } from "react";
+import { GetPublicEvents } from "../../api/eventApi";
 import Menu from "../../components/Menu";
 import PublicEventInfo from "../../components/PublicEventInfo";
+import { UserContext } from "../../context/UserContext";
 
 import "./publicEvent.css";
 
@@ -22,8 +23,9 @@ function PublicEvents() {
   const [publicEvents, setPublicEvents] = useState([]);
   const [event, setEvent] = useState({});
   const [step, setStep] = useState(1);
+  const { token } = useContext(UserContext);
   async function loadUserEvents() {
-    let result = await getPublicEvents(2);
+    let result = await GetPublicEvents(token);
     if (result) {
       setPublicEvents(result);
     }
@@ -44,60 +46,51 @@ function PublicEvents() {
   switch (step) {
     case 1:
       return (
-        <>
-          {/* <IonRouterOutlet>
-        <Route path="/publicEvent/:id">
-          {" "}
-         
-        </Route>
-      </IonRouterOutlet> */}
-          <IonPage>
-            <Menu page={"public events"} />
-            <IonContent>
-              <IonToolbar>
-                <IonSearchbar class="searchbarBorder toolbarMargin"></IonSearchbar>
-              </IonToolbar>
-              <div className="eventCards">
-                {publicEvents?.map((list: any) => {
-                  if (list.ISPUBLIC) {
-                    return (
-                      <IonCard class="PublicEventCard" key={list.EVENTID}>
-                        <IonCardHeader>
-                          <IonCardTitle className="ion-text-capitalize">
-                            {list.EVENTTITLE}
-                          </IonCardTitle>
-                          <IonCardSubtitle>
-                            Time:{" "}
-                            {format(
-                              parseISO(list.STARTDATETIME),
-                              "MMM d, yyyy, K:m a "
-                            )}
-                          </IonCardSubtitle>
-                          <IonCardSubtitle>
-                            Venue: {list.LOCATION}
-                          </IonCardSubtitle>
-                        </IonCardHeader>
+        <IonPage>
+          <Menu page={"public events"} />
+          <IonContent>
+            <IonToolbar>
+              <IonSearchbar class="searchbarBorder toolbarMargin"></IonSearchbar>
+            </IonToolbar>
+            <div className="eventCards">
+              {publicEvents?.map((list: any) => {
+                if (list.ISPUBLIC) {
+                  return (
+                    <IonCard class="PublicEventCard" key={list.EVENTID}>
+                      <IonCardHeader>
+                        <IonCardTitle className="ion-text-capitalize">
+                          {list.EVENTTITLE}
+                        </IonCardTitle>
+                        <IonCardSubtitle>
+                          Time:{" "}
+                          {format(
+                            parseISO(list.STARTDATETIME),
+                            "MMM d, yyyy, K:m a "
+                          )}
+                        </IonCardSubtitle>
+                        <IonCardSubtitle>
+                          Venue: {list.LOCATION}
+                        </IonCardSubtitle>
+                      </IonCardHeader>
 
-                        <IonCardContent>
-                          Description: {list.DESCRIPTION}
-                        </IonCardContent>
-                        <IonButton
-                          fill="solid"
-                          shape="round"
-                          size="small"
-                          onClick={(e) => viewEvent(list)}
-                          // routerLink={"/publicEvent/" + list.EVENTID}
-                        >
-                          View
-                        </IonButton>
-                      </IonCard>
-                    );
-                  } else return "";
-                })}
-              </div>
-            </IonContent>
-          </IonPage>
-        </>
+                      <IonCardContent>
+                        Description: {list.DESCRIPTION}
+                      </IonCardContent>
+                      <IonButton
+                        fill="solid"
+                        shape="round"
+                        size="small"
+                        onClick={(e) => viewEvent(list)}
+                      >
+                        View
+                      </IonButton>
+                    </IonCard>
+                  );
+                } else return "";
+              })}
+            </div>
+          </IonContent>
+        </IonPage>
       );
     case 2:
       return (

@@ -34,7 +34,7 @@ export default function TaskModal(props: any) {
       notes: task.NOTES,
     };
 
-    await updateTask(task.TASKID, JSON.stringify(Task)).then(
+    await updateTask(task.TASKID, JSON.stringify(Task), props.token).then(
       (response: any) => {
         if (response === "Success") {
           props.setToastMessage("Task Updated!");
