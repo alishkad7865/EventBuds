@@ -14,7 +14,7 @@ import {
   setupIonicReact,
   useIonAlert,
 } from "@ionic/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getUser } from "../../api/userApi";
 import FriendsModal from "../../components/FriendsModal";
 import "./ManageFriends.css";
@@ -25,8 +25,9 @@ export default function MyFriends(props: any) {
   const [presentAlert] = useIonAlert();
 
   const [friendsList, setfriendsList] = useState([]);
+  const [modalFriendData, setModalFriendData] = useState({});
   const [isOpen, setIsOpen] = useState(false);
-
+  const modal = useRef<HTMLIonModalElement>(null);
   useEffect(() => {
     async function loadUserData() {
       let result = await getUser(1);
@@ -44,18 +45,36 @@ export default function MyFriends(props: any) {
           <IonSearchbar class="searchbarBorder"></IonSearchbar>
         </IonToolbar>
       </IonHeader>
+      <FriendsModal
+        expand="block"
+        modal={modal}
+        isOpen={isOpen}
+        list={modalFriendData}
+        setIsOpen={setIsOpen}
+      />
       <IonList>
         {friendsList.map((list: any) => {
           return (
             <IonItem class="itemBackground" key={list.EMAIL + props.title}>
-              <IonAvatar slot="start" onClick={() => setIsOpen(true)}>
+              <IonAvatar
+                slot="start"
+                onClick={() => {
+                  setIsOpen(true);
+                  setModalFriendData(list);
+                }}
+              >
                 <img
                   alt="Silhouette of a person's head"
                   src="https://ionicframework.com/docs/img/demos/avatar.svg"
                 />
               </IonAvatar>
 
-              <IonLabel onClick={() => setIsOpen(true)}>
+              <IonLabel
+                onClick={() => {
+                  setIsOpen(true);
+                  setModalFriendData(list);
+                }}
+              >
                 <h6 className="labelColour ion-text-capitalize">
                   {" "}
                   <b className="labelColour">
@@ -66,7 +85,8 @@ export default function MyFriends(props: any) {
               </IonLabel>
 
               <IonButton
-                onClick={() =>
+                onClick={() => {
+                  console.log(list.USERID, "friends user id");
                   presentAlert({
                     header: "Are you sure?",
                     cssClass: "custom-alert",
@@ -79,12 +99,11 @@ export default function MyFriends(props: any) {
                         text: "Cancel",
                       },
                     ],
-                  })
-                }
+                  });
+                }}
               >
                 Remove Friend
               </IonButton>
-              <FriendsModal expand="block" isOpen={isOpen} />
             </IonItem>
           );
         })}
