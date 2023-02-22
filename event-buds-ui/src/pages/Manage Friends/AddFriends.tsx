@@ -2,7 +2,6 @@ import {
   IonAvatar,
   IonButton,
   IonHeader,
-  IonIcon,
   IonItem,
   IonLabel,
   IonList,
@@ -12,24 +11,22 @@ import {
   useIonAlert,
 } from "@ionic/react";
 
-import { addCircle } from "ionicons/icons";
-import { useEffect, useState } from "react";
-import { getAllUsers, getUser } from "../../api/userApi";
+import { useContext, useEffect, useState } from "react";
+import { getAllUsers } from "../../api/userApi";
+import { UserContext } from "../../context/UserContext";
 import "./ManageFriends.css";
 setupIonicReact();
 
 export default function AddFriends(props: any) {
   const [presentAlert] = useIonAlert();
   const [otherUsersList, setotherUsersList] = useState([]);
-
+  const { token } = useContext(UserContext);
   useEffect(() => {
     async function loadAllUsers() {
-      let result = await getAllUsers(1);
-      console.log(result);
+      let result = await getAllUsers(token);
       if (result) {
         setotherUsersList(result);
       }
-      console.log(otherUsersList);
     }
 
     loadAllUsers();
@@ -45,7 +42,7 @@ export default function AddFriends(props: any) {
           {otherUsersList.map((list: any) => {
             return (
               <IonItem class="itemBackground" key={list.EMAIL + props.title}>
-                <IonAvatar slot= "start">
+                <IonAvatar slot="start">
                   <img
                     alt="Silhouette of a person's head"
                     src="https://ionicframework.com/docs/img/demos/avatar.svg"

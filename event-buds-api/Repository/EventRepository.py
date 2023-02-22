@@ -10,7 +10,7 @@ class EventRepository:
     def __init__(self):
         self.connection = connection()
 
-    def insertOrUpdateEvent(self, pageName, number):
+    def UpdateEvent(self, pageName, number):
         try:
             query = """ INSERT INTO "ADMIN"."EVENT"
                             (click, TotalClick) VALUES (%s,%s)"""
@@ -26,7 +26,7 @@ class EventRepository:
             query = 'INSERT INTO "ADMIN"."EVENT" (EVENTID, EVENTTITLE, DESCRIPTION, CREATEDBY, REGENDDATE,STARTDATETIME, ENDDATETIME, LOCATION, ISPUBLIC, CAPACITY, PRICE, OWNERID, STATUS, HELPERS) VALUES(:eventId, :eventTitle, :description, :createdBy, :regEndDate, :startDateTime, :endDateTime, :location, :isPublic, :capacity, :price, :ownerId, :status, :helpers)'
 
             with self.connection.cursor() as cursor:
-                cursor.execute(query, [event.eventId, event.eventTitle, event.description, event.createdBy, event.eventStartDateTime, event.eventStartDateTime,
+                cursor.execute(query, [event.eventId, event.eventTitle, event.description, event.createdBy, event.eventRegEndDateTime, event.eventStartDateTime,
                                event.eventEndDateTime, event.location, event.isPublic, event.capacity, event.price, event.ownerId, event.status, str(event.helpers)])
                 self.connection.commit()
             return OK
@@ -46,7 +46,8 @@ class EventRepository:
 
     def getUserEvent(self, userId):
         try:
-            query = """ SELECT * FROM "ADMIN"."EVENT" WHERE OWNERID = :userId"""
+            query = """ SELECT * FROM "ADMIN"."EVENT" WHERE "ADMIN"."EVENT"."EVENTID"= (select DISTINCT admin.eventinvitation.eventid from admin.eventinvitation where admin.eventinvitation.userid=:userId and admin.eventinvitation.invitationresponse ='accepted') or admin.event.ownerid=:userId"""
+            # query = """ SELECT * FROM "ADMIN"."EVENT" WHERE "ADMIN"."EVENT"."EVENTID"= (select DISTINCT admin.eventinvitation.eventid from admin.eventinvitation where admin.eventinvitation.userid=:userId and admin.eventinvitation.ishelper=1 and admin.eventinvitation.invitationresponse ='accepted') or admin.event.ownerid=:userId"""
             with self.connection.cursor() as cursor:
                 data = dict(userId=int(userId),)
                 cursor.execute(query, data)

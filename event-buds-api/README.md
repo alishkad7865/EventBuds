@@ -11,6 +11,11 @@ pip install fastapi
 pip install uvicorn
 pip install cx_Oracle
 pip install mysql-connector-python
+pip install python-multipart
+pip install python-jose[cryptography]
+pip install passlib[bcrypt]
+pip install PyJWT python-decouple
+
 ```
 
 ---
@@ -27,8 +32,23 @@ uvicorn main:app --reload
 
 ---
 
-##### _5. View API document page go to http://localhost:8000/docs_
+##### _5. View API document page go to http://localhost:8000/docs#_
 
 ---
 
 ##### _6. To run the app on emulator go to http://10.0.2.2:8000/docs or to use your device, use your machine IP for routing to the API http://[your_Machine_IP]:8000/docs._
+
+---
+
+#### More Tips
+
+##### _To get rid of **pycache** files from API project:_
+
+1. Press Ctrl+g and backspace and find settings.json for vscode
+2. add following property to your json file
+
+```
+ "files.exclude": {
+        "**/__pycache__": true
+   },
+```

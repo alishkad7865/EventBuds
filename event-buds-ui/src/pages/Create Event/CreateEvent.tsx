@@ -1,15 +1,17 @@
-import { useEffect, useState } from "react";
-import { getAllUsers, getUser } from "../../api/userApi";
-import AddMembers from "./AddMembers";
+import { useContext, useEffect, useState } from "react";
+import { getAllUsers } from "../../api/userApi";
+import AddMembers from "../../components/EventForm/AddMembers";
 import "./CreateEvent.css";
-import EventInfo from "./EventInfo";
+import EventInfoForm from "../../components/EventForm/EventInfoForm";
+import { UserContext } from "../../context/UserContext";
 
 export default function CreateEvent(props: any) {
   let initialState = {
     step: 1,
     eventTitle: "",
-    eventStartTime: new Date(),
-    eventEndTime: new Date(),
+    lastRegDate: "",
+    eventStartTime: "",
+    eventEndTime: "",
     location: "",
     eventType: undefined,
     description: "",
@@ -23,23 +25,15 @@ export default function CreateEvent(props: any) {
   const [helpers, setHelpers] = useState<any>([]);
   const [guests, setGuests] = useState<any>([]);
   const [toastMessage, setToastMessage] = useState("");
-
+  const { user, token } = useContext(UserContext);
   useEffect(() => {
-    async function loadUserData() {
-      let result = await getUser(1);
-      console.log(result);
-      if (result) {
-        setFriends(JSON.parse(result.FRIENDS));
-      }
-      console.log(friends)
-    }
+    setFriends(JSON.parse(user.FRIENDS));
     async function loadAllUsers() {
-      let result = await getAllUsers(1);
+      let result = await getAllUsers(token);
       if (result) {
         setAllUsers(result);
       }
     }
-    loadUserData();
     loadAllUsers();
   }, []);
 
@@ -67,6 +61,7 @@ export default function CreateEvent(props: any) {
   const { step } = state;
   const {
     eventTitle,
+    lastRegDate,
     eventStartTime,
     eventEndTime,
     location,
@@ -77,6 +72,7 @@ export default function CreateEvent(props: any) {
   } = state;
   const values = {
     eventTitle,
+    lastRegDate,
     eventStartTime,
     eventEndTime,
     location,
@@ -88,7 +84,7 @@ export default function CreateEvent(props: any) {
   switch (step) {
     case 1:
       return (
-        <EventInfo
+        <EventInfoForm
           nextStep={nextStep}
           handleChange={handleChange}
           values={values}
@@ -99,9 +95,11 @@ export default function CreateEvent(props: any) {
     case 2:
       return (
         <AddMembers
+          token={token}
           nextStep={nextStep}
           prevStep={prevStep}
           setState={setState}
+          user={user}
           handleChange={handleChange}
           values={values}
           friends={friends}

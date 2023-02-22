@@ -9,11 +9,13 @@ ion-card-header.ios {
 
 .PrivateEventCard {
   max-width: 450px;
+  min-width: 320px;
   background: #a7baf480;
 }
 
 .PublicEventCard {
   max-width: 450px;
+  min-width: 320px;
   background: #f7d56cbf;
 }
 
@@ -28,9 +30,12 @@ ion-item-divider {
   width: 300px;
 }
 
-.tabButton {
-  /* --color: #92949c; */
-  -webkit-text-fill-color: #fff;
+.navButton {
+  padding-left: 2%;
+}
+
+ion-col {
+  min-width: 300px;
 }
 ion-item {
   --background: #319396;

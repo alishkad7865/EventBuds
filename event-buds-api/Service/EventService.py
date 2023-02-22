@@ -1,25 +1,36 @@
-from Model.EventModel import Event
-from Repository import EventRepository
+from fastapi import Depends
+from Auth.AuthBearer import JWTBearer
+from Auth.AuthHandler import decodeJWT
+from Service import EventInvitationService
+from Model.EventModel import Event, EventInvitation
+from Repository.EventRepository import EventRepository
 import json
 import sys
 import time
-import uuid
+from fastapi.security import OAuth2PasswordBearer
 sys.path.append('')
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 class EventService:
-    def __init__(self, repository):
-        self.repository = repository
+    def __init__(self):
+        self.repository = EventRepository()
+        self.invitation_service = EventInvitationService.EventInvitationService()
 
     def getAllPublicEvents(self):
         return self.repository.getAllPublicEvents()
 
-    def getUserEvents(self, userId):
-        events = self.repository.getUserEvent(userId)
+    def getUserEvents(self, token: str):
+        payload = decodeJWT(token)
+        user_id: str = payload.get("user_id")
+        events = self.repository.getUserEvent(user_id)
         return events
 
-    def getOtherPublicEvents(self, userId):
-        events = self.repository.getOtherPublicEvents(userId)
+    def getOtherPublicEvents(self, token: str):
+        payload = decodeJWT(token)
+        user_id: str = payload.get("user_id")
+        events = self.repository.getOtherPublicEvents(user_id)
         return events
 
     def createEvent(self, rawEvent):
@@ -33,16 +44,29 @@ class EventService:
                              createdBy=parsedEvent["createdBy"],
                              ownerId=parsedEvent["ownerId"],
                              status="Ongoing",
-                             eventRegEndDateTime=parsedEvent["eventStartTime"])
+                             eventRegEndDateTime=parsedEvent["lastRegDate"])
+
         try:
             self.repository.createEvent(event)
+            for guest in parsedEvent["guests"]:
+                invitation: EventInvitation = EventInvitation(
+                    eventId=eventId, inviteId=int(round(time.time() * 1000)), invitationResponse="sent", isHelper=0, Notified=0, ownerId=int(parsedEvent["ownerId"]), RespondDate=None, userId=guest['USERID'])
+                self.invitation_service.sendEventInvitation(
+                    invitation)
+
+            for helper in parsedEvent["helpers"]:
+                invitation: EventInvitation = EventInvitation(
+                    eventId=eventId, inviteId=int(round(time.time() * 1000)), invitationResponse="sent", isHelper=1, Notified=0, ownerId=int(parsedEvent["ownerId"]), RespondDate=None, userId=helper['USERID'])
+
+                self.invitation_service.sendEventInvitation(
+                    invitation)
 
             return "Success"
         except NameError as e:
             return e
 
-    def insertOrUpdateEvent(self, event):
-        self.repository.insertOrUpdateEvent(event)
+    def UpdateEvent(self, event):
+        self.repository.UpdateEvent(event)
 
     def deleteEvent(self, eventId):
         self.repository.deleteEvent(eventId)
