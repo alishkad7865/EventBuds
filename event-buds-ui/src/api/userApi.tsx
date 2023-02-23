@@ -1,4 +1,3 @@
-import axios from "axios";
 import { CapacitorHttp, HttpResponse } from "@capacitor/core";
 export async function getUser(userId: number, token: string) {
   let baseUrl = `${process.env.REACT_APP_BASE_URL}/User/getUser`;
@@ -83,22 +82,23 @@ export async function userSignUp(user: {}) {
       }
     })
     .catch((e: any) => console.log(e));
-  console.log(response, "signup response");
   return response;
 }
 export async function getAllUsers(token: string) {
   let baseUrl = `${process.env.REACT_APP_BASE_URL}/User/getAllUsers`;
-  return axios
-    .get(`${baseUrl}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
-      },
-    })
+  const options = {
+    url: baseUrl,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token,
+    },
+  };
+  const response: HttpResponse = await CapacitorHttp.get(options)
     .then((response: any) => {
       if (response.status >= 200 && response.status < 300) {
-        return response.data;
+        return response;
       }
     })
     .catch((e: any) => console.log(e));
+  return response.data;
 }

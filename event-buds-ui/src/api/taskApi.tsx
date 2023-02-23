@@ -1,5 +1,4 @@
 import { CapacitorHttp, HttpResponse } from "@capacitor/core";
-import axios from "axios";
 
 export async function createTask(task: any, token: string) {
   let baseUrl =
@@ -26,37 +25,41 @@ export async function createTask(task: any, token: string) {
 export async function getTasks(eventId: number, token: string) {
   let baseUrl =
     `${process.env.REACT_APP_BASE_URL}/Task/getTasks?event_id=` + eventId;
-  return axios
-    .get(`${baseUrl}`, {
-      headers: {
-        Accept: "application/json",
-        Authorization: "Bearer " + token,
-      },
-    })
+  const options = {
+    url: baseUrl,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token,
+    },
+  };
+  const response: HttpResponse = await CapacitorHttp.get(options)
     .then((response: any) => {
       if (response.status >= 200 && response.status < 300) {
-        return response.data;
+        return response;
       }
     })
     .catch((e: any) => console.log(e));
+  return response.data;
 }
 
 export async function deleteTask(taskId: number, token: string) {
   let baseUrl =
     `${process.env.REACT_APP_BASE_URL}/Task/deleteTask?task_id=` + taskId;
-  return axios
-    .delete(`${baseUrl}`, {
-      headers: {
-        Accept: "application/json",
-        Authorization: "Bearer " + token,
-      },
-    })
+  const options = {
+    url: baseUrl,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token,
+    },
+  };
+  const response: HttpResponse = await CapacitorHttp.delete(options)
     .then((response: any) => {
       if (response.status >= 200 && response.status < 300) {
-        return response.data;
+        return response;
       }
     })
     .catch((e: any) => console.log(e));
+  return response.data;
 }
 
 export async function updateTask(taskId: number, task: any, token: string) {
