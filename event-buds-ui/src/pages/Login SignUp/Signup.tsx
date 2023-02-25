@@ -114,7 +114,7 @@ export default function Signup() {
       sex: sex,
       bio: bio,
     });
-    console.log(newUser, "new user");
+    
     if (ValidateAllFields() === true) {
       await userSignUp(newUser).then((response: any) => {
         if (response.status >= 200 && response.status < 300) {
@@ -122,7 +122,7 @@ export default function Signup() {
           history.push("/Home");
         } else {
           setShowToast(true);
-          console.log(response);
+          
           setToastMessage(response.detail);
         }
       });

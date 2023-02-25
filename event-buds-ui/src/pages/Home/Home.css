@@ -37,3 +37,16 @@ ion-item-divider {
 ion-col {
   min-width: 300px;
 }
+
+ion-col {
+  background-color: #bbe4e6;
+  border: solid 1px #fff;
+  color: black;
+  text-align: center;
+}
+
+.seg {
+  background: #bbe4e6;
+  border-radius: 2px;
+  border-radius: 15px;
+}
