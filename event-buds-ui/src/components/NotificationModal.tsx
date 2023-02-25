@@ -14,45 +14,17 @@ import {
   IonToolbar,
   setupIonicReact,
 } from "@ionic/react";
-import {
-  checkmarkCircleOutline,
-  closeCircleOutline,
-  create,
-} from "ionicons/icons";
-import { useEffect, useRef, useState } from "react";
-import { getAllUsers } from "../api/userApi";
+import { checkmarkCircleOutline, closeCircleOutline } from "ionicons/icons";
+import { useRef, useState } from "react";
 
 setupIonicReact();
 
 export default function NotificationModal(props: any) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const page = useRef(null);
-
-  const [otherUsersList, setotherUsersList] = useState([]);
-
-  //to fix changes
-
-  // useEffect(() => {
-  //   async function loadAllUsers() {
-  //     let result = await getAllUsers(1);
-  //     console.log(result);
-  //     if (result) {
-  //       setotherUsersList(result);
-  //     }
-  //     console.log(otherUsersList);
-  //   }
-
-  //   loadAllUsers();
-  // }, []);
-
   return (
     <IonModal
-      // isOpen={props.isOpen}
       ref={props.modal}
       trigger={"notification-modal" + props.pageName}
       id={"notification-modal" + props.pageName}
-      // presentingElement={presentingElement!}
     >
       <IonHeader>
         <IonToolbar>
@@ -73,12 +45,12 @@ export default function NotificationModal(props: any) {
                 Connor Smith has requested to be friends with you
               </IonLabel>
               <IonButton fill="outline">
-                Yes
-                <IonIcon icon={checkmarkCircleOutline}></IonIcon>
-              </IonButton>
-              <IonButton fill="outline">
                 No
                 <IonIcon icon={closeCircleOutline}></IonIcon>
+              </IonButton>
+              <IonButton fill="outline" slot="end">
+                Yes
+                <IonIcon icon={checkmarkCircleOutline}></IonIcon>
               </IonButton>
             </IonLabel>
           </IonItem>
@@ -91,12 +63,12 @@ export default function NotificationModal(props: any) {
                 Daniel Smith has requested to be friends with you
               </IonLabel>
               <IonButton fill="outline">
-                Yes
-                <IonIcon icon={checkmarkCircleOutline}></IonIcon>
-              </IonButton>
-              <IonButton fill="outline">
                 No
                 <IonIcon icon={closeCircleOutline}></IonIcon>
+              </IonButton>
+              <IonButton fill="outline" slot="end">
+                Yes
+                <IonIcon icon={checkmarkCircleOutline}></IonIcon>
               </IonButton>
             </IonLabel>
           </IonItem>

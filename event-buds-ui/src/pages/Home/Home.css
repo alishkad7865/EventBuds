@@ -37,24 +37,7 @@ ion-item-divider {
 ion-col {
   min-width: 300px;
 }
-<<<<<<< Updated upstream
-=======
-/* ion-item {
-  --background: #319396;
-  --color: #fff;
 
-  --border-color: #fff;
-  --border-style: bold;
-  --border-width: 2px;
-
-  --border-radius: 20px;
-
-  --ripple-color: purple;
-
-  --detail-icon-color: white;
-  --detail-icon-opacity: 1;
-  --detail-icon-font-size: 20px;
-} */
 ion-col {
   background-color: #bbe4e6;
   border: solid 1px #fff;
@@ -67,4 +50,3 @@ ion-col {
   border-radius: 2px;
   border-radius: 15px;
 }
->>>>>>> Stashed changes

@@ -1,4 +1,6 @@
 import {
+  IonAccordion,
+  IonAccordionGroup,
   IonButton,
   IonCard,
   IonCardContent,
@@ -6,12 +8,18 @@ import {
   IonCardSubtitle,
   IonCardTitle,
   IonContent,
+  IonHeader,
+  IonItem,
   IonItemDivider,
   IonLabel,
   IonPage,
+  IonSegment,
+  IonSegmentButton,
+  IonTitle,
+  IonToolbar,
   useIonViewWillEnter,
 } from "@ionic/react";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
   GetEventGuests,
   GetEventHelpers,
@@ -26,6 +34,10 @@ import { UserContext } from "../../context/UserContext";
 export default function Home() {
   const { user, token } = useContext(UserContext);
   const [events, setEvents] = useState([]);
+  const accordionGroup = useRef<null | HTMLIonAccordionGroupElement>(null);
+  const [segment, setSegment] = useState<"segment1" | "segment2" | "segment3">(
+    "segment1"
+  );
   const [event, setEvent] = useState<any>({});
   const [guestsList, setGuestsList] = useState<any>([]);
   const [helpersList, setHelpersList] = useState<any>([]);
@@ -42,6 +54,13 @@ export default function Home() {
     loadUserEvents();
   });
 
+  useEffect(() => {
+    if (!accordionGroup.current) {
+      return;
+    }
+  }, []);
+
+  
   function viewEvent(list: any) {
     setEvent(list);
     setEventStepper(2);
@@ -62,7 +81,7 @@ export default function Home() {
     if (event.EVENTID) {
       loadEventInvitations(event.EVENTID);
     }
-    // eslint-disable-next-line
+    
   }, [event]);
 
   switch (eventStepper) {

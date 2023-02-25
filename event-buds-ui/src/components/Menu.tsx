@@ -6,6 +6,7 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
+
 import {
   calendarOutline,
   checkboxOutline,
@@ -122,11 +123,9 @@ function Menu(props: any) {
         {getHeaderComponent()}
         <Logout pageName={props.page} />
         <NotificationModal
-          // token={token}
           pageName={props.page}
           triggerId={"notification-modal" + props.page}
           modal={modal}
-          // handleChange={handleChange}
           dismiss={dismiss}
         />
       </IonToolbar>
