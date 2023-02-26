@@ -50,3 +50,28 @@ ion-col {
   border-radius: 2px;
   border-radius: 15px;
 }
+
+.accordName {
+  background: #319396;
+}
+
+.AccordTitle {
+  --background: #319396;
+  --color: #fff;
+
+  --border-color: #fff;
+  --border-style: bold;
+  --border-width: 2px;
+
+  --border-radius: 20px;
+
+  --ripple-color: purple;
+
+  --detail-icon-color: white;
+  --detail-icon-opacity: 1;
+  --detail-icon-font-size: 20px;
+  padding: 1%;
+}
+.NotiModalButtons {
+  color: #319396;
+}

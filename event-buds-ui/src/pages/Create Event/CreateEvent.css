@@ -54,3 +54,11 @@ ion-modal#custom-modal ion-header > ion-toolbar {
 .addSpaceAbove {
   margin-top: 2%;
 }
+
+ion-datetime {
+  --background: #e0f4f5;
+
+  border-radius: 16px;
+  box-shadow: #e0f4f5;
+  color: black;
+}
