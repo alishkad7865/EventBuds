@@ -1,6 +1,8 @@
+import ast
+from Auth.AuthHandler import decodeJWT
 from fastapi import HTTPException
 from Auth.AuthHandler import signJWT
-from Model.EventModel import User
+from Model.EventModel import User, Friend
 from Repository.UserRepository import UserRepository
 import sys
 import json
@@ -22,6 +24,27 @@ class UserService:
 
     def getLoggedInUser(self, email):
         return self.repository.getLoggedInUser(email)
+
+    def getFriends(self, token: str):
+        payload = decodeJWT(token)
+        user_id = payload.get("user_id")
+        friends = self.repository.getFriends(user_id)
+        return ast.literal_eval(str(friends))
+
+    def add_friend(self, friend: Friend, token: str):
+        payload = decodeJWT(token)
+        user = Friend.convert_payload_friend(payload=payload)
+        return self.repository.add_friend(friend=friend, user=user)
+
+    def remove_friend(self, friend: Friend, token: str):
+        payload = decodeJWT(token)
+        user = Friend.convert_payload_friend(payload=payload)
+        return self.repository.remove_friend(friend_id=friend.USERID, user_id=user.USERID)
+
+    def accept_friend_request(self, friend: Friend, token: str):
+        payload = decodeJWT(token)
+        user = Friend.convert_payload_friend(payload=payload)
+        return self.repository.accept_friend_request(friend_id=friend.USERID, user_id=user.USERID)
 
     def createUser(self, user):
         try:

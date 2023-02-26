@@ -10,17 +10,6 @@ class EventInvitationRepository:
     def __init__(self):
         self.connection = connection()
 
-    def UpdateEventInvitation(self, pageName, number):
-        try:
-            query = """ INSERT INTO "ADMIN"."EVENT"
-                            (click, TotalClick) VALUES (%s,%s)"""
-            data = (pageName, number)
-            self.connection.cursor().execute(query, data)
-            self.connection.commit()
-            return OK
-        except NameError as e:
-            return e
-
     def sendEventInvitation(self, invitation: EventInvitation):
         try:
             query = 'INSERT INTO "ADMIN"."EVENTINVITATION" (EVENTID, USERID, OWNERID, INVITATIONRESPONSE, NOTIFIED, ISHELPER) VALUES(:eventId, :userId, :ownerId, :invitationResponse, :Notified, :isHelper)'
@@ -48,6 +37,36 @@ class EventInvitationRepository:
                     eventInvitationList.append(tempObj)
                     tempObj = {}
                 return eventInvitationList
+        except NameError as e:
+            return e
+
+    def getUserInvitation(self, user_id):
+        try:
+            query = """ SELECT * FROM "ADMIN"."EVENTINVITATION" WHERE USERID = :user_id """
+            with self.connection.cursor() as cursor:
+                data = dict(event_id=int(user_id),)
+                cursor.execute(query, data)
+                rows = cursor.fetchall()
+                eventInvitationList = []
+                for row in rows:
+                    tempObj = {}
+                    for index, column in enumerate(cursor.description, start=0):
+                        tempObj[str(column[0])] = row[index]
+                    eventInvitationList.append(tempObj)
+                    tempObj = {}
+                return eventInvitationList
+        except NameError as e:
+            return e
+
+    def updateInvitation(self, invitation_id, message):
+        try:
+            update_invitation_row = 'UPDATE "ADMIN"."EVENTINVITATION" SET "ADMIN"."EVENTINVITATION"."INVITATIONRESPONSE" =:message WHERE "ADMIN"."EVENTINVITATION"."INVITATIONID" = :invitation_id'
+            with self.connection.cursor() as cursor:
+                invitation_data = dict(message=str(
+                    message), invitation_id=int(invitation_id))
+                cursor.execute(update_invitation_row, invitation_data)
+                self.connection.commit()
+                return "Invitation " + message+"!"
         except NameError as e:
             return e
 

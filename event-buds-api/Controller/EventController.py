@@ -35,6 +35,14 @@ class EventController:
     def getEventHelpers(event_id):
         return eventInvitationService.getEventHelpers(event_id)
 
+    @router.get("/acceptEventInvitation", dependencies=[Depends(JWTBearer())])
+    def acceptEventInvitation(invitation_id):
+        return eventInvitationService.updateEventInvitation(invitation_id=invitation_id, message="accepted")
+
+    @router.get("/declineEventInvitation", dependencies=[Depends(JWTBearer())])
+    def acceptEventInvitation(invitation_id):
+        return eventInvitationService.updateEventInvitation(invitation_id=invitation_id, message="rejected")
+
     @router.get("/eventGuests", dependencies=[Depends(JWTBearer())])
     def getEventGuests(event_id):
         return eventInvitationService.getEventGuests(event_id)

@@ -15,6 +15,9 @@ class EventInvitationService:
         except NameError as e:
             return e
 
+    def updateEventInvitation(self, invitation_id, message):
+        return self.repository.updateInvitation(invitation_id=invitation_id, message=message)
+
     def getEventInvitations(self, event_id=0):
         return self.repository.getEventInvitation(event_id)
 
