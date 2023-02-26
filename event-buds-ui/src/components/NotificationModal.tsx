@@ -38,27 +38,28 @@ export default function NotificationModal(props: any) {
         <IonList>
           <IonItem>
             <IonLabel>
-              <IonAvatar slot="start">
-                <IonImg src="https://i.pravatar.cc/300?u=b" />
-              </IonAvatar>
-              <IonLabel>
-                Connor Smith has requested to be friends with you
-              </IonLabel>
-              <IonButton fill="outline">
-                No
-                <IonIcon icon={closeCircleOutline}></IonIcon>
-              </IonButton>
-              <IonButton fill="outline" slot="end">
-                Yes
-                <IonIcon icon={checkmarkCircleOutline}></IonIcon>
-              </IonButton>
+              <IonToolbar>
+                <IonButtons>
+                  <IonButton class="NotiModalButtons" fill="outline">
+                    No
+                    <IonIcon icon={closeCircleOutline}></IonIcon>
+                  </IonButton>
+
+                  <IonLabel>
+                    Daniel Smith has requested to be friends with you
+                  </IonLabel>
+
+                  <IonButton class="NotiModalButtons" fill="outline" slot="end">
+                    Yes
+                    <IonIcon icon={checkmarkCircleOutline}></IonIcon>
+                  </IonButton>
+                </IonButtons>
+              </IonToolbar>
             </IonLabel>
           </IonItem>
+
           <IonItem>
             <IonLabel>
-              <IonAvatar slot="start">
-                <IonImg src="https://i.pravatar.cc/300?u=b" />
-              </IonAvatar>
               <IonLabel>
                 Daniel Smith has requested to be friends with you
               </IonLabel>
