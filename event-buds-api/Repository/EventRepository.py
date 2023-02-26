@@ -46,7 +46,7 @@ class EventRepository:
 
     def getUserEvent(self, userId):
         try:
-            query = """ SELECT * FROM "ADMIN"."EVENT" WHERE "ADMIN"."EVENT"."EVENTID"= (select DISTINCT admin.eventinvitation.eventid from admin.eventinvitation where admin.eventinvitation.userid=:userId and admin.eventinvitation.invitationresponse ='accepted') or admin.event.ownerid=:userId"""
+            query = """ SELECT Distinct "ADMIN"."EVENT"."EVENTID", "ADMIN"."EVENT"."DESCRIPTION", "ADMIN"."EVENT"."CREATIONDATE", "ADMIN"."EVENT"."CREATEDBY", "ADMIN"."EVENT"."REGENDDATE", "ADMIN"."EVENT"."STARTDATETIME", "ADMIN"."EVENT"."ENDDATETIME", "ADMIN"."EVENT"."LOCATION", "ADMIN"."EVENT"."ISPUBLIC", "ADMIN"."EVENT"."CAPACITY", "ADMIN"."EVENT"."PRICE", "ADMIN"."EVENT"."STATUS", "ADMIN"."EVENT"."OWNERID", "ADMIN"."EVENT"."HELPERS", "ADMIN"."EVENT"."EVENTTITLE" FROM "ADMIN"."EVENT", "ADMIN"."EVENTINVITATION" WHERE "ADMIN"."EVENT"."OWNERID" =:userId  OR ("ADMIN"."EVENT"."EVENTID"= "ADMIN"."EVENTINVITATION"."EVENTID" AND ("ADMIN"."EVENTINVITATION"."USERID" =:userId AND "ADMIN"."EVENTINVITATION"."INVITATIONRESPONSE" ='accepted'))"""
             # query = """ SELECT * FROM "ADMIN"."EVENT" WHERE "ADMIN"."EVENT"."EVENTID"= (select DISTINCT admin.eventinvitation.eventid from admin.eventinvitation where admin.eventinvitation.userid=:userId and admin.eventinvitation.ishelper=1 and admin.eventinvitation.invitationresponse ='accepted') or admin.event.ownerid=:userId"""
             with self.connection.cursor() as cursor:
                 data = dict(userId=int(userId),)
