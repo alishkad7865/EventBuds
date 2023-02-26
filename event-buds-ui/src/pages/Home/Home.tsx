@@ -31,9 +31,10 @@ export default function Home() {
   const [helpersList, setHelpersList] = useState<any>([]);
   const [eventStepper, setEventStepper] = useState(1);
   const [acceptedhelpersList, setAcceptedHelpersList] = useState<any>([]);
+  const [isHelperOrOwner, setIsHelperOROwner] = useState<boolean>(false);
 
   async function loadUserEvents() {
-    let result = await GetUserEvents(token); // update this list for actual data
+    let result = await GetUserEvents(token);
     if (result) {
       setEvents(result);
     }
@@ -53,6 +54,13 @@ export default function Home() {
       if (helpers) {
         setHelpersList(helpers.helpersList);
         setAcceptedHelpersList(helpers.acceptedhelpersList);
+        if (
+          helpers.acceptedhelpersList.find(
+            (list: any) => list.USERID === user.USERID
+          )
+        ) {
+          setIsHelperOROwner(true);
+        } else setIsHelperOROwner(false);
       }
       let guests = await GetEventGuests(eventId, token);
       if (guests) {
@@ -174,7 +182,7 @@ export default function Home() {
         <Event
           event={event}
           setEventStepper={setEventStepper}
-          isHelperOrOwner={true}
+          isHelperOrOwner={isHelperOrOwner}
           helpersList={helpersList}
           guestsList={guestsList}
           acceptedhelpersList={acceptedhelpersList}
