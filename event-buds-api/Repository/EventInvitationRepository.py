@@ -1,6 +1,6 @@
 from Model.EventModel import EventInvitation
 from Connection import connection
-import datetime
+from datetime import datetime
 from http.client import OK
 import sys
 sys.path.append('../event-buds-api/')
@@ -42,9 +42,9 @@ class EventInvitationRepository:
 
     def getUserInvitation(self, user_id):
         try:
-            query = """ SELECT * FROM "ADMIN"."EVENTINVITATION" WHERE USERID = :user_id """
+            query = """ SELECT  "ADMIN"."EVENTINVITATION"."INVITEID", "ADMIN"."EVENTINVITATION"."USERID",  "ADMIN"."EVENTINVITATION"."OWNERID",  "ADMIN"."EVENTINVITATION"."SENTDATE",  "ADMIN"."EVENTINVITATION"."ISHELPER",  "ADMIN"."EVENTINVITATION"."TASKASSIGNED",  "ADMIN"."EVENT"."EVENTTITLE", "ADMIN"."USER"."USERNAME", "ADMIN"."USER"."EMAIL", "ADMIN"."USER"."FIRSTNAME", "ADMIN"."USER"."LASTNAME",  "ADMIN"."EVENTINVITATION"."EVENTID"  FROM "ADMIN"."EVENTINVITATION" left join "ADMIN"."EVENT" on "ADMIN"."EVENTINVITATION"."EVENTID" = "ADMIN"."EVENT"."EVENTID" left join "ADMIN"."USER" on "ADMIN"."EVENTINVITATION"."OWNERID" = "ADMIN"."USER"."USERID" WHERE "ADMIN"."EVENTINVITATION"."USERID" =:user_id AND "ADMIN"."EVENTINVITATION"."INVITATIONRESPONSE"= 'sent' """
             with self.connection.cursor() as cursor:
-                data = dict(event_id=int(user_id),)
+                data = dict(user_id=int(user_id),)
                 cursor.execute(query, data)
                 rows = cursor.fetchall()
                 eventInvitationList = []
@@ -60,10 +60,10 @@ class EventInvitationRepository:
 
     def updateInvitation(self, invitation_id, message):
         try:
-            update_invitation_row = 'UPDATE "ADMIN"."EVENTINVITATION" SET "ADMIN"."EVENTINVITATION"."INVITATIONRESPONSE" =:message WHERE "ADMIN"."EVENTINVITATION"."INVITATIONID" = :invitation_id'
+            update_invitation_row = 'UPDATE "ADMIN"."EVENTINVITATION" SET "ADMIN"."EVENTINVITATION"."INVITATIONRESPONSE" =:message, "ADMIN"."EVENTINVITATION"."RESPONDDATE"=:respond_date WHERE "ADMIN"."EVENTINVITATION"."INVITEID" = :invitation_id'
             with self.connection.cursor() as cursor:
                 invitation_data = dict(message=str(
-                    message), invitation_id=int(invitation_id))
+                    message), invitation_id=int(invitation_id), respond_date=datetime.now())
                 cursor.execute(update_invitation_row, invitation_data)
                 self.connection.commit()
                 return "Invitation " + message+"!"

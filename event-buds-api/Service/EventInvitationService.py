@@ -1,3 +1,4 @@
+from Auth.AuthHandler import decodeJWT
 from Repository import EventInvitationRepository
 from Model.EventModel import EventInvitation
 import sys
@@ -17,6 +18,11 @@ class EventInvitationService:
 
     def updateEventInvitation(self, invitation_id, message):
         return self.repository.updateInvitation(invitation_id=invitation_id, message=message)
+
+    def getUserInvitations(self, token):
+        payload = decodeJWT(token)
+        user_id: int = payload.get("user_id")
+        return self.repository.getUserInvitation(user_id=user_id)
 
     def getEventInvitations(self, event_id=0):
         return self.repository.getEventInvitation(event_id)

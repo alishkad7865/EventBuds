@@ -98,7 +98,7 @@ export default function Home() {
             <Menu page={"home"} />
             <IonContent>
               <h1 className="ion-text-center ion-text-capitalize">
-                {`Welcome ${user.FIRSTNAME ?? ""}`}
+                {`Welcome ${user.FIRSTNAME ?? ""} ${user.LASTNAME ?? ""}`}
               </h1>
 
               <IonAccordionGroup
