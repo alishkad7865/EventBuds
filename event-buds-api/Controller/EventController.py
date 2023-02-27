@@ -31,9 +31,29 @@ class EventController:
     def getEventInvitation(event_id):
         return eventInvitationService.getEventInvitations(event_id)
 
+    @router.get("/userEventInvitations", dependencies=[Depends(JWTBearer())])
+    def getUserEventInvitation(token=Depends(oauth2_scheme)):
+        return eventInvitationService.getUserInvitations(token=token)
+
+    @router.patch("/acceptEventInvitations", dependencies=[Depends(JWTBearer())])
+    def acceptEventInvitation(invitation_id):
+        return eventInvitationService.updateEventInvitation(invitation_id=invitation_id, message="accepted")
+
+    @router.patch("/rejectEventInvitations", dependencies=[Depends(JWTBearer())])
+    def rejectEventInvitation(invitation_id):
+        return eventInvitationService.updateEventInvitation(invitation_id=invitation_id, message="rejected")
+
     @router.get("/eventHelpers", dependencies=[Depends(JWTBearer())])
     def getEventHelpers(event_id):
         return eventInvitationService.getEventHelpers(event_id)
+
+    @router.get("/acceptEventInvitation", dependencies=[Depends(JWTBearer())])
+    def acceptEventInvitation(invitation_id):
+        return eventInvitationService.updateEventInvitation(invitation_id=invitation_id, message="accepted")
+
+    @router.get("/declineEventInvitation", dependencies=[Depends(JWTBearer())])
+    def acceptEventInvitation(invitation_id):
+        return eventInvitationService.updateEventInvitation(invitation_id=invitation_id, message="rejected")
 
     @router.get("/eventGuests", dependencies=[Depends(JWTBearer())])
     def getEventGuests(event_id):

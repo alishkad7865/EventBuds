@@ -77,6 +77,21 @@ class UserObject(BaseModel):
     email: str
 
 
+class Friend(BaseModel):
+    USERID: int
+    USERNAME: str
+    EMAIL: str
+    FIRSTNAME: str
+    LASTNAME: str
+    STATUS: Optional[str] = ""
+
+    def convert_payload_friend(payload: dict):
+        return Friend(USERID=payload.get("user_id"), EMAIL=payload.get("email"), FIRSTNAME=payload.get("first_name"), LASTNAME=payload.get("last_name"), USERNAME=payload.get("user_name"))
+
+    def add_status_friend(friend: dict, message: str):
+        return Friend(USERID=friend.get("USERID"), EMAIL=friend.get("EMAIL"), FIRSTNAME=friend.get("FIRSTNAME"), LASTNAME=friend.get("LASTNAME"), USERNAME=friend.get("USERNAME"), STATUS=message)
+
+
 class Event(BaseModel):
     eventId: Optional[int] = None
     createdBy: str

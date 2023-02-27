@@ -1,7 +1,8 @@
+import json
 from fastapi import APIRouter, Depends, HTTPException, status
 from jose import JWTError
 from Service.UserService import UserService
-from Model.EventModel import UserLogin, UserSignUp, User
+from Model.EventModel import UserLogin, UserSignUp, User, Friend
 from Auth.AuthBearer import JWTBearer
 from Auth.AuthHandler import signJWT, decodeJWT
 from passlib.context import CryptContext
@@ -50,6 +51,22 @@ class UserController:
     def getAllUsers():
         return userService.getAllUsers()
 
+    @router.get("/getFriends", dependencies=[Depends(JWTBearer())])
+    def getFriends(token=Depends(oauth2_scheme)):
+        return userService.getFriends(token)
+
+    @router.patch("/addFriend", dependencies=[Depends(JWTBearer())])
+    def add_friend(friend: Friend, token=Depends(oauth2_scheme)):
+        return userService.add_friend(friend=friend, token=token)
+
+    @router.patch("/acceptFriendRequest", dependencies=[Depends(JWTBearer())])
+    def accept_friend_request(friend: Friend, token=Depends(oauth2_scheme)):
+        return userService.accept_friend_request(friend=friend, token=token)
+
+    @router.patch("/removeFriend", dependencies=[Depends(JWTBearer())])
+    def remove_friend(friend: Friend, token=Depends(oauth2_scheme)):
+        return userService.remove_friend(friend=friend, token=token)
+
     @router.post("/editUser", dependencies=[Depends(JWTBearer())])
     def editUser(userId, user):
         return userService.editUser(userId, user)
@@ -85,5 +102,5 @@ class UserController:
         logged_user = UserController.authenticate_user(
             user.email, user.password)
         if logged_user:
-            return signJWT(logged_user["USERID"], logged_user["USERNAME"], logged_user["EMAIL"])
+            return signJWT(logged_user["USERID"], logged_user["USERNAME"], logged_user["EMAIL"], logged_user["FIRSTNAME"], logged_user["LASTNAME"])
         raise HTTPException(status_code=403, detail="Wrong login details!")

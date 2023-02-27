@@ -1,6 +1,7 @@
+import json
 from Connection import connection
 from http.client import OK
-from Model.EventModel import UserLogin, User, UserSignUp
+from Model.EventModel import UserLogin, User, UserSignUp, Friend
 import sys
 sys.path.append('../event-buds-api/')
 
@@ -48,6 +49,98 @@ class UserRepository:
             self.connection.cursor().execute(query, data)
             self.connection.commit()
             return OK
+        except NameError as e:
+            return e
+
+    def getFriends(self, userId) -> list:
+        try:
+            query = """ SELECT FRIENDS FROM "ADMIN"."USER" WHERE USERID = :userId """
+            with self.connection.cursor() as cursor:
+                data = dict(userId=int(userId),)
+                cursor.execute(query, data)
+                friend_row = cursor.fetchone()[0]
+                return json.loads(friend_row)
+        except NameError as e:
+            return e
+
+    def add_friend(self, user: Friend, friend: Friend):
+        try:
+            update_friend_query = 'UPDATE "ADMIN"."USER" SET "ADMIN"."USER"."FRIENDS" =:friend_friends WHERE "ADMIN"."USER"."USERID" = :friendId '
+            update_user_query = 'UPDATE "ADMIN"."USER" SET "ADMIN"."USER"."FRIENDS" =:user_friends WHERE "ADMIN"."USER"."USERID" = :userId'
+
+            user_friends: list = self.getFriends(user.USERID)
+            friend_request_exists = any(
+                item in user_friends for item in user_friends if item["USERID"] == friend.USERID)
+            if friend_request_exists == True:
+                return "Request Already Exists!"
+
+            user_friends.append(friend.dict())
+
+            friend_friends: list = self.getFriends(friend.USERID)
+            request_object = Friend.add_status_friend(
+                friend=user.dict(), message="requested")
+            friend_friends.append(
+                request_object.dict())
+
+            with self.connection.cursor() as cursor:
+                friends_data = [str(json.dumps(friend_friends)), friend.USERID]
+                cursor.execute(update_friend_query, friends_data)
+                user_data = [str(json.dumps(user_friends)), user.USERID]
+                cursor.execute(update_user_query, user_data)
+                self.connection.commit()
+                return "Friend Request Sent!"
+        except NameError as e:
+            return e
+
+    def accept_friend_request(self, user_id: int, friend_id: int):
+        try:
+            update_friend_query = 'UPDATE "ADMIN"."USER" SET "ADMIN"."USER"."FRIENDS" =:friend_friends WHERE "ADMIN"."USER"."USERID" = :friendId '
+            update_user_query = 'UPDATE "ADMIN"."USER" SET "ADMIN"."USER"."FRIENDS" =:user_friends WHERE "ADMIN"."USER"."USERID" = :userId'
+
+            user_friends: list = self.getFriends(user_id)
+            update_users_status = list(
+                filter(lambda obj: obj['USERID'] == friend_id, user_friends))[0]
+
+            update_users_status['STATUS'] = "accepted"
+
+            friend_friends: list = self.getFriends(friend_id)
+            update_friends_status = list(
+                filter(lambda obj: obj['USERID'] == user_id, friend_friends))[0]
+            update_friends_status['STATUS'] = "accepted"
+            with self.connection.cursor() as cursor:
+                friends_data = [
+                    str(json.dumps(friend_friends)), int(friend_id)]
+                cursor.execute(update_friend_query, friends_data)
+                user_data = [str(json.dumps(user_friends)), int(user_id)]
+                cursor.execute(update_user_query, user_data)
+                self.connection.commit()
+                return "Friend Request Accepted!"
+        except NameError as e:
+            return e
+
+    def remove_friend(self, user_id: int, friend_id: int):
+        try:
+            update_friend_query = 'UPDATE "ADMIN"."USER" SET "ADMIN"."USER"."FRIENDS" =:friend_friends WHERE "ADMIN"."USER"."USERID" = :friendId '
+            update_user_query = 'UPDATE "ADMIN"."USER" SET "ADMIN"."USER"."FRIENDS" =:user_friends WHERE "ADMIN"."USER"."USERID" = :userId'
+
+            user_friends: list = self.getFriends(user_id)
+            remove_friend = list(
+                filter(lambda obj: obj['USERID'] == friend_id, user_friends))[0]
+            user_friends.remove(remove_friend)
+
+            friend_friends: list = self.getFriends(friend_id)
+            remove_user = list(
+                filter(lambda obj: obj['USERID'] == user_id, friend_friends))[0]
+            friend_friends.remove(remove_user)
+
+            with self.connection.cursor() as cursor:
+                friends_data = [
+                    str(json.dumps(friend_friends)), int(friend_id)]
+                cursor.execute(update_friend_query, friends_data)
+                user_data = [str(json.dumps(user_friends)), int(user_id)]
+                cursor.execute(update_user_query, user_data)
+                self.connection.commit()
+                return "Friend Request Declined or Removed!"
         except NameError as e:
             return e
 

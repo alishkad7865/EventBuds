@@ -9,29 +9,64 @@ import {
   IonList,
   IonModal,
   IonSearchbar,
-  IonTitle,
+  IonToast,
   IonToolbar,
   setupIonicReact,
   useIonAlert,
 } from "@ionic/react";
+import { getFriends, removeFriend } from "../../api/userApi";
 import { useContext, useEffect, useRef, useState } from "react";
 import FriendsModal from "../../components/FriendsModal";
 import { UserContext } from "../../context/UserContext";
+import { Friend } from "../../types/Friends";
 import "./ManageFriends.css";
 
 setupIonicReact();
 
 export default function MyFriends(props: any) {
   const [presentAlert] = useIonAlert();
-  const { user } = useContext(UserContext);
-  const [friendsList, setfriendsList] = useState([]);
+  const { token } = useContext(UserContext);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const { friendsList, setfriendsList } = props;
   const [modalFriendData, setModalFriendData] = useState({});
   const [isOpen, setIsOpen] = useState(false);
   const modal = useRef<HTMLIonModalElement>(null);
   useEffect(() => {
-    if (JSON.parse(user.FRIENDS).length > 0)
-      setfriendsList(JSON.parse(user.FRIENDS));
+    async function loadFriends() {
+      let result = await getFriends(token);
+      if (result) {
+        setfriendsList(result.data);
+      }
+    }
+    loadFriends();
   }, []);
+
+  useEffect(() => {
+    async function loadFriends() {
+      let result = await getFriends(token);
+      if (result) {
+        setfriendsList(result.data);
+      }
+    }
+    loadFriends();
+  }, [toastMessage]);
+
+  useEffect(() => {
+    if (toastMessage !== "") {
+      setShowToast(true);
+    }
+  }, [toastMessage]);
+  async function removeFriendHandler(friend: Friend) {
+    //set api endpoint to update friend
+    await removeFriend(token, friend).then((response: any) => {
+      if (response.status >= 200 && response.status < 300) {
+        setToastMessage(response.data);
+      } else {
+        setToastMessage("Request Failed, Try Again!");
+      }
+    });
+  }
   return (
     <>
       <IonHeader>
@@ -39,6 +74,16 @@ export default function MyFriends(props: any) {
           <IonSearchbar class="searchbarBorder"></IonSearchbar>
         </IonToolbar>
       </IonHeader>
+      <IonToast
+        isOpen={showToast}
+        position="top"
+        onDidDismiss={() => {
+          setShowToast(false);
+          setToastMessage("");
+        }}
+        message={toastMessage}
+        duration={3000}
+      />
       <FriendsModal
         expand="block"
         modal={modal}
@@ -52,7 +97,7 @@ export default function MyFriends(props: any) {
         )}
         {friendsList.map((list: any) => {
           return (
-            <IonItem class="itemBackground" key={list.EMAIL + props.title}>
+            <IonItem class="itemBackground" key={list.EMAIL + "_friendlist"}>
               <IonAvatar
                 slot="start"
                 onClick={() => {
@@ -80,26 +125,43 @@ export default function MyFriends(props: any) {
                 </h6>
                 <p>{list.EMAIL}</p>
               </IonLabel>
-
-              <IonButton
-                onClick={() => {
-                  presentAlert({
-                    header: "Are you sure?",
-                    cssClass: "custom-alert",
-                    buttons: [
-                      {
-                        text: "Yes",
-                      },
-
-                      {
-                        text: "Cancel",
-                      },
-                    ],
-                  });
-                }}
-              >
-                Remove Friend
-              </IonButton>
+              {list.STATUS === "accepted" ? (
+                <IonButton
+                  onClick={() =>
+                    presentAlert({
+                      header: "Are you sure?",
+                      cssClass: "custom-alert",
+                      mode: "ios",
+                      buttons: [
+                        {
+                          text: "Cancel",
+                          role: "Cancel",
+                          cssClass: "alert-button-cancel",
+                          handler: () => {
+                            console.log("Cancelled");
+                          },
+                        },
+                        {
+                          text: "Yes",
+                          role: "confirm",
+                          cssClass: "alert-button-confirm",
+                          handler: () => {
+                            removeFriendHandler(list);
+                          },
+                        },
+                      ],
+                    })
+                  }
+                >
+                  Remove Friend
+                </IonButton>
+              ) : (
+                <div className="addChip">
+                  <IonButton disabled expand="full" shape="round">
+                    {list.STATUS}
+                  </IonButton>
+                </div>
+              )}
             </IonItem>
           );
         })}

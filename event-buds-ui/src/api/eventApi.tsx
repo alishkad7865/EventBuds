@@ -1,5 +1,4 @@
 import { CapacitorHttp, HttpResponse } from "@capacitor/core";
-import axios from "axios";
 export async function CreateEvent(event: any, token: string) {
   let baseUrl =
     `${process.env.REACT_APP_BASE_URL}/Event/createEvent?Event=` + event;
@@ -25,37 +24,109 @@ export async function CreateEvent(event: any, token: string) {
 export async function GetUserEvents(token: string) {
   let baseUrl = `${process.env.REACT_APP_BASE_URL}/Event/getUserEvents`;
 
-  return axios
-    .get(`${baseUrl}`, {
-      headers: {
-        Accept: "application/json",
-        Authorization: "Bearer " + token,
-      },
+  const options = {
+    url: baseUrl,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token,
+    },
+  };
+  const response: HttpResponse = await CapacitorHttp.get(options)
+    .then((response: any) => {
+      if (response.status >= 200 && response.status < 300) {
+        return response;
+      }
     })
+    .catch((e: any) => console.log(e));
+  return response.data;
+}
+
+export async function GetUserEventInvitations(token: string) {
+  let baseUrl = `${process.env.REACT_APP_BASE_URL}/Event/userEventInvitations`;
+
+  const options = {
+    url: baseUrl,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token,
+    },
+  };
+  const response: HttpResponse = await CapacitorHttp.get(options)
+    .then((response: any) => {
+      if (response.status >= 200 && response.status < 300) {
+        return response;
+      }
+    })
+    .catch((e: any) => console.log(e));
+  return response.data;
+}
+
+export async function acceptEventInvitations(
+  token: string,
+  invitationId: number
+) {
+  let baseUrl = `${process.env.REACT_APP_BASE_URL}/Event/acceptEventInvitations?invitation_id=${invitationId}`;
+
+  const options = {
+    url: baseUrl,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token,
+    },
+  };
+  const response: HttpResponse = await CapacitorHttp.patch(options)
     .then((response: any) => {
       if (response.status >= 200 && response.status < 300) {
         return response.data;
       }
     })
     .catch((e: any) => console.log(e));
+  return response;
+}
+
+export async function rejectEventInvitations(
+  token: string,
+  invitationId: number
+) {
+  let baseUrl = `${process.env.REACT_APP_BASE_URL}/Event/rejectEventInvitations?invitation_id=${invitationId}`;
+
+  const options = {
+    url: baseUrl,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token,
+    },
+  };
+  const response: HttpResponse = await CapacitorHttp.patch(options)
+    .then((response: any) => {
+      if (response.status >= 200 && response.status < 300) {
+        return response.data;
+      } else if (response.status > 300) {
+        return response.data;
+      }
+    })
+    .catch((e: any) => console.log(e));
+  return response;
 }
 
 export async function GetPublicEvents(token: string) {
   let baseUrl = `${process.env.REACT_APP_BASE_URL}/Event/getPublicEvents`;
 
-  return axios
-    .get(`${baseUrl}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
-      },
-    })
+  const options = {
+    url: baseUrl,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token,
+    },
+  };
+  const response: HttpResponse = await CapacitorHttp.get(options)
     .then((response: any) => {
       if (response.status >= 200 && response.status < 300) {
-        return response.data;
+        return response;
       }
     })
     .catch((e: any) => console.log(e));
+  return response.data;
 }
 
 export async function GetEventInvitations(eventId: number, token: string) {
@@ -63,55 +134,61 @@ export async function GetEventInvitations(eventId: number, token: string) {
     `${process.env.REACT_APP_BASE_URL}/Event/eventInvitations?event_id=` +
     eventId;
 
-  return axios
-    .get(`${baseUrl}`, {
-      headers: {
-        Accept: "application/json",
-        Authorization: "Bearer " + token,
-      },
-    })
+  const options = {
+    url: baseUrl,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token,
+    },
+  };
+  const response: HttpResponse = await CapacitorHttp.get(options)
     .then((response: any) => {
       if (response.status >= 200 && response.status < 300) {
-        return response.data;
+        return response;
       }
     })
     .catch((e: any) => console.log(e));
+  return response;
 }
 
 export async function GetEventHelpers(eventId: number, token: string) {
   let baseUrl =
     `${process.env.REACT_APP_BASE_URL}/Event/eventHelpers?event_id=` + eventId;
 
-  return axios
-    .get(`${baseUrl}`, {
-      headers: {
-        Accept: "application/json",
-        Authorization: "Bearer " + token,
-      },
-    })
+  const options = {
+    url: baseUrl,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token,
+    },
+  };
+  const response: HttpResponse = await CapacitorHttp.get(options)
     .then((response: any) => {
       if (response.status >= 200 && response.status < 300) {
-        return response.data;
+        return response;
       }
     })
     .catch((e: any) => console.log(e));
+  return response.data;
 }
 
 export async function GetEventGuests(eventId: number, token: string) {
   let baseUrl =
     `${process.env.REACT_APP_BASE_URL}/Event/eventGuests?event_id=` + eventId;
 
-  return axios
-    .get(`${baseUrl}`, {
-      headers: {
-        Accept: "application/json",
-        Authorization: "Bearer " + token,
-      },
-    })
+  const options = {
+    url: baseUrl,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token,
+    },
+  };
+  const response: HttpResponse = await CapacitorHttp.get(options)
     .then((response: any) => {
       if (response.status >= 200 && response.status < 300) {
-        return response.data;
+        return response;
       }
     })
     .catch((e: any) => console.log(e));
+  return response.data;
 }

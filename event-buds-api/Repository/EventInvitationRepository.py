@@ -1,6 +1,6 @@
 from Model.EventModel import EventInvitation
 from Connection import connection
-import datetime
+from datetime import datetime
 from http.client import OK
 import sys
 sys.path.append('../event-buds-api/')
@@ -9,17 +9,6 @@ sys.path.append('../event-buds-api/')
 class EventInvitationRepository:
     def __init__(self):
         self.connection = connection()
-
-    def UpdateEventInvitation(self, pageName, number):
-        try:
-            query = """ INSERT INTO "ADMIN"."EVENT"
-                            (click, TotalClick) VALUES (%s,%s)"""
-            data = (pageName, number)
-            self.connection.cursor().execute(query, data)
-            self.connection.commit()
-            return OK
-        except NameError as e:
-            return e
 
     def sendEventInvitation(self, invitation: EventInvitation):
         try:
@@ -48,6 +37,36 @@ class EventInvitationRepository:
                     eventInvitationList.append(tempObj)
                     tempObj = {}
                 return eventInvitationList
+        except NameError as e:
+            return e
+
+    def getUserInvitation(self, user_id):
+        try:
+            query = """ SELECT  "ADMIN"."EVENTINVITATION"."INVITEID", "ADMIN"."EVENTINVITATION"."USERID",  "ADMIN"."EVENTINVITATION"."OWNERID",  "ADMIN"."EVENTINVITATION"."SENTDATE",  "ADMIN"."EVENTINVITATION"."ISHELPER",  "ADMIN"."EVENTINVITATION"."TASKASSIGNED",  "ADMIN"."EVENT"."EVENTTITLE", "ADMIN"."USER"."USERNAME", "ADMIN"."USER"."EMAIL", "ADMIN"."USER"."FIRSTNAME", "ADMIN"."USER"."LASTNAME",  "ADMIN"."EVENTINVITATION"."EVENTID"  FROM "ADMIN"."EVENTINVITATION" left join "ADMIN"."EVENT" on "ADMIN"."EVENTINVITATION"."EVENTID" = "ADMIN"."EVENT"."EVENTID" left join "ADMIN"."USER" on "ADMIN"."EVENTINVITATION"."OWNERID" = "ADMIN"."USER"."USERID" WHERE "ADMIN"."EVENTINVITATION"."USERID" =:user_id AND "ADMIN"."EVENTINVITATION"."INVITATIONRESPONSE"= 'sent' """
+            with self.connection.cursor() as cursor:
+                data = dict(user_id=int(user_id),)
+                cursor.execute(query, data)
+                rows = cursor.fetchall()
+                eventInvitationList = []
+                for row in rows:
+                    tempObj = {}
+                    for index, column in enumerate(cursor.description, start=0):
+                        tempObj[str(column[0])] = row[index]
+                    eventInvitationList.append(tempObj)
+                    tempObj = {}
+                return eventInvitationList
+        except NameError as e:
+            return e
+
+    def updateInvitation(self, invitation_id, message):
+        try:
+            update_invitation_row = 'UPDATE "ADMIN"."EVENTINVITATION" SET "ADMIN"."EVENTINVITATION"."INVITATIONRESPONSE" =:message, "ADMIN"."EVENTINVITATION"."RESPONDDATE"=:respond_date WHERE "ADMIN"."EVENTINVITATION"."INVITEID" = :invitation_id'
+            with self.connection.cursor() as cursor:
+                invitation_data = dict(message=str(
+                    message), invitation_id=int(invitation_id), respond_date=datetime.now())
+                cursor.execute(update_invitation_row, invitation_data)
+                self.connection.commit()
+                return "Invitation " + message+"!"
         except NameError as e:
             return e
 

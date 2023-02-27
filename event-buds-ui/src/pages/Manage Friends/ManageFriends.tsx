@@ -4,7 +4,7 @@ import {
   IonSegment,
   IonSegmentButton,
 } from "@ionic/react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -16,14 +16,26 @@ import "@ionic/react/css/typography.css";
 import MyFriends from "./MyFriends";
 import AddFriends from "./AddFriends";
 import Menu from "../../components/Menu";
+import { UserContext } from "../../context/UserContext";
 
 export default function ManageFriends(props: any) {
   const [segment, setSegment] = useState("Friends");
+  const { user } = useContext(UserContext);
+  const [friendsList, setfriendsList] = useState<any>([]);
+
   function handleSegmentChange(value: any) {
     if (value === "Friends") {
-      return <MyFriends />;
+      return (
+        <MyFriends setfriendsList={setfriendsList} friendsList={friendsList} />
+      );
     } else if (value === "Add") {
-      return <AddFriends />;
+      return (
+        <AddFriends
+          user={user}
+          setfriendsList={setfriendsList}
+          friendsList={friendsList}
+        />
+      );
     }
   }
 

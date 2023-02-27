@@ -16,11 +16,13 @@ def token_response(token: str):
     }
 
 
-def signJWT(user_id: str, user_name: str, email: str) -> Dict[str, str]:
+def signJWT(user_id: str, user_name: str, email: str, first_name: str, last_name: str) -> Dict[str, str]:
     payload = {
         "user_id": user_id,
         "user_name": user_name,
         "email": email,
+        "first_name": first_name,
+        "last_name": last_name,
     }
     token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
     return token_response(token)
