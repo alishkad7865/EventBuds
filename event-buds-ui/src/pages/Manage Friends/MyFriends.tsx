@@ -1,21 +1,26 @@
 import {
   IonAvatar,
   IonButton,
+  IonButtons,
+  IonContent,
   IonHeader,
   IonItem,
   IonLabel,
   IonList,
+  IonModal,
   IonSearchbar,
   IonToast,
   IonToolbar,
   setupIonicReact,
   useIonAlert,
 } from "@ionic/react";
-import { useContext, useEffect, useState } from "react";
 import { getFriends, removeFriend } from "../../api/userApi";
+import { useContext, useEffect, useRef, useState } from "react";
+import FriendsModal from "../../components/FriendsModal";
 import { UserContext } from "../../context/UserContext";
 import { Friend } from "../../types/Friends";
 import "./ManageFriends.css";
+
 setupIonicReact();
 
 export default function MyFriends(props: any) {
@@ -24,26 +29,29 @@ export default function MyFriends(props: any) {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const { friendsList, setfriendsList } = props;
+  const [modalFriendData, setModalFriendData] = useState({});
+  const [isOpen, setIsOpen] = useState(false);
+  const modal = useRef<HTMLIonModalElement>(null);
   useEffect(() => {
     async function loadFriends() {
       let result = await getFriends(token);
-      console.log(result.data);
       if (result) {
         setfriendsList(result.data);
       }
     }
     loadFriends();
   }, []);
+
   useEffect(() => {
     async function loadFriends() {
       let result = await getFriends(token);
-      console.log(result.data);
       if (result) {
         setfriendsList(result.data);
       }
     }
     loadFriends();
   }, [toastMessage]);
+
   useEffect(() => {
     if (toastMessage !== "") {
       setShowToast(true);
@@ -76,6 +84,13 @@ export default function MyFriends(props: any) {
         message={toastMessage}
         duration={3000}
       />
+      <FriendsModal
+        expand="block"
+        modal={modal}
+        isOpen={isOpen}
+        list={modalFriendData}
+        setIsOpen={setIsOpen}
+      />
       <IonList>
         {friendsList.length === 0 && (
           <h5 className="ion-text-center labelColour">No Friends Added!</h5>
@@ -83,19 +98,31 @@ export default function MyFriends(props: any) {
         {friendsList.map((list: any) => {
           return (
             <IonItem class="itemBackground" key={list.EMAIL + "_friendlist"}>
-              <IonAvatar slot="start">
+              <IonAvatar
+                slot="start"
+                onClick={() => {
+                  setIsOpen(true);
+                  setModalFriendData(list);
+                }}
+              >
                 <img
                   alt="Silhouette of a person's head"
                   src="https://ionicframework.com/docs/img/demos/avatar.svg"
                 />
               </IonAvatar>
-              <IonLabel>
-                <h2 className="labelColour ion-text-capitalize">
+
+              <IonLabel
+                onClick={() => {
+                  setIsOpen(true);
+                  setModalFriendData(list);
+                }}
+              >
+                <h6 className="labelColour ion-text-capitalize">
                   {" "}
                   <b className="labelColour">
                     {list.FIRSTNAME + " " + list.LASTNAME}{" "}
                   </b>
-                </h2>
+                </h6>
                 <p>{list.EMAIL}</p>
               </IonLabel>
               {list.STATUS === "accepted" ? (

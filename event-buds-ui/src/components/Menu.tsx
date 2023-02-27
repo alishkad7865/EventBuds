@@ -6,6 +6,7 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
+
 import {
   calendarOutline,
   checkboxOutline,
@@ -15,9 +16,15 @@ import {
   notifications,
   peopleOutline,
 } from "ionicons/icons";
+import { useRef } from "react";
 import Logout from "./Logout";
+import NotificationModal from "./NotificationModal";
 
 function Menu(props: any) {
+  const modal = useRef<HTMLIonModalElement>(null);
+  function dismiss() {
+    modal.current?.dismiss();
+  }
   function getHeaderComponent() {
     if (props.page === "home") {
       return (
@@ -108,13 +115,19 @@ function Menu(props: any) {
   return (
     <IonHeader>
       <IonToolbar>
-        <IonButtons slot="end">
+        <IonButtons slot="end" id={"notification-modal" + props.page}>
           <IonTabButton>
             <IonIcon icon={notifications} />
           </IonTabButton>
         </IonButtons>
         {getHeaderComponent()}
         <Logout pageName={props.page} />
+        <NotificationModal
+          pageName={props.page}
+          triggerId={"notification-modal" + props.page}
+          modal={modal}
+          dismiss={dismiss}
+        />
       </IonToolbar>
     </IonHeader>
   );

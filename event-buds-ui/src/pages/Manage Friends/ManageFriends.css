@@ -17,3 +17,8 @@
 .labelColour {
   color: #37383a;
 }
+
+.GiantAvatar {
+  height: "200px";
+  border-radius: "50%";
+}
