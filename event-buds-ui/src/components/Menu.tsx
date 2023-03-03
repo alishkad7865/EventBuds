@@ -11,16 +11,19 @@ import {
   calendarOutline,
   checkboxOutline,
   createOutline,
+  downloadOutline,
   homeOutline,
   logInOutline,
   notifications,
   peopleOutline,
 } from "ionicons/icons";
-import { useRef } from "react";
+import { useContext, useRef } from "react";
+import { UserContext } from "../context/UserContext";
 import Logout from "./Logout";
 import NotificationModal from "./NotificationModal";
 
 function Menu(props: any) {
+  const { userLoggedIn } = useContext(UserContext);
   const modal = useRef<HTMLIonModalElement>(null);
   function dismiss() {
     modal.current?.dismiss();
@@ -115,11 +118,14 @@ function Menu(props: any) {
   return (
     <IonHeader>
       <IonToolbar>
-        <IonButtons slot="end" id={"notification-modal" + props.page}>
-          <IonTabButton>
-            <IonIcon icon={notifications} />
-          </IonTabButton>
-        </IonButtons>
+        {userLoggedIn && (
+          <IonButtons slot="end" id={"notification-modal" + props.page}>
+            <IonTabButton>
+              <IonIcon icon={notifications} />
+            </IonTabButton>
+          </IonButtons>
+        )}
+
         {getHeaderComponent()}
         <Logout pageName={props.page} />
         <NotificationModal

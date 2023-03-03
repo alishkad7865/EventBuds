@@ -29,7 +29,7 @@ import "@ionic/react/css/display.css";
 
 /* Theme variables */
 import "./theme/variables.css";
-import { Route } from "react-router";
+import { Redirect, Route } from "react-router";
 import Login from "./pages/Login SignUp/Login";
 import Home from "./pages/Home/Home";
 import Signup from "./pages/Login SignUp/Signup";
@@ -37,8 +37,19 @@ import ManageFriends from "./pages/Manage Friends/ManageFriends";
 import CreateEvent from "./pages/Create Event/CreateEvent";
 import PublicEvents from "./pages/Public Event/PublicEvent";
 import Profile from "./pages/My Profile/Profile";
-import { home, people, create, calendar, person } from "ionicons/icons";
+import {
+  home,
+  people,
+  create,
+  calendar,
+  person,
+  personAdd,
+  logIn,
+  download,
+  informationCircle,
+} from "ionicons/icons";
 import { UserContext } from "./context/UserContext";
+import Download from "./pages/Information/Download";
 
 setupIonicReact();
 
@@ -50,9 +61,7 @@ const App: React.FC = () => {
         {userLoggedIn ? (
           <IonTabs>
             <IonRouterOutlet>
-              <Route path="/">
-                <Home />
-              </Route>
+              <Redirect exact from="/" to="/Home" />
               <Route path="/Home">
                 <Home />
               </Route>
@@ -67,6 +76,9 @@ const App: React.FC = () => {
               </Route>
               <Route path="/profile">
                 <Profile />
+              </Route>
+              <Route exact path="/Download">
+                <Download />
               </Route>
             </IonRouterOutlet>
             <IonTabBar slot="bottom">
@@ -93,17 +105,40 @@ const App: React.FC = () => {
             </IonTabBar>
           </IonTabs>
         ) : (
-          <IonRouterOutlet>
-            <Route path="/">
-              <Login />
-            </Route>
-            <Route exact path="/Login">
-              <Login />
-            </Route>
-            <Route exact path="/Signup">
-              <Signup />
-            </Route>
-          </IonRouterOutlet>
+          <IonTabs>
+            <IonRouterOutlet>
+              <Route exact path="/Login">
+                <Login />
+              </Route>
+              <Route exact path="/Download">
+                <Download />
+              </Route>
+              <Route exact path="/">
+                <Login />
+              </Route>
+              <Route exact path="/Signup">
+                <Signup />
+              </Route>
+            </IonRouterOutlet>
+            <IonTabBar slot="bottom">
+              <IonTabButton disabled tab="AboutUs" href="/AboutUs">
+                <IonIcon icon={informationCircle} />
+                <IonLabel>About Us</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="Download" href="/Download">
+                <IonIcon icon={download} />
+                <IonLabel>Download</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="Login" href="/Login">
+                <IonIcon icon={logIn} />
+                <IonLabel>Login</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="Signup" href="/Signup">
+                <IonIcon icon={personAdd} />
+                <IonLabel>SignUp</IonLabel>
+              </IonTabButton>
+            </IonTabBar>
+          </IonTabs>
         )}
       </IonReactRouter>
     </IonApp>

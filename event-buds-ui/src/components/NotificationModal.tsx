@@ -42,7 +42,6 @@ export default function NotificationModal(props: any) {
       if (invitations) {
         setEventInvitations(invitations);
       }
-      console.log("invitations:", invitations);
     }
     if (userLoggedIn) {
       loadFriends();
@@ -68,7 +67,6 @@ export default function NotificationModal(props: any) {
       if (invitations) {
         setEventInvitations(invitations);
       }
-      console.log("invitations:", invitations);
     }
     if (userLoggedIn) {
       loadFriends();
@@ -99,8 +97,6 @@ export default function NotificationModal(props: any) {
   }
   async function declineInvitationHandler(invitationId: number) {
     await rejectEventInvitations(token, invitationId).then((response: any) => {
-      console.log(response);
-
       if (response !== null) {
         setToastMessage(response);
       } else {
@@ -112,7 +108,6 @@ export default function NotificationModal(props: any) {
   async function acceptInvitationHandler(invitationId: number) {
     await acceptEventInvitations(token, invitationId).then((response: any) => {
       if (response !== null) {
-        console.log(response);
         setToastMessage(response);
       } else {
         setToastMessage("Request Failed, Try Again!");
