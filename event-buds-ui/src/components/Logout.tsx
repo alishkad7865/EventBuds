@@ -12,13 +12,20 @@ import { useHistory } from "react-router";
 import { UserContext } from "../context/UserContext";
 
 export default function Logout(props: any) {
-  const { user, userLoggedIn, setUserLoggedIn, setToken } =
-    useContext(UserContext);
+  const {
+    user,
+    setUser,
+    initialUser,
+    userLoggedIn,
+    setUserLoggedIn,
+    setToken,
+  } = useContext(UserContext);
   let history = useHistory();
   function handleLogout() {
     setUserLoggedIn(false);
+    setUser(initialUser);
     setToken(null);
-    history.push("/Login");
+    history.push("/");
   }
   return userLoggedIn ? (
     <>
@@ -31,6 +38,13 @@ export default function Logout(props: any) {
       >
         <IonContent>
           <IonList>
+            <IonItem
+              button={true}
+              detail={false}
+              onClick={() => history.push("/Download")}
+            >
+              Download
+            </IonItem>
             <IonItem detail={false}>
               {`${user.FIRSTNAME} ${user.LASTNAME}`}
             </IonItem>

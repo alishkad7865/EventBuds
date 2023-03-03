@@ -11,9 +11,9 @@ const config: CapacitorConfig = {
     },
   },
   server: {
-    androidScheme: "http",
+    androidScheme: "https",
     allowNavigation: [
-      "140.238.138.230"
+      "api.eventbuds.ca"
     ]
   }
 };

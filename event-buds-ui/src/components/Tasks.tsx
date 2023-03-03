@@ -15,17 +15,14 @@ import { add, trashBin } from "ionicons/icons";
 import { useContext, useEffect, useRef, useState } from "react";
 import { deleteTask, getTasks } from "../api/taskApi";
 import TaskModal from "./Modal/TaskModal";
-import { format, parseISO } from "date-fns";
+import { format, parseJSON } from "date-fns";
 import UpdateTaskModal from "./Modal/UpdateTaskModal";
 import { enterAnimation, leaveAnimation } from "../Utils/ModalUtil";
 import { UserContext } from "../context/UserContext";
 
 export default function Task(props: any) {
-  const [triggerId, setTriggerId] = useState("");
-  const [updateModalTriggerId, setupdateModalTriggerId] = useState("");
   const [taskList, setTaskList] = useState([]);
-  const [task, setTask] = useState({});
-  const [modalTitle, setModalTitle] = useState("");
+  const [task, setTask] = useState<any>({});
   const modal = useRef<HTMLIonModalElement>(null);
   const updateTaskModal = useRef<HTMLIonModalElement>(null);
   const [showToast, setShowToast] = useState(false);
@@ -43,10 +40,6 @@ export default function Task(props: any) {
   const [state, setState] = useState(initialState);
   const handleChange = (input: any) => (e: any) => {
     setState({ ...state, [input]: e.target.value });
-  };
-
-  const handleUpdateChange = (input: any) => (e: any) => {
-    setTask({ ...task, [input]: e.target.value });
   };
 
   const {
@@ -124,121 +117,118 @@ export default function Task(props: any) {
         duration={3000}
       />
       <IonFab slot="fixed" vertical="bottom" horizontal="end">
-        <IonFabButton
-          id="task-modal"
-          onIonFocus={(e) => setTriggerId(e.target.id)}
-          onClick={(e: any) => {
-            setModalTitle("Add Task");
-            setTriggerId(e.target.id);
-          }}
-        >
+        <IonFabButton id="task-modal">
           <IonIcon icon={add}></IonIcon>
         </IonFabButton>
       </IonFab>
       <div className="eventCardsDiv">
         {taskList?.map((task: any) => {
           return (
-            <IonCard
-              class={getTaskCardCSS(task.TASKSTATUS ?? task.taskStatus)}
-              key={task.TASKID}
-            >
-              <IonCardHeader>
-                <IonItem class="item-backgroundColor">
-                  <IonButton
-                    color={"danger"}
-                    slot="end"
-                    size="default"
-                    onClick={() => deleteTaskHandler(task.TASKID)}
-                  >
-                    Remove
-                    <IonIcon slot="end" icon={trashBin}></IonIcon>
-                  </IonButton>
-                </IonItem>
-
-                <IonCardTitle className="ion-text-capitalize ion-text-wrap">
-                  {task.TASKNAME ?? task.taskName}
-                </IonCardTitle>
-
-                <IonCardSubtitle>
-                  Status: {task.TASKSTATUS ?? task.taskStatus}
-                </IonCardSubtitle>
-                <IonCardSubtitle>
-                  Assigned To: {task.ASSIGNEDTO ?? task.ASSIGNEDTO}
-                </IonCardSubtitle>
-              </IonCardHeader>
-
-              <IonCardContent>
-                <p>
-                  <b>description:</b> {task.DESCRIPTION ?? task.description}
-                </p>
-                <p>
-                  <b>Notes:</b> {task.NOTES ?? task.notes}
-                </p>
-
-                <p>
-                  <b>Start Period:</b> {}
-                  {task.STARTTIME
-                    ? format(
-                        parseISO(task.STARTTIME.toString()),
-                        "MMM d, yyyy, K:m a "
-                      )
-                    : format(
-                        parseISO(task.startTime.toString()),
-                        "MMM d, yyyy, K:m a "
-                      )}
-                </p>
-
-                <p>
-                  <b>Completion Date:</b>{" "}
-                  {task.ENDTIME
-                    ? format(
-                        parseISO(task.ENDTIME.toString()),
-                        "MMM d, yyyy, K:m a "
-                      )
-                    : format(
-                        parseISO(task.endTime.toString()),
-                        "MMM d, yyyy, K:m a "
-                      )}
-                </p>
-              </IonCardContent>
-              <IonButton
-                fill="solid"
-                shape="round"
-                expand="block"
-                id={"taskUpdate-modal" + task.TASKID}
-                onIonFocus={(e) => setupdateModalTriggerId(e.target.id)}
-                onClick={(e: any) => {
-                  setTask(task);
-                  setModalTitle("Update Task");
-                  setupdateModalTriggerId(e.target.id);
-                }}
+            <>
+              <IonCard
+                class={getTaskCardCSS(task.TASKSTATUS ?? task.taskStatus)}
+                key={task.TASKID}
               >
-                Edit
-              </IonButton>
-            </IonCard>
+                <IonCardHeader>
+                  <IonItem class="item-backgroundColor">
+                    <IonButton
+                      color={"danger"}
+                      slot="end"
+                      size="default"
+                      onClick={() => deleteTaskHandler(task.TASKID)}
+                    >
+                      Remove
+                      <IonIcon slot="end" icon={trashBin}></IonIcon>
+                    </IonButton>
+                  </IonItem>
+
+                  <IonCardTitle className="ion-text-capitalize ion-text-wrap">
+                    {task.TASKNAME ?? task.taskName}
+                  </IonCardTitle>
+
+                  <IonCardSubtitle>
+                    Status: {task.TASKSTATUS ?? task.taskStatus}
+                  </IonCardSubtitle>
+                  <IonCardSubtitle>
+                    Assigned To: {task.ASSIGNEDTO ?? task.ASSIGNEDTO}
+                  </IonCardSubtitle>
+                </IonCardHeader>
+
+                <IonCardContent>
+                  <p>
+                    <b>description:</b> {task.DESCRIPTION ?? task.description}
+                  </p>
+                  <p>
+                    <b>Notes:</b> {task.NOTES ?? task.notes}
+                  </p>
+
+                  <p>
+                    <b>Start Period:</b>
+                    {task.STARTTIME
+                      ? format(
+                          parseJSON(task.STARTTIME.toString()),
+                          "MMM d, yyyy, K:m a "
+                        )
+                      : format(
+                          parseJSON(task.startTime.toString()),
+                          "MMM d, yyyy, K:m a "
+                        )}
+                  </p>
+
+                  <p>
+                    <b>Completion Date:</b>{" "}
+                    {task.ENDTIME
+                      ? format(
+                          parseJSON(task.ENDTIME.toString()),
+                          "MMM d, yyyy, K:m a "
+                        )
+                      : format(
+                          parseJSON(task.endTime.toString()),
+                          "MMM d, yyyy, K:m a "
+                        )}
+                  </p>
+                </IonCardContent>
+                <IonButton
+                  fill="solid"
+                  shape="round"
+                  expand="block"
+                  id={"taskUpdate-modal" + task.TASKID}
+                  // onIonFocus={(e) => setupdateModalTriggerId(e.target.id)}
+                  onClick={(e: any) => {
+                    setTask(task);
+                    // setModalTitle("Update Task");
+                    // setupdateModalTriggerId(e.target.id);
+                  }}
+                >
+                  Edit
+                </IonButton>
+              </IonCard>
+              <UpdateTaskModal
+                token={token}
+                triggerId={"taskUpdate-modal" + task?.TASKID}
+                modal={updateTaskModal}
+                setState={setState}
+                event={props.event}
+                // handleUpdateChange={handleUpdateChange}
+                helpers={props.helpers}
+                dismiss={dismiss}
+                task={task}
+                setTask={setTask}
+                taskList={taskList}
+                setTaskList={setTaskList}
+                setToastMessage={setToastMessage}
+                modalTitle={"Update Task"}
+                enterAnimation={enterAnimation}
+                leaveAnimation={leaveAnimation}
+              />
+            </>
           );
         })}
       </div>
-      <UpdateTaskModal
-        token={token}
-        triggerId={updateModalTriggerId}
-        modal={updateTaskModal}
-        setState={setState}
-        event={props.event}
-        handleUpdateChange={handleUpdateChange}
-        helpers={props.helpers}
-        dismiss={dismiss}
-        task={task}
-        taskList={taskList}
-        setTaskList={setTaskList}
-        setToastMessage={setToastMessage}
-        modalTitle={modalTitle}
-        enterAnimation={enterAnimation}
-        leaveAnimation={leaveAnimation}
-      />
+
       <TaskModal
         token={token}
-        triggerId={triggerId}
+        triggerId={"task-modal"}
         modal={modal}
         setState={setState}
         event={props.event}
@@ -250,7 +240,7 @@ export default function Task(props: any) {
         taskList={taskList}
         setTaskList={setTaskList}
         setToastMessage={setToastMessage}
-        modalTitle={modalTitle}
+        modalTitle={"Add Task"}
         enterAnimation={enterAnimation}
         leaveAnimation={leaveAnimation}
       />

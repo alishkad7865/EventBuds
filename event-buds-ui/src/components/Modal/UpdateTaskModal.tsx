@@ -18,18 +18,28 @@ import {
   IonSelect,
   IonSelectOption,
 } from "@ionic/react";
+import { useState } from "react";
 import { updateTask } from "../../api/taskApi";
 
 export default function TaskModal(props: any) {
-  const { task, handleUpdateChange } = props;
+  const [task, setTask] = useState(props.task);
+  const handleUpdateChange = (input: any) => (e: any) => {
+    setTask({ ...task, [input]: e.target.value });
+  };
   async function updateTaskHandler() {
     let Task = {
       eventId: props.event.EVENTID,
       taskName: task.TASKNAME,
       description: task.DESCRIPTION,
       assignedTo: task.ASSIGNEDTO,
-      startTime: task.STARTTIME,
-      endTime: task.ENDTIME,
+      startTime:
+        task.STARTTIME !== ""
+          ? new Date(task.STARTTIME).toISOString()
+          : new Date().toISOString(),
+      endTime:
+        task.ENDTIME !== ""
+          ? new Date(task.ENDTIME).toISOString()
+          : new Date().toISOString(),
       taskStatus: task.TASKSTATUS,
       notes: task.NOTES,
     };
@@ -47,9 +57,9 @@ export default function TaskModal(props: any) {
   }
   return (
     <IonModal
-      id={"taskUpdate-modal" + task.TASKID}
+      id={"taskUpdate-modal" + task?.TASKID}
       ref={props.modal}
-      trigger={props.triggerId}
+      trigger={"taskUpdate-modal" + task?.TASKID}
       enterAnimation={props.enterAnimation}
       leaveAnimation={props.leaveAnimation}
     >

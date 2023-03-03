@@ -36,9 +36,18 @@ export default function AddMembers(props: any) {
   async function SubmitEvent() {
     let Event = {
       eventTitle: eventTitle,
-      lastRegDate: new Date(lastRegDate).toISOString(),
-      eventStartTime: new Date(eventStartTime).toISOString(),
-      eventEndTime: new Date(eventEndTime).toISOString(),
+      lastRegDate:
+        lastRegDate !== ""
+          ? new Date(lastRegDate).toISOString()
+          : new Date().toISOString(),
+      eventStartTime:
+        eventStartTime !== ""
+          ? new Date(eventStartTime).toISOString()
+          : new Date().toISOString(),
+      eventEndTime:
+        eventEndTime !== ""
+          ? new Date(eventEndTime).toISOString()
+          : new Date().toISOString(),
       location: location,
       eventType: eventType,
       description: description,

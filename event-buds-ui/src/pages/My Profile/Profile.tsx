@@ -28,7 +28,7 @@ export default function Profile(props: any) {
     }
   }
   useEffect(() => {
-    user.FRIENDS && setFriendsCount(JSON.parse(user.FRIENDS)?.length);
+    user?.FRIENDS && setFriendsCount(JSON.parse(user?.FRIENDS)?.length);
     loadUserEvents();
   }, []);
   return (
@@ -51,11 +51,14 @@ export default function Profile(props: any) {
                 </div>
                 <IonCardHeader>
                   <IonCardTitle class="ion-text-center ion-text-capitalize">
-                    <h1> {`${user.FIRSTNAME} ${user.LASTNAME}`}</h1>
+                    <h1>
+                      {" "}
+                      {`${user?.FIRSTNAME ?? ""} ${user?.LASTNAME ?? ""}`}
+                    </h1>
                   </IonCardTitle>
                   <IonCardSubtitle class="ion-text-center ion-text-capitalize">
                     <h6>
-                      Bio:<b>{user?.BIO}</b>
+                      Bio:<b>{user?.BIO ?? ""}</b>
                     </h6>
                   </IonCardSubtitle>
                 </IonCardHeader>
@@ -73,17 +76,17 @@ export default function Profile(props: any) {
 
                 <IonCardContent>
                   <h3>
-                    Email: <b>{user.EMAIL.toString()}</b>
+                    Email: <b>{user?.EMAIL.toString()}</b>
                   </h3>
                   <br />
                   <br />
                   <h3>
-                    Address: <b>{user.ADDRESS?.toString()}</b>
+                    Address: <b>{user?.ADDRESS?.toString() ?? ""}</b>
                   </h3>
                   <br />
                   <br />
                   <h3>
-                    Sex: <b>{user.SEX.toString()}</b>
+                    Sex: <b>{user?.SEX?.toString() ?? ""}</b>
                   </h3>
                   <br />
                   <br />

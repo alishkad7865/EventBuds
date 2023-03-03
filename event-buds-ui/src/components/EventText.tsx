@@ -9,7 +9,7 @@ import {
   IonList,
   IonChip,
 } from "@ionic/react";
-import { format, parseISO } from "date-fns";
+import { format, parseJSON } from "date-fns";
 
 export default function EventText(props: any) {
   return (
@@ -31,7 +31,7 @@ export default function EventText(props: any) {
           <b>Registration End Date:</b>
         </IonCol>
         <IonCol sizeSm="4">
-          {format(parseISO(props.event.REGENDDATE), "MMM d, yyyy, K:m a ") ??
+          {format(parseJSON(props.event.REGENDDATE), "MMM d, yyyy, K:m a ") ??
             ""}
         </IonCol>
       </IonRow>
@@ -40,8 +40,10 @@ export default function EventText(props: any) {
           <b>Event Start Date:</b>
         </IonCol>
         <IonCol sizeSm="4">
-          {format(parseISO(props.event.STARTDATETIME), "MMM d, yyyy, K:m a ") ??
-            ""}
+          {format(
+            parseJSON(props.event.STARTDATETIME),
+            "MMM d, yyyy, K:m a "
+          ) ?? ""}
         </IonCol>
       </IonRow>
       <IonRow class="ion-justify-content-center">
@@ -49,7 +51,7 @@ export default function EventText(props: any) {
           <b>Event End Date:</b>
         </IonCol>
         <IonCol sizeSm="4">
-          {format(parseISO(props.event.ENDDATETIME), "MMM d, yyyy, K:m a ") ??
+          {format(parseJSON(props.event.ENDDATETIME), "MMM d, yyyy, K:m a ") ??
             ""}
         </IonCol>
       </IonRow>

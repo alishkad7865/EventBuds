@@ -14,7 +14,7 @@ import {
 } from "@ionic/react";
 import { arrowForwardCircle } from "ionicons/icons";
 import { useState, useEffect, useContext } from "react";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { userSignUp } from "../../api/userApi";
 import Menu from "../../components/Menu";
 import { UserContext } from "../../context/UserContext";
@@ -120,6 +120,11 @@ export default function Signup() {
         if (response.status >= 200 && response.status < 300) {
           setToken(response.data.access_token);
           history.push("/Home");
+        } else if (response.status >= 500) {
+          setShowToast(true);
+          setToastMessage(
+            "Internal Server Issue. Please contact admin or developers!"
+          );
         } else {
           setShowToast(true);
           setToastMessage(response.detail);
@@ -283,7 +288,7 @@ export default function Signup() {
         </IonItem>
         <IonItem fill="solid" className="addSpaceAbove">
           <IonLabel position="stacked" className="ionLabel">
-            Address
+            Address (optional)
           </IonLabel>
           <IonInput
             clearInput={true}
@@ -297,7 +302,7 @@ export default function Signup() {
         </IonItem>
         <IonItem className="addSpaceAbove">
           <IonLabel position="stacked" className="ionLabel">
-            Sex
+            Sex (optional)
           </IonLabel>
           <IonSelect
             interface="popover"
@@ -315,7 +320,7 @@ export default function Signup() {
         </IonItem>
         <IonItem counter={true} fill="solid" className="addSpaceAbove">
           <IonLabel position="stacked" className="ionLabel">
-            Bio data
+            Bio data (optional)
           </IonLabel>
           <IonTextarea
             placeholder="Type something here"
@@ -338,8 +343,10 @@ export default function Signup() {
         </IonButton>
         <br />
         <IonLabel className="labelColour">
-          Already have an account? <a href="/Login">Login</a>
+          Already have an account? <Link to="/Login">Login</Link>
         </IonLabel>
+        <br />
+        <br />
         <br />
       </IonContent>
     </IonPage>

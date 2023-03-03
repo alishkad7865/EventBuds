@@ -8,9 +8,8 @@ import {
   IonPage,
   IonButton,
 } from "@ionic/react";
-import { format, parseISO } from "date-fns";
+import { format, parseJSON } from "date-fns";
 import { arrowBack } from "ionicons/icons";
-import React from "react";
 import Menu from "./Menu";
 
 export default function PublicEventInfo(props: any) {
@@ -27,16 +26,20 @@ export default function PublicEventInfo(props: any) {
         <h1 className="ion-text-center ion-text-capitalize">
           {props.event.EVENTTITLE ?? ""}
         </h1>
-        <div className="addSpaceAbove">
-          <IonButton
-            className=""
-            onClick={() => {
-              // add event and api endpoints to update guest invitation here
-            }}
-          >
-            Interested
-          </IonButton>
-        </div>
+        <IonRow className="addSpaceAbove ion-align-items-end ion-justify-content-end ion-hide">
+          <IonCol></IonCol>
+          <IonCol>
+            <IonButton
+              className="interestedButton"
+              disabled
+              onClick={() => {
+                // add event and api endpoints to update guest invitation here
+              }}
+            >
+              Interested
+            </IonButton>
+          </IonCol>
+        </IonRow>
         <IonGrid>
           <IonRow class="ion-justify-content-center">
             <IonCol sizeSm="2">
@@ -55,7 +58,7 @@ export default function PublicEventInfo(props: any) {
               <b>Registration End Date:</b>
             </IonCol>
             <IonCol sizeSm="4">
-              {format(parseISO(props.event.REGENDDATE), "MMM d, yyyy, K:m a ")}
+              {format(parseJSON(props.event.REGENDDATE), "MMM d, yyyy, K:m a ")}
             </IonCol>
           </IonRow>
           <IonRow class="ion-justify-content-center">
@@ -64,7 +67,7 @@ export default function PublicEventInfo(props: any) {
             </IonCol>
             <IonCol sizeSm="4">
               {format(
-                parseISO(props.event.STARTDATETIME),
+                parseJSON(props.event.STARTDATETIME),
                 "MMM d, yyyy, K:m a "
               )}
             </IonCol>
@@ -75,7 +78,10 @@ export default function PublicEventInfo(props: any) {
             </IonCol>
             <IonCol sizeSm="4">
               {" "}
-              {format(parseISO(props.event.ENDDATETIME), "MMM d, yyyy, K:m a ")}
+              {format(
+                parseJSON(props.event.ENDDATETIME),
+                "MMM d, yyyy, K:m a "
+              )}
             </IonCol>
           </IonRow>
           <IonRow class="ion-justify-content-center">

@@ -54,7 +54,7 @@ class UserService:
                 user_login_id = self.repository.register_user(user=user)
                 user_id = self.repository.add_user(
                     user=user, user_id=int(user_login_id))
-                return signJWT(user_id, user.userName, user.email)
+                return signJWT(user_id, user.userName, user.email, first_name=user.firstName, last_name=user.lastName)
             else:
                 raise HTTPException(status_code=403, detail=accountExists)
         except NameError as e:

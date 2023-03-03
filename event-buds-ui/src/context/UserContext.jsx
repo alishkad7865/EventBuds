@@ -4,7 +4,7 @@ export const UserContext = createContext();
 export const UserProvider = (props) => {
   const [token, setToken] = useState(localStorage.getItem("eventBudsToken"));
   const [userLoggedIn, setUserLoggedIn] = useState(false);
-  const [user, setUser] = useState({
+  const inititalUser = {
     ADDRESS: "",
     BIO: "",
     EMAIL: "",
@@ -13,7 +13,8 @@ export const UserProvider = (props) => {
     LASTNAME: "",
     SEX: "",
     USERID: 0,
-  });
+  };
+  const [user, setUser] = useState(inititalUser);
   useEffect(() => {
     if (user) {
       if (
@@ -49,6 +50,7 @@ export const UserProvider = (props) => {
           setUserLoggedIn,
           user,
           setUser,
+          inititalUser,
         }}
       >
         {props.children}
