@@ -8,15 +8,11 @@ import {
   IonCardSubtitle,
   IonCardTitle,
   IonContent,
-  IonHeader,
   IonItem,
-  IonItemDivider,
   IonLabel,
   IonPage,
   IonSegment,
   IonSegmentButton,
-  IonTitle,
-  IonToolbar,
   useIonViewWillEnter,
 } from "@ionic/react";
 import { useContext, useEffect, useRef, useState } from "react";
@@ -28,7 +24,7 @@ import {
 import "./Home.css";
 import Event from "../Event/Event";
 import Menu from "../../components/Menu";
-import { format, parseISO } from "date-fns";
+import { format, parseJSON } from "date-fns";
 import { UserContext } from "../../context/UserContext";
 
 export default function Home() {
@@ -98,7 +94,7 @@ export default function Home() {
             <Menu page={"home"} />
             <IonContent>
               <h1 className="ion-text-center ion-text-capitalize">
-                {`Welcome ${user.FIRSTNAME ?? ""} ${user.LASTNAME ?? ""}`}
+                {`Welcome ${user?.FIRSTNAME ?? ""} ${user?.LASTNAME ?? ""}`}
               </h1>
 
               <IonAccordionGroup
@@ -114,7 +110,6 @@ export default function Home() {
                     <IonSegment
                       value={segment}
                       onIonChange={(e: any) => {
-                        console.log(e.detail.value);
                         setSegment(e.detail.value);
                       }}
                       mode="ios"
@@ -168,7 +163,7 @@ export default function Home() {
                               <IonCardSubtitle>
                                 Time:{" "}
                                 {format(
-                                  parseISO(list.STARTDATETIME),
+                                  parseJSON(list.STARTDATETIME),
                                   "MMM d, yyyy, K:m a "
                                 )}
                               </IonCardSubtitle>
@@ -214,7 +209,7 @@ export default function Home() {
                               <IonCardSubtitle>
                                 Time:{" "}
                                 {format(
-                                  parseISO(list.STARTDATETIME),
+                                  parseJSON(list.STARTDATETIME),
                                   "MMM d, yyyy, K:m a "
                                 )}
                               </IonCardSubtitle>

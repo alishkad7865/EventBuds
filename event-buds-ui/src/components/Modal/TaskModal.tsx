@@ -28,8 +28,14 @@ export default function TaskModal(props: any) {
       taskName: values.TASKNAME,
       description: values.DESCRIPTION,
       assignedTo: values.ASSIGNEDTO,
-      startTime: values.STARTTIME,
-      endTime: values.ENDTIME,
+      startTime:
+        values.STARTTIME !== ""
+          ? new Date(values.STARTTIME).toISOString()
+          : new Date().toISOString(),
+      endTime:
+        values.ENDTIME !== ""
+          ? new Date(values.ENDTIME).toISOString()
+          : new Date().toISOString(),
       taskStatus: values.TASKSTATUS,
       notes: values.NOTES,
     };

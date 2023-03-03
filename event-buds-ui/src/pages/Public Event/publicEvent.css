@@ -2,3 +2,7 @@
   display: flex;
   flex-wrap: wrap;
 }
+
+.interestedButton {
+  width: 100%;
+}

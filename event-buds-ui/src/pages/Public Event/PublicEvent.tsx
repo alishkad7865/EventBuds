@@ -10,7 +10,7 @@ import {
   IonCardSubtitle,
   IonCardTitle,
 } from "@ionic/react";
-import { format, parseISO } from "date-fns";
+import { format, parseJSON } from "date-fns";
 import { useContext, useEffect, useState } from "react";
 import { GetPublicEvents } from "../../api/eventApi";
 import Menu from "../../components/Menu";
@@ -64,7 +64,7 @@ function PublicEvents() {
                         <IonCardSubtitle>
                           Time:{" "}
                           {format(
-                            parseISO(list.STARTDATETIME),
+                            parseJSON(list.STARTDATETIME),
                             "MMM d, yyyy, K:m a "
                           )}
                         </IonCardSubtitle>

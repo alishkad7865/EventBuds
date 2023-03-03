@@ -17,6 +17,7 @@ import { UserContext } from "../../context/UserContext";
 import { userLogin } from "../../api/userApi";
 import { validateEmail, validatePassword } from "../../Utils/Validation";
 import { useHistory } from "react-router";
+import { Link } from "react-router-dom";
 
 export default function Login() {
   const [showToast, setShowToast] = useState(false);
@@ -55,7 +56,7 @@ export default function Login() {
     await userLogin(email, password).then((response: any) => {
       if (response.status >= 200 && response.status < 300) {
         setToken(response.data.access_token);
-        history.push("/Home");
+        history.push("/");
       } else {
         setShowToast(true);
         setToastMessage(response.detail);
@@ -134,7 +135,7 @@ export default function Login() {
         </IonButton>
         <br />
         <IonLabel className="labelColour">
-          Don't have an account? <a href="/Signup">Sign up</a>
+          Don't have an account? <Link to="/Signup">Sign up</Link>
         </IonLabel>
       </IonContent>
     </IonPage>
