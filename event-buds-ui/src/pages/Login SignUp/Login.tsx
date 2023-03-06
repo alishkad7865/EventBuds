@@ -9,8 +9,8 @@ import {
   IonButton,
   IonIcon,
 } from "@ionic/react";
-import { logInOutline } from "ionicons/icons";
-import { useState, useContext } from "react";
+import { eye, eyeOff, logInOutline } from "ionicons/icons";
+import { useState, useContext, useEffect } from "react";
 import Menu from "../../components/Menu";
 import "./Login.css";
 import { UserContext } from "../../context/UserContext";
@@ -24,11 +24,24 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [toastMessage, setToastMessage] = useState("");
-  const { setToken } = useContext(UserContext);
+  const { setToken, userLoggedIn } = useContext(UserContext);
   const [isTouched, setIsTouched] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState<boolean>();
   const [isPasswordValid, setIsPasswordValid] = useState<boolean>();
+  const [passwordType, setPasswordType] = useState("");
+  const togglePassword = () => {
+    if (passwordType === "password") {
+      setPasswordType("text");
+      return;
+    }
+    setPasswordType("password");
+  };
   let history = useHistory();
+  useEffect(() => {
+    if (userLoggedIn) {
+      history.push("/Home");
+    }
+  }, [userLoggedIn]);
   const validate = (ev: Event) => {
     const { name, value } = ev.target as HTMLInputElement;
     if (name === "email") {
@@ -56,7 +69,6 @@ export default function Login() {
     await userLogin(email, password).then((response: any) => {
       if (response.status >= 200 && response.status < 300) {
         setToken(response.data.access_token);
-        history.push("/");
       } else {
         setShowToast(true);
         setToastMessage(response.detail);
@@ -113,13 +125,21 @@ export default function Login() {
           <IonInput
             clearInput={true}
             placeholder="******"
-            type="password"
+            type={passwordType === "text" ? "text" : "password"}
             name="password"
             onIonChange={(e: any) => setPassword(e.target.value)}
             onIonInput={(event) => validate(event)}
             onIonBlur={() => markTouched()}
             value={password}
           ></IonInput>
+          <IonButton
+            onClick={togglePassword}
+            shape="round"
+            slot="end"
+            size="small"
+          >
+            <IonIcon icon={passwordType === "text" ? eye : eyeOff} />
+          </IonButton>
           <IonNote slot="helper">Enter password</IonNote>
           <IonNote slot="error">
             Password length should be greater than 5

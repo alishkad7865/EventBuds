@@ -19,6 +19,7 @@ import {
   IonSelectOption,
 } from "@ionic/react";
 import { createTask } from "../../api/taskApi";
+import { getAssignedUser } from "../../types/AssignedToUser";
 
 export default function TaskModal(props: any) {
   const { values, handleChange } = props;
@@ -27,7 +28,7 @@ export default function TaskModal(props: any) {
       eventId: props.event.EVENTID,
       taskName: values.TASKNAME,
       description: values.DESCRIPTION,
-      assignedTo: values.ASSIGNEDTO,
+      assignedTo: JSON.stringify(values.ASSIGNEDTO).toString(),
       startTime:
         values.STARTTIME !== ""
           ? new Date(values.STARTTIME).toISOString()
@@ -111,10 +112,7 @@ export default function TaskModal(props: any) {
             >
               {props.helpers?.map((list: any) => {
                 return (
-                  <IonSelectOption
-                    key={list.EMAIL}
-                    value={list.FIRSTNAME + " " + list.LASTNAME}
-                  >
+                  <IonSelectOption key={list.EMAIL} value={list}>
                     {list.FIRSTNAME + " " + list.LASTNAME}
                   </IonSelectOption>
                 );

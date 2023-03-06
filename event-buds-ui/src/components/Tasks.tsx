@@ -19,7 +19,11 @@ import { format, parseJSON } from "date-fns";
 import UpdateTaskModal from "./Modal/UpdateTaskModal";
 import { enterAnimation, leaveAnimation } from "../Utils/ModalUtil";
 import { UserContext } from "../context/UserContext";
-
+import {
+  defaultAssignedToUser,
+  getAssignedUser,
+  getFirstAndLastName,
+} from "../types/AssignedToUser";
 export default function Task(props: any) {
   const [taskList, setTaskList] = useState([]);
   const [task, setTask] = useState<any>({});
@@ -28,18 +32,21 @@ export default function Task(props: any) {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const { token } = useContext(UserContext);
+
   let initialState = {
     TASKNAME: "",
     STARTTIME: "",
     ENDTIME: "",
     DESCRIPTION: "",
-    ASSIGNEDTO: "",
+    ASSIGNEDTO: defaultAssignedToUser,
     TASKSTATUS: "",
     NOTES: "",
   };
   const [state, setState] = useState(initialState);
   const handleChange = (input: any) => (e: any) => {
-    setState({ ...state, [input]: e.target.value });
+    if (input === "ASSIGNEDTO") {
+      setState({ ...state, [input]: getAssignedUser(e.target.value) });
+    } else setState({ ...state, [input]: e.target.value });
   };
 
   const {
@@ -150,7 +157,9 @@ export default function Task(props: any) {
                     Status: {task.TASKSTATUS ?? task.taskStatus}
                   </IonCardSubtitle>
                   <IonCardSubtitle>
-                    Assigned To: {task.ASSIGNEDTO ?? task.ASSIGNEDTO}
+                    Assigned To:{" "}
+                    {getFirstAndLastName(task.ASSIGNEDTO) ??
+                      getFirstAndLastName(task.assignedTo)}
                   </IonCardSubtitle>
                 </IonCardHeader>
 

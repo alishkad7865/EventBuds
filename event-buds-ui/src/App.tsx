@@ -29,7 +29,7 @@ import "@ionic/react/css/display.css";
 
 /* Theme variables */
 import "./theme/variables.css";
-import { Redirect, Route } from "react-router";
+import { Route } from "react-router";
 import Login from "./pages/Login SignUp/Login";
 import Home from "./pages/Home/Home";
 import Signup from "./pages/Login SignUp/Signup";
@@ -58,29 +58,34 @@ const App: React.FC = () => {
   return (
     <IonApp>
       <IonReactRouter>
-        {userLoggedIn ? (
-          <IonTabs>
-            <IonRouterOutlet>
-              <Redirect exact from="/" to="/Home" />
-              <Route path="/Home">
-                <Home />
-              </Route>
-              <Route path="/ManageFriends">
-                <ManageFriends />
-              </Route>
-              <Route path="/CreateEvent">
-                <CreateEvent />
-              </Route>
-              <Route path="/publicEvents">
-                <PublicEvents />
-              </Route>
-              <Route path="/profile">
-                <Profile />
-              </Route>
-              <Route exact path="/Download">
-                <Download />
-              </Route>
-            </IonRouterOutlet>
+        <IonTabs>
+          <IonRouterOutlet>
+            <Route exact path="/Home" component={Home} />
+            <Route exact path="/ManageFriends" component={ManageFriends} />
+
+            <Route exact path="/CreateEvent" component={CreateEvent} />
+
+            <Route exact path="/publicEvents" component={PublicEvents} />
+
+            <Route exact path="/profile" component={Profile} />
+
+            <Route exact path="/Download">
+              <Download />
+            </Route>
+
+            <Route exact path="/Login" component={Login} />
+
+            <Route exact path="/Signup" component={Signup} />
+            <Route
+              exact
+              path="/"
+              component={() => {
+                return !userLoggedIn ? <Login /> : <Home />;
+              }}
+            />
+          </IonRouterOutlet>
+
+          {userLoggedIn ? (
             <IonTabBar slot="bottom">
               <IonTabButton tab="Home" href="/Home">
                 <IonIcon icon={home} />
@@ -103,23 +108,7 @@ const App: React.FC = () => {
                 <IonLabel>My Profile</IonLabel>
               </IonTabButton>
             </IonTabBar>
-          </IonTabs>
-        ) : (
-          <IonTabs>
-            <IonRouterOutlet>
-              <Route exact path="/Login">
-                <Login />
-              </Route>
-              <Route exact path="/Download">
-                <Download />
-              </Route>
-              <Route exact path="/">
-                <Login />
-              </Route>
-              <Route exact path="/Signup">
-                <Signup />
-              </Route>
-            </IonRouterOutlet>
+          ) : (
             <IonTabBar slot="bottom">
               <IonTabButton disabled tab="AboutUs" href="/AboutUs">
                 <IonIcon icon={informationCircle} />
@@ -138,8 +127,8 @@ const App: React.FC = () => {
                 <IonLabel>SignUp</IonLabel>
               </IonTabButton>
             </IonTabBar>
-          </IonTabs>
-        )}
+          )}
+        </IonTabs>
       </IonReactRouter>
     </IonApp>
   );

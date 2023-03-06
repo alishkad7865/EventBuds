@@ -9,14 +9,18 @@ import {
   IonGrid,
   IonRow,
   IonCol,
+  IonRefresher,
+  IonRefresherContent,
+  RefresherEventDetail,
 } from "@ionic/react";
+import { chevronDownCircleOutline } from "ionicons/icons";
 import { useContext, useEffect, useState } from "react";
 import { GetUserEvents } from "../../api/eventApi";
 import Menu from "../../components/Menu";
 import { UserContext } from "../../context/UserContext";
 import "./profile.css";
 export default function Profile(props: any) {
-  const { user, token } = useContext(UserContext);
+  const { user, token, userLoggedIn } = useContext(UserContext);
 
   const [eventCount, setEventCount] = useState(0);
   const [friendsCount, setFriendsCount] = useState(0);
@@ -27,14 +31,36 @@ export default function Profile(props: any) {
       setEventCount(result.length);
     }
   }
+  async function loadFriendsCount() {
+    user?.FRIENDS &&
+      setFriendsCount(
+        user?.FRIENDS?.filter((user: any) => user.STATUS === "accepted").length
+      );
+  }
   useEffect(() => {
-    user?.FRIENDS && setFriendsCount(JSON.parse(user?.FRIENDS)?.length);
+    loadFriendsCount();
     loadUserEvents();
-  }, []);
+  }, [userLoggedIn]);
+
+  function handleRefresh(event: CustomEvent<RefresherEventDetail>) {
+    setTimeout(() => {
+      loadFriendsCount();
+      loadUserEvents();
+      event.detail.complete();
+    }, 3000);
+  }
   return (
     <IonPage>
       <Menu page={"profile"} />
       <IonContent>
+        <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+          <IonRefresherContent
+            pullingIcon={chevronDownCircleOutline}
+            pullingText="Pull to refresh"
+            refreshingSpinner="circles"
+            refreshingText="Refreshing..."
+          ></IonRefresherContent>
+        </IonRefresher>
         <IonGrid>
           <IonRow class="ion-justify-content-center">
             <IonCol size="auto" class="ion-justify-content-center">

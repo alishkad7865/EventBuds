@@ -11,7 +11,6 @@ import {
   calendarOutline,
   checkboxOutline,
   createOutline,
-  downloadOutline,
   homeOutline,
   logInOutline,
   notifications,

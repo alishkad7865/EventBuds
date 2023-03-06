@@ -5,12 +5,16 @@ import {
   IonItem,
   IonLabel,
   IonList,
+  IonRefresher,
+  IonRefresherContent,
   IonSearchbar,
   IonToast,
   IonToolbar,
+  RefresherEventDetail,
   setupIonicReact,
   useIonAlert,
 } from "@ionic/react";
+import { chevronDownCircleOutline } from "ionicons/icons";
 
 import { useContext, useEffect, useState } from "react";
 import { addFriend, getAllUsers } from "../../api/userApi";
@@ -26,15 +30,54 @@ export default function AddFriends(props: any) {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const { friendsList, setfriendsList } = props;
-  useEffect(() => {
-    async function loadAllUsers() {
-      let result = await getAllUsers(token);
-      if (result) {
-        setotherUsersList(result);
-      }
+  let [results, setResults] = useState([...otherUsersList]);
+
+  const handleChange = (ev: Event) => {
+    let query = "";
+    const target = ev.target as HTMLIonSearchbarElement;
+
+    query = target.value!.toLowerCase();
+
+    setResults(
+      otherUsersList?.filter(
+        (friend: any) =>
+          friend.FIRSTNAME.toLowerCase().indexOf(query) > -1 ||
+          friend.LASTNAME.toLowerCase().indexOf(query) > -1 ||
+          friend.EMAIL.toLowerCase().indexOf(query) > -1 ||
+          friend.USERNAME.toLowerCase().indexOf(query) > -1
+      )
+    );
+  };
+  async function loadAllUsers() {
+    let result = await getAllUsers(token);
+    if (result) {
+      setotherUsersList(
+        result?.filter(
+          (friend: any) =>
+            !friendsList.find((user: any) => user.USERID === friend.USERID) &&
+            friend.USERID !== props.user?.USERID
+        )
+      );
     }
+  }
+
+  useEffect(() => {
+    setResults(otherUsersList);
+  }, [otherUsersList]);
+
+  useEffect(() => {
+    loadAllUsers();
+  }, [toastMessage]);
+
+  useEffect(() => {
     loadAllUsers();
   }, []);
+  function handleRefresh(event: CustomEvent<RefresherEventDetail>) {
+    setTimeout(() => {
+      loadAllUsers();
+      event.detail.complete();
+    }, 3000);
+  }
   useEffect(() => {
     if (toastMessage !== "") {
       setShowToast(true);
@@ -55,9 +98,22 @@ export default function AddFriends(props: any) {
   }
   return (
     <>
+      <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+        <IonRefresherContent
+          pullingIcon={chevronDownCircleOutline}
+          pullingText="Pull to refresh"
+          refreshingSpinner="circles"
+          refreshingText="Refreshing..."
+        ></IonRefresherContent>
+      </IonRefresher>
       <IonHeader>
         <IonToolbar class="toolbarMargin">
-          <IonSearchbar class="searchbarBorder"></IonSearchbar>
+          <IonSearchbar
+            class="searchbarBorder"
+            placeholder="Search by First name, Last name or Email"
+            debounce={1000}
+            onIonChange={(ev) => handleChange(ev)}
+          ></IonSearchbar>
         </IonToolbar>
         <IonToast
           isOpen={showToast}
@@ -70,14 +126,8 @@ export default function AddFriends(props: any) {
           duration={3000}
         />
         <IonList class="itemBackground">
-          {otherUsersList
-            .filter((list: any) => {
-              return (
-                !friendsList.find((user: any) => user.USERID === list.USERID) &&
-                list.USERID !== props.user.USERID
-              );
-            })
-            .map((list: any) => {
+          {results.length > 0 ? (
+            results?.map((list: any) => {
               return (
                 <IonItem class="itemBackground" key={list.EMAIL + props.title}>
                   <IonAvatar slot="start">
@@ -103,9 +153,6 @@ export default function AddFriends(props: any) {
                             text: "Cancel",
                             role: "Cancel",
                             cssClass: "alert-button-cancel",
-                            handler: () => {
-                              console.log("Cancelled");
-                            },
                           },
                           {
                             text: "Yes",
@@ -123,7 +170,12 @@ export default function AddFriends(props: any) {
                   </IonButton>
                 </IonItem>
               );
-            })}
+            })
+          ) : (
+            <p className="ion-text-center">
+              No users found, Try different query!
+            </p>
+          )}
         </IonList>
       </IonHeader>
     </>

@@ -20,18 +20,21 @@ import {
 } from "@ionic/react";
 import { useState } from "react";
 import { updateTask } from "../../api/taskApi";
+import { getAssignedUser } from "../../types/AssignedToUser";
 
 export default function TaskModal(props: any) {
   const [task, setTask] = useState(props.task);
   const handleUpdateChange = (input: any) => (e: any) => {
-    setTask({ ...task, [input]: e.target.value });
+    if (input === "ASSIGNEDTO") {
+      setTask({ ...task, [input]: getAssignedUser(e.target.value) });
+    } else setTask({ ...task, [input]: e.target.value });
   };
   async function updateTaskHandler() {
     let Task = {
       eventId: props.event.EVENTID,
       taskName: task.TASKNAME,
       description: task.DESCRIPTION,
-      assignedTo: task.ASSIGNEDTO,
+      assignedTo: JSON.stringify(task.ASSIGNEDTO),
       startTime:
         task.STARTTIME !== ""
           ? new Date(task.STARTTIME).toISOString()
@@ -109,17 +112,16 @@ export default function TaskModal(props: any) {
             </IonLabel>
             <IonSelect
               interface="popover"
-              placeholder="Select Helper"
+              placeholder={
+                task.ASSIGNEDTO
+                  ? task.ASSIGNEDTO.FIRSTNAME + " " + task.ASSIGNEDTO.LASTNAME
+                  : "Select Helper"
+              }
               onIonChange={handleUpdateChange("ASSIGNEDTO")}
-              defaultValue={task.ASSIGNEDTO}
-              value={task.ASSIGNEDTO}
             >
               {props.helpers?.map((list: any) => {
                 return (
-                  <IonSelectOption
-                    key={list.EMAIL}
-                    value={list.FIRSTNAME + " " + list.LASTNAME}
-                  >
+                  <IonSelectOption key={list.EMAIL} value={list}>
                     {list.FIRSTNAME + " " + list.LASTNAME}
                   </IonSelectOption>
                 );
