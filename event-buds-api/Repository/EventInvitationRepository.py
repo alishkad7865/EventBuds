@@ -70,6 +70,28 @@ class EventInvitationRepository:
         except NameError as e:
             return e
 
+    def updateTaskAssignedInvitation(self, invitation_id):
+        try:
+            update_invitation_row = 'UPDATE "ADMIN"."EVENTINVITATION" SET "ADMIN"."EVENTINVITATION"."TASKASSIGNED" = 1, "ADMIN"."EVENTINVITATION"."NOTIFIED"=0 WHERE "ADMIN"."EVENTINVITATION"."INVITEID" = :invitation_id'
+            with self.connection.cursor() as cursor:
+                invitation_data = dict(invitation_id=int(invitation_id), )
+                cursor.execute(update_invitation_row, invitation_data)
+                self.connection.commit()
+                return "Notification Sent!"
+        except NameError as e:
+            return e
+
+    def updateInvitationNotified(self, invitation_id):
+        try:
+            update_invitation_row = 'UPDATE "ADMIN"."EVENTINVITATION" SET "ADMIN"."EVENTINVITATION"."NOTIFIED"=1 WHERE "ADMIN"."EVENTINVITATION"."INVITEID" = :invitation_id'
+            with self.connection.cursor() as cursor:
+                invitation_data = dict(invitation_id=int(invitation_id),)
+                cursor.execute(update_invitation_row, invitation_data)
+                self.connection.commit()
+                return "Notifications Updated!"
+        except NameError as e:
+            return e
+
     def getEventHelpers(self, event_id):
         try:
             query = """SELECT * FROM "ADMIN"."EVENTINVITATION" left join "ADMIN"."USER" on "ADMIN"."EVENTINVITATION"."USERID" = "ADMIN"."USER"."USERID" WHERE "ADMIN"."EVENTINVITATION"."ISHELPER" = 1 AND "ADMIN"."EVENTINVITATION"."EVENTID" = :event_id """
