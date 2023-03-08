@@ -10,14 +10,16 @@ import {
   IonLabel,
   IonPage,
 } from "@ionic/react";
-import { arrowBack, closeCircle } from "ionicons/icons";
+import { arrowBack, closeCircle, logoUsd } from "ionicons/icons";
 import { useRef, useState } from "react";
 import { CreateEvent } from "../../api/eventApi";
 import CustomModal from "../Modal/CustomModal";
 import Menu from "../Menu";
 import "../../pages/Create Event/CreateEvent.css";
+import { useHistory } from "react-router";
 
 export default function AddMembers(props: any) {
+  let history = useHistory();
   const [title, setTitle] = useState("");
   const [triggerId, setTriggerId] = useState("");
   const [open, setOpen] = useState(false);
@@ -64,6 +66,7 @@ export default function AddMembers(props: any) {
           props.setGuests([]);
           props.setToastMessage("Event Created Successfully!");
           props.setState(props.initialState);
+          history.push("/");
         } else {
           props.setToastMessage("Event Creation Failed, Try Again!");
         }
@@ -208,15 +211,18 @@ export default function AddMembers(props: any) {
 
         <IonItem className="addSpaceAbove">
           <IonLabel position="stacked" className="ionLabel">
-            Price:{" "}
+            Price:
           </IonLabel>
+
           <IonInput
             type="number"
             placeholder="000"
             onIonChange={props.handleChange("price")}
             defaultValue={price}
             value={price}
-          ></IonInput>
+          >
+            <IonIcon icon={logoUsd} slot="start" />
+          </IonInput>
         </IonItem>
 
         <div className="addSpaceAbove">

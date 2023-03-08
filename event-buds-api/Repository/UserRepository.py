@@ -20,7 +20,10 @@ class UserRepository:
             user: User = {}
             for row in rows:
                 for index, column in enumerate(cursor.description, start=0):
-                    user[str(column[0])] = row[index]
+                    if str(column[0]) == "FRIENDS":
+                        user[str(column[0])] = json.loads(row[index])
+                    else:
+                        user[str(column[0])] = row[index]
             return user
         except NameError as e:
             return e
@@ -35,7 +38,10 @@ class UserRepository:
             for row in rows:
                 user = {}
                 for index, column in enumerate(cursor.description, start=0):
-                    user[str(column[0])] = row[index]
+                    if str(column[0]) == "FRIENDS":
+                        user[str(column[0])] = json.loads(row[index])
+                    else:
+                        user[str(column[0])] = row[index]
                 userList.append(user)
                 user = {}
             return userList
@@ -154,7 +160,10 @@ class UserRepository:
                 user: UserLogin = {}
                 for row in rows:
                     for index, column in enumerate(cursor.description, start=0):
-                        user[str(column[0])] = row[index]
+                        if str(column[0]) == "FRIENDS":
+                            user[str(column[0])] = json.loads(row[index])
+                        else:
+                            user[str(column[0])] = row[index]
                 return user
         except NameError as e:
             return e

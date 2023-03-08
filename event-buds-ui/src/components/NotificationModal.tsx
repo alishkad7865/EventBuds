@@ -9,11 +9,18 @@ import {
   IonLabel,
   IonList,
   IonModal,
+  IonRefresher,
+  IonRefresherContent,
   IonTitle,
   IonToast,
   IonToolbar,
+  RefresherEventDetail,
 } from "@ionic/react";
-import { checkmarkCircleOutline, closeCircleOutline } from "ionicons/icons";
+import {
+  checkmarkCircleOutline,
+  chevronDownCircleOutline,
+  closeCircleOutline,
+} from "ionicons/icons";
 import { useContext, useEffect, useState } from "react";
 import {
   acceptEventInvitations,
@@ -30,19 +37,19 @@ export default function NotificationModal(props: any) {
   const [eventInvitations, setEventInvitations] = useState<any>([]);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  async function loadFriends() {
+    let result = await getFriends(token);
+    if (result) {
+      setfriendsList(result.data);
+    }
+  }
+  async function loadInvitations() {
+    let invitations = await GetUserEventInvitations(token);
+    if (invitations) {
+      setEventInvitations(invitations);
+    }
+  }
   useEffect(() => {
-    async function loadFriends() {
-      let result = await getFriends(token);
-      if (result) {
-        setfriendsList(result.data);
-      }
-    }
-    async function loadInvitations() {
-      let invitations = await GetUserEventInvitations(token);
-      if (invitations) {
-        setEventInvitations(invitations);
-      }
-    }
     if (userLoggedIn) {
       loadFriends();
       loadInvitations();
@@ -56,18 +63,6 @@ export default function NotificationModal(props: any) {
   }, [toastMessage]);
 
   useEffect(() => {
-    async function loadFriends() {
-      let result = await getFriends(token);
-      if (result) {
-        setfriendsList(result.data);
-      }
-    }
-    async function loadInvitations() {
-      let invitations = await GetUserEventInvitations(token);
-      if (invitations) {
-        setEventInvitations(invitations);
-      }
-    }
     if (userLoggedIn) {
       loadFriends();
       loadInvitations();
@@ -84,6 +79,13 @@ export default function NotificationModal(props: any) {
         setToastMessage("Request Failed, Try Again!");
       }
     });
+  }
+  function handleRefresh(event: CustomEvent<RefresherEventDetail>) {
+    setTimeout(() => {
+      loadFriends();
+      loadInvitations();
+      event.detail.complete();
+    }, 3000);
   }
   async function removeFriendHandler(friend: Friend) {
     //set api endpoint to update friend
@@ -131,6 +133,16 @@ export default function NotificationModal(props: any) {
       </IonHeader>
 
       <IonContent className="ion-padding">
+        <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+          <IonRefresherContent
+            pullingIcon={chevronDownCircleOutline}
+            pullingText="Pull to refresh"
+            refreshingSpinner="circles"
+            refreshingText="Refreshing..."
+          ></IonRefresherContent>
+        </IonRefresher>
+
+        <p className="ion-text-center">Pull down to refresh Notifications.</p>
         <IonToast
           isOpen={showToast}
           position="top"

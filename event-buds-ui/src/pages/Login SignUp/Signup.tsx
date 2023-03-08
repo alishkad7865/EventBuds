@@ -12,7 +12,7 @@ import {
   IonButton,
   IonIcon,
 } from "@ionic/react";
-import { arrowForwardCircle } from "ionicons/icons";
+import { arrowForwardCircle, eye, eyeOff } from "ionicons/icons";
 import { useState, useEffect, useContext } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { userSignUp } from "../../api/userApi";
@@ -37,7 +37,7 @@ export default function Signup() {
   const [bio, setBio] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
-  const { setToken } = useContext(UserContext);
+  const { setToken, userLoggedIn } = useContext(UserContext);
   const [isTouched, setIsTouched] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState<boolean>();
   const [isPasswordValid, setIsPasswordValid] = useState<boolean>();
@@ -46,6 +46,15 @@ export default function Signup() {
   const [isUserNameValid, setIsUserNameValid] = useState<boolean>(false);
   const [isFirstNameValid, setIsFirstNameValid] = useState<boolean>(false);
   const [isLastNameValid, setIsLastNameValid] = useState<boolean>(false);
+  const [passwordType, setPasswordType] = useState("");
+  const togglePassword = () => {
+    if (passwordType === "password") {
+      setPasswordType("text");
+      return;
+    }
+    setPasswordType("password");
+  };
+
   let history = useHistory();
 
   useEffect(() => {
@@ -53,6 +62,12 @@ export default function Signup() {
       setShowToast(true);
     }
   }, [toastMessage]);
+
+  useEffect(() => {
+    if (userLoggedIn) {
+      history.push("/Home");
+    }
+  }, [userLoggedIn]);
 
   function ValidateAllFields() {
     return (
@@ -119,7 +134,6 @@ export default function Signup() {
       await userSignUp(newUser).then((response: any) => {
         if (response.status >= 200 && response.status < 300) {
           setToken(response.data.access_token);
-          history.push("/Home");
         } else if (response.status >= 500) {
           setShowToast(true);
           setToastMessage(
@@ -185,13 +199,21 @@ export default function Signup() {
           <IonInput
             clearInput={true}
             placeholder="******"
-            type="password"
+            type={passwordType === "text" ? "text" : "password"}
             name="password"
             onIonChange={(e: any) => setPassword(e.target.value)}
             onIonInput={(event) => validate(event)}
             onIonBlur={() => markTouched()}
             value={password}
           ></IonInput>
+          <IonButton
+            onClick={togglePassword}
+            shape="round"
+            slot="end"
+            size="small"
+          >
+            <IonIcon icon={passwordType === "text" ? eye : eyeOff} />
+          </IonButton>
           <IonNote slot="helper">Enter password</IonNote>
           <IonNote slot="error">
             Password length should be greater than 5
@@ -209,13 +231,21 @@ export default function Signup() {
           <IonInput
             clearInput={true}
             placeholder="******"
-            type="password"
+            type={passwordType === "text" ? "text" : "password"}
             name="confirmPassword"
             onIonChange={(e: any) => setConfirmPassword(e.target.value)}
             onIonInput={(event) => validate(event)}
             onIonBlur={() => markTouched()}
             value={confirmPassword}
           ></IonInput>
+          <IonButton
+            onClick={togglePassword}
+            shape="round"
+            slot="end"
+            size="small"
+          >
+            <IonIcon icon={passwordType === "text" ? eye : eyeOff} />
+          </IonButton>
           <IonNote slot="helper">Enter password</IonNote>
           <IonNote slot="error">
             Confirm Password doesn't match with Password

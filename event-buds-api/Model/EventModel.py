@@ -125,7 +125,7 @@ class Task(BaseModel):
     eventId: int
     taskId: Optional[int] = None
     taskName: Optional[str] = ""
-    assignedTo: Optional[str] = ""
+    assignedTo: Optional[object] = {}
     startTime: Optional[datetime] = None
     endTime: Optional[datetime] = None
     notes: Optional[str] = ""

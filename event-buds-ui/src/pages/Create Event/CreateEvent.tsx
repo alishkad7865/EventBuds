@@ -27,7 +27,9 @@ export default function CreateEvent(props: any) {
   const [toastMessage, setToastMessage] = useState("");
   const { user, token } = useContext(UserContext);
   useEffect(() => {
-    setFriends(JSON.parse(user.FRIENDS));
+    if (user?.FRIENDS) {
+      setFriends(user?.FRIENDS);
+    }
     async function loadAllUsers() {
       let result = await getAllUsers(token);
       if (result) {

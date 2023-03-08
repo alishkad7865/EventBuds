@@ -25,7 +25,7 @@ export default function Logout(props: any) {
     setUserLoggedIn(false);
     setUser(initialUser);
     setToken(null);
-    history.push("/");
+    history.push("/Login");
   }
   return userLoggedIn ? (
     <>
@@ -46,7 +46,7 @@ export default function Logout(props: any) {
               Download
             </IonItem>
             <IonItem detail={false}>
-              {`${user.FIRSTNAME} ${user.LASTNAME}`}
+              {`${user?.FIRSTNAME} ${user?.LASTNAME}`}
             </IonItem>
             <IonItem button={true} detail={false} onClick={handleLogout}>
               Logout
