@@ -12,6 +12,10 @@ import {
   IonRefresher,
   IonRefresherContent,
   RefresherEventDetail,
+  IonSpinner,
+  IonGrid,
+  IonImg,
+  IonRow,
 } from "@ionic/react";
 import { format, parseJSON } from "date-fns";
 import { chevronDownCircleOutline } from "ionicons/icons";
@@ -27,13 +31,16 @@ function PublicEvents() {
   const [publicEvents, setPublicEvents] = useState([]);
   const [results, setResults] = useState([...publicEvents]);
   const [event, setEvent] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState(1);
   const { token, userLoggedIn } = useContext(UserContext);
   async function loadPublicEvents() {
+    setIsLoading(true);
     let result = await GetPublicEvents(token);
     if (result) {
       setPublicEvents(result);
     }
+    setIsLoading(false);
   }
   const handleChange = (ev: Event) => {
     let query = "";
@@ -95,49 +102,68 @@ function PublicEvents() {
                 onIonChange={(ev) => handleChange(ev)}
               ></IonSearchbar>
             </IonToolbar>
-            <div className="eventCards">
-              {results.length > 0 ? (
-                results?.map((list: any) => {
-                  if (list.ISPUBLIC) {
-                    return (
-                      <IonCard class="PublicEventCard" key={list.EVENTID}>
-                        <IonCardHeader>
-                          <IonCardTitle className="ion-text-capitalize">
-                            {list.EVENTTITLE}
-                          </IonCardTitle>
-                          <IonCardSubtitle>
-                            Time:{" "}
-                            {format(
-                              parseJSON(list.STARTDATETIME),
-                              "MMM d, yyyy, K:m a "
-                            )}
-                          </IonCardSubtitle>
-                          <IonCardSubtitle>
-                            Venue: {list.LOCATION}
-                          </IonCardSubtitle>
-                        </IonCardHeader>
+            {isLoading ? (
+              <IonSpinner name="crescent"></IonSpinner>
+            ) : (
+              <div className="eventCards">
+                {results.length > 0 ? (
+                  results?.map((list: any) => {
+                    if (list.ISPUBLIC) {
+                      return (
+                        <IonCard class="PublicEventCard" key={list.EVENTID}>
+                          <IonCardHeader>
+                            <IonCardTitle className="ion-text-capitalize">
+                              {list.EVENTTITLE}
+                            </IonCardTitle>
+                            <IonCardSubtitle>
+                              Time:{" "}
+                              {format(
+                                parseJSON(list.STARTDATETIME),
+                                "MMM d, yyyy, K:m a "
+                              )}
+                            </IonCardSubtitle>
+                            <IonCardSubtitle>
+                              Venue: {list.LOCATION}
+                            </IonCardSubtitle>
+                          </IonCardHeader>
 
-                        <IonCardContent>
-                          Description: {list.DESCRIPTION}
-                        </IonCardContent>
-                        <IonButton
-                          fill="solid"
-                          shape="round"
-                          size="small"
-                          onClick={(e) => viewEvent(list)}
-                        >
-                          View
-                        </IonButton>
-                      </IonCard>
-                    );
-                  } else return "";
-                })
-              ) : (
-                <p className="ion-text-center">
-                  No Events found, Try different query!
-                </p>
-              )}
-            </div>
+                          <IonCardContent>
+                            Description: {list.DESCRIPTION}
+                          </IonCardContent>
+                          <IonButton
+                            fill="solid"
+                            shape="round"
+                            size="small"
+                            onClick={(e) => viewEvent(list)}
+                          >
+                            View
+                          </IonButton>
+                        </IonCard>
+                      );
+                    } else return "";
+                  })
+                ) : (
+                  <IonGrid>
+                    <IonRow class="ion-justify-content-center">
+                      <IonImg
+                        class="icon-svg"
+                        src="assets/svg/sadFace.svg"
+                        alt="folder-empty"
+                      />
+                    </IonRow>
+                    <IonRow class="ion-justify-content-center">
+                      <h2 className="icon-svg">Oops, No events Found!</h2>
+                    </IonRow>
+                    <IonRow class="ion-justify-content-center">
+                      <h4 className="icon-svg">
+                        Try Searching by different event Title, Description or
+                        Venue
+                      </h4>
+                    </IonRow>
+                  </IonGrid>
+                )}
+              </div>
+            )}
           </IonContent>
         </IonPage>
       );

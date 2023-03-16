@@ -19,10 +19,18 @@ import {
   IonSelectOption,
 } from "@ionic/react";
 import { createTask } from "../../api/taskApi";
-import { getAssignedUser } from "../../types/AssignedToUser";
+import { LocaleDateTimeISOFormat } from "../../Utils/ArrayUtil";
 
 export default function TaskModal(props: any) {
-  const { values, handleChange } = props;
+  const {
+    values,
+    handleChange,
+    event,
+    markTouched,
+    validator,
+    isTouched,
+    ValidateAllFields,
+  } = props;
   async function saveTask() {
     let Task = {
       eventId: props.event.EVENTID,
@@ -30,28 +38,29 @@ export default function TaskModal(props: any) {
       description: values.DESCRIPTION,
       assignedTo: JSON.stringify(values.ASSIGNEDTO).toString(),
       startTime:
-        values.STARTTIME !== ""
-          ? new Date(values.STARTTIME).toISOString()
-          : new Date().toISOString(),
+        values.STARTTIME !== "" ? values.STARTTIME : new Date().toISOString(),
       endTime:
-        values.ENDTIME !== ""
-          ? new Date(values.ENDTIME).toISOString()
-          : new Date().toISOString(),
+        values.ENDTIME !== "" ? values.ENDTIME : new Date().toISOString(),
       taskStatus: values.TASKSTATUS,
       notes: values.NOTES,
     };
-
-    await createTask(JSON.stringify(Task), props.token).then(
-      (response: any) => {
-        if (response.status >= 200 && response.status < 300) {
-          props.setToastMessage("Task Created Successfully!");
-          // props.setTaskList([...props.taskList, Task]);
-          props.dismiss();
-        } else {
-          props.setToastMessage("Task Creation Failed, Try Again!");
+    if (ValidateAllFields(values) === true) {
+      await createTask(JSON.stringify(Task), props.token).then(
+        (response: any) => {
+          if (response.status >= 200 && response.status < 300) {
+            props.setToastMessage("Task Created Successfully!");
+            props.setState(props.initialState);
+            props.dismiss();
+          } else {
+            props.setToastMessage("Task Creation Failed, Try Again!");
+          }
         }
-      }
-    );
+      );
+    } else {
+      props.setToastMessage(
+        "Task Name, Start date or End Date. Check your fields!"
+      );
+    }
   }
   return (
     <IonModal
@@ -73,19 +82,28 @@ export default function TaskModal(props: any) {
       </IonHeader>
       <IonContent>
         <IonList>
-          <IonItem className="addSpaceAbove">
+          <IonItem
+            fill="solid"
+            className={`addSpaceAbove ${
+              validator.isTaskNameValid && "ion-valid"
+            } ${validator.isTaskNameValid === false && "ion-invalid"} ${
+              isTouched && "ion-touched"
+            }`}
+          >
             <IonLabel position="stacked" className="ionLabel">
               Task Name
             </IonLabel>
             <IonInput
               clearInput={true}
+              name="TASKNAME"
               placeholder="Enter event title"
               onIonChange={handleChange("TASKNAME")}
+              onIonBlur={() => markTouched()}
               defaultValue={values.TASKNAME}
               value={values.TASKNAME}
             ></IonInput>
             <IonNote slot="helper">Enter a Task Name</IonNote>
-            <IonNote slot="error">Invalid Title</IonNote>
+            <IonNote slot="error">Task Name can't be blank</IonNote>
           </IonItem>
           <IonItem counter={true} className="addSpaceAbove">
             <IonLabel position="stacked" className="ionLabel">
@@ -93,6 +111,7 @@ export default function TaskModal(props: any) {
             </IonLabel>
             <IonTextarea
               placeholder="Type something here"
+              name="DESCRIPTION"
               autoGrow={true}
               maxlength={200}
               onIonChange={handleChange("DESCRIPTION")}
@@ -128,6 +147,7 @@ export default function TaskModal(props: any) {
             <IonSelect
               interface="popover"
               placeholder="Select Status"
+              value={values.TASKSTATUS}
               onIonChange={handleChange("TASKSTATUS")}
             >
               <IonSelectOption value="Ongoing">Ongoing</IonSelectOption>
@@ -136,37 +156,73 @@ export default function TaskModal(props: any) {
             <IonNote slot="helper">Enter a valid Title</IonNote>
             <IonNote slot="error">Invalid Title</IonNote>
           </IonItem>
-          <IonItem className="addSpaceAbove">
+
+          <IonItem
+            fill="solid"
+            className={`addSpaceAbove ${
+              validator.isStartDateValid && "ion-valid"
+            } ${validator.isStartDateValid === false && "ion-invalid"} ${
+              isTouched && "ion-touched"
+            }`}
+          >
             <IonLabel position="stacked" className="dateLabel">
               Start Date
             </IonLabel>
             <IonDatetimeButton datetime="startDate"></IonDatetimeButton>
 
-            <IonModal keepContentsMounted={true}>
+            <IonModal keepContentsMounted={true} id={"date"}>
               <IonDatetime
                 id="startDate"
+                name="startDate"
+                min={LocaleDateTimeISOFormat(event.STARTDATETIME)}
+                max={LocaleDateTimeISOFormat(event.ENDDATETIME)}
                 onIonChange={handleChange("STARTTIME")}
-                defaultValue={values.STARTTIME}
+                onIonBlur={() => markTouched()}
+                value={values.STARTTIME}
+                showDefaultButtons={true}
               >
                 <span slot="title">Start Date</span>
               </IonDatetime>
             </IonModal>
+            <IonNote slot="helper">Enter Task Start Date and Time</IonNote>
+            <IonNote slot="error">
+              Task's start Time should be less than task's End Time
+            </IonNote>
           </IonItem>
-          <IonItem className="addSpaceAbove">
+          <IonItem
+            fill="solid"
+            className={`addSpaceAbove ${
+              validator.isEndDateValid && "ion-valid"
+            } ${validator.isEndDateValid === false && "ion-invalid"} ${
+              isTouched && "ion-touched"
+            }`}
+          >
             <IonLabel position="stacked" className="dateLabel">
               End date
             </IonLabel>
             <IonDatetimeButton datetime="endDate"></IonDatetimeButton>
 
-            <IonModal keepContentsMounted={true}>
+            <IonModal keepContentsMounted={true} id={"date"}>
               <IonDatetime
                 id="endDate"
+                name="endDate"
                 onIonChange={handleChange("ENDTIME")}
-                defaultValue={values.ENDTIME}
+                onIonBlur={() => markTouched()}
+                value={values.ENDTIME}
+                min={
+                  values.STARTTIME ||
+                  LocaleDateTimeISOFormat(event.STARTDATETIME)
+                }
+                max={LocaleDateTimeISOFormat(event.ENDDATETIME)}
+                showDefaultButtons={true}
               >
                 <span slot="title">Completion Date</span>
               </IonDatetime>
             </IonModal>
+            <IonNote slot="helper">Enter Task End Date and Time</IonNote>
+            <IonNote slot="error">
+              Task's End Time should be greater than task's Start Time
+            </IonNote>
           </IonItem>
           <IonItem counter={true} className="addSpaceAbove">
             <IonLabel position="stacked" className="ionLabel">

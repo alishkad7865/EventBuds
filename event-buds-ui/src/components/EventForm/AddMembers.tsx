@@ -16,10 +16,8 @@ import { CreateEvent } from "../../api/eventApi";
 import CustomModal from "../Modal/CustomModal";
 import Menu from "../Menu";
 import "../../pages/Create Event/CreateEvent.css";
-import { useHistory } from "react-router";
 
 export default function AddMembers(props: any) {
-  let history = useHistory();
   const [title, setTitle] = useState("");
   const [triggerId, setTriggerId] = useState("");
   const [open, setOpen] = useState(false);
@@ -60,18 +58,39 @@ export default function AddMembers(props: any) {
       helpers: props.helpers,
       guests: props.guests,
     };
-    await CreateEvent(JSON.stringify(Event), props.token).then(
-      (response: any) => {
-        if (response.status >= 200 && response.status < 300) {
-          props.setGuests([]);
-          props.setToastMessage("Event Created Successfully!");
-          props.setState(props.initialState);
-          history.push("/");
-        } else {
-          props.setToastMessage("Event Creation Failed, Try Again!");
+    if (props.ValidateAllFields() === true) {
+      await CreateEvent(JSON.stringify(Event), props.token).then(
+        (response: any) => {
+          if (response.status >= 200 && response.status < 300) {
+            props.setGuests([]);
+            props.setToastMessage("Event Created Successfully!");
+            props.setEventCreatedModal(true);
+            props.setEventCreatedModalData({
+              eventTitle: eventTitle,
+              eventType: eventType,
+            });
+            props.setState(props.initialState);
+            props.SetAllValidatorsFalse();
+            // history.push("/");
+          } else if (response.status >= 500) {
+            props.setShowToast(true);
+            props.setToastMessage(
+              "Internal Server Issue. Please contact admin or developers!"
+            );
+          } else {
+            props.setShowToast(true);
+            props.setToastMessage(
+              `${response.detail[0].loc[1]}, ${response.detail[0].msg}`
+            );
+          }
         }
-      }
-    );
+      );
+    } else {
+      props.setShowToast(true);
+      props.setToastMessage(
+        "One or more validation failed. Check your fields!"
+      );
+    }
   }
   function Back(e: any) {
     e.preventDefault();

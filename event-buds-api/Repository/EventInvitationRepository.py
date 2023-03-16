@@ -110,10 +110,6 @@ class EventInvitationRepository:
                         acceptedhelpersList.append(tempObj)
                     tempObj = {}
 
-                owner = self.getEventOwner(int(event_id))
-                if owner:
-                    acceptedhelpersList.append(owner)
-
                 return {"helpersList": helperList, "acceptedhelpersList": acceptedhelpersList}
         except NameError as e:
             return e

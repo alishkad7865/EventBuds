@@ -10,14 +10,14 @@ class EventRepository:
     def __init__(self):
         self.connection = connection()
 
-    def UpdateEvent(self, pageName, number):
+    def UpdateEvent(self, event_id, status):
         try:
-            query = """ INSERT INTO "ADMIN"."EVENT"
-                            (click, TotalClick) VALUES (%s,%s)"""
-            data = (pageName, number)
-            self.connection.cursor().execute(query, data)
-            self.connection.commit()
-            return OK
+            update_event = 'UPDATE "ADMIN"."EVENT" SET "ADMIN"."EVENT"."STATUS" = :status WHERE "ADMIN"."EVENT"."EVENTID" = :event_id'
+            with self.connection.cursor() as cursor:
+                event_data = dict(event_id=int(event_id), status=str(status))
+                cursor.execute(update_event,  event_data)
+                self.connection.commit()
+                return "Event Updated!"
         except NameError as e:
             return e
 
@@ -41,6 +41,25 @@ class EventRepository:
             self.connection.cursor().execute(query, data)
             self.connection.commit()
             return OK
+        except NameError as e:
+            return e
+
+    def Get_Event(self, event_id):
+        try:
+            query = """ SELECT * FROM "ADMIN"."EVENT" WHERE "ADMIN"."EVENT"."EVENTID" = :event_id """
+            with self.connection.cursor() as cursor:
+                data = dict(event_id=int(event_id),)
+                cursor.execute(query, data)
+                rows = cursor.fetchall()
+
+                event = []
+                for row in rows:
+                    tempObj = {}
+                    for index, column in enumerate(cursor.description, start=0):
+                        tempObj[str(column[0])] = row[index]
+                    event.append(tempObj)
+                    tempObj = {}
+                return event
         except NameError as e:
             return e
 

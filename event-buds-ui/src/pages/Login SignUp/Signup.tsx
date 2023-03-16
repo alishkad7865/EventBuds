@@ -84,20 +84,23 @@ export default function Signup() {
     if (name === "email") {
       setIsEmailValid(undefined);
 
-      if (value === "") return;
+      if (value === "") return setIsEmailValid(false);
       validateEmail(value) !== null
         ? setIsEmailValid(true)
         : setIsEmailValid(false);
     }
     if (name === "password") {
-      setIsPasswordValid(undefined);
+      setIsPasswordValid(false);
 
       validatePassword(value) !== false
         ? setIsPasswordValid(true)
         : setIsPasswordValid(false);
+      value === confirmPassword
+        ? setIsConfirmPasswordValid(true)
+        : setIsConfirmPasswordValid(false);
     }
     if (name === "confirmPassword") {
-      setIsConfirmPasswordValid(undefined);
+      setIsConfirmPasswordValid(false);
       value === password
         ? setIsConfirmPasswordValid(true)
         : setIsConfirmPasswordValid(false);
@@ -141,7 +144,9 @@ export default function Signup() {
           );
         } else {
           setShowToast(true);
-          setToastMessage(response.detail);
+          setToastMessage(
+            `${response.detail[0].loc[1]}, ${response.detail[0].msg}`
+          );
         }
       });
     } else {
@@ -179,7 +184,10 @@ export default function Signup() {
             clearInput={true}
             placeholder="johndoe@gmail.com"
             name="email"
-            onIonChange={(e: any) => setEmail(e.target.value)}
+            onIonChange={(e: any) => {
+              setEmail(e.target.value);
+              validate(e);
+            }}
             onIonInput={(event) => validate(event)}
             onIonBlur={() => markTouched()}
             value={email}
@@ -201,7 +209,10 @@ export default function Signup() {
             placeholder="******"
             type={passwordType === "text" ? "text" : "password"}
             name="password"
-            onIonChange={(e: any) => setPassword(e.target.value)}
+            onIonChange={(e: any) => {
+              setPassword(e.target.value);
+              validate(e);
+            }}
             onIonInput={(event) => validate(event)}
             onIonBlur={() => markTouched()}
             value={password}
@@ -233,7 +244,10 @@ export default function Signup() {
             placeholder="******"
             type={passwordType === "text" ? "text" : "password"}
             name="confirmPassword"
-            onIonChange={(e: any) => setConfirmPassword(e.target.value)}
+            onIonChange={(e: any) => {
+              setConfirmPassword(e.target.value);
+              validate(e);
+            }}
             onIonInput={(event) => validate(event)}
             onIonBlur={() => markTouched()}
             value={confirmPassword}
@@ -264,7 +278,10 @@ export default function Signup() {
             clearInput={true}
             placeholder="username786!"
             name="userName"
-            onIonChange={(e: any) => setUserName(e.target.value)}
+            onIonChange={(e: any) => {
+              setUserName(e.target.value);
+              validate(e);
+            }}
             onIonInput={(event) => validate(event)}
             onIonBlur={() => markTouched()}
             value={userName}
@@ -287,7 +304,10 @@ export default function Signup() {
             clearInput={true}
             placeholder="John"
             name="firstName"
-            onIonChange={(e: any) => setFirstName(e.target.value)}
+            onIonChange={(e: any) => {
+              setFirstName(e.target.value);
+              validate(e);
+            }}
             onIonInput={(event) => validate(event)}
             onIonBlur={() => markTouched()}
             value={firstName}
@@ -308,7 +328,10 @@ export default function Signup() {
             clearInput={true}
             placeholder="Doe"
             name="lastName"
-            onIonChange={(e: any) => setLastName(e.target.value)}
+            onIonChange={(e: any) => {
+              setLastName(e.target.value);
+              validate(e);
+            }}
             onIonInput={(event) => validate(event)}
             onIonBlur={() => markTouched()}
             value={lastName}
@@ -363,6 +386,12 @@ export default function Signup() {
             value={bio}
           ></IonTextarea>
         </IonItem>
+        <IonLabel className="labelColour">
+          By Signing up to our Application you agree to accept our
+          <Link to="/PrivacyPolicy.html" target="_blank">
+            Privacy Policy
+          </Link>
+        </IonLabel>
         <IonButton
           expand="full"
           onClick={SignUpRequest}

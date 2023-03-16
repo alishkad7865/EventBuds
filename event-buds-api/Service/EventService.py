@@ -61,12 +61,17 @@ class EventService:
                 self.invitation_service.sendEventInvitation(
                     invitation)
 
+            owner_invitation: EventInvitation = EventInvitation(
+                eventId=eventId, inviteId=int(round(time.time() * 1000)), invitationResponse="accepted", isHelper=1, Notified=0, ownerId=int(parsedEvent["ownerId"]), RespondDate=None, userId=int(parsedEvent["ownerId"]))
+
+            self.invitation_service.sendEventInvitation(
+                owner_invitation)
             return "Success"
         except NameError as e:
             return e
 
-    def UpdateEvent(self, event):
-        self.repository.UpdateEvent(event)
+    def UpdateEvent(self, event_id, status):
+        return self.repository.UpdateEvent(event_id=event_id, status=status)
 
-    def deleteEvent(self, eventId):
-        self.repository.deleteEvent(eventId)
+    def getEvent(self, event_id):
+        return self.repository.Get_Event(event_id=event_id)[0]

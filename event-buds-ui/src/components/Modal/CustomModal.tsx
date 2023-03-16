@@ -13,6 +13,8 @@ import {
   IonCheckbox,
   IonFooter,
   IonHeader,
+  IonGrid,
+  IonRow,
 } from "@ionic/react";
 import { useState } from "react";
 
@@ -67,7 +69,24 @@ export default function CustomModal(props: any) {
       <IonContent>
         <IonList>
           {props.data.length === 0 && (
-            <h5 className="ion-text-center labelColour">No Friends Added!</h5>
+            <IonGrid>
+              <IonRow class="ion-justify-content-center">
+                <IonImg
+                  class="icon-svg"
+                  src="assets/svg/friends.svg"
+                  alt="folder-empty"
+                />
+              </IonRow>
+              <IonRow class="ion-justify-content-center">
+                <h2 className="icon-svg">No Friends Added!</h2>
+              </IonRow>
+              <IonRow class="ion-justify-content-center">
+                <h4 className="icon-svg">click Add button to add friends</h4>
+                <IonButton className="ion-padding" routerLink="/ManageFriends">
+                  Friends
+                </IonButton>
+              </IonRow>
+            </IonGrid>
           )}
           {props.data?.map((list: any) => {
             return (

@@ -10,7 +10,7 @@ ion-card-header.ios {
 .PrivateEventCard {
   max-width: 450px;
   min-width: 320px;
-  background: #a7baf480;
+  background: #ffc9c4;
 }
 
 .PublicEventCard {
@@ -74,4 +74,8 @@ ion-col {
 }
 .NotiModalButtons {
   color: #319396;
+}
+
+.icon-svg {
+  color: gray;
 }

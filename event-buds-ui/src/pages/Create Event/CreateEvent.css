@@ -57,8 +57,7 @@ ion-modal#custom-modal ion-header > ion-toolbar {
 
 ion-datetime {
   --background: #e0f4f5;
-
   border-radius: 16px;
   box-shadow: #e0f4f5;
-  color: black;
+  color: #636f6f;
 }

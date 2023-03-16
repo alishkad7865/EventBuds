@@ -1,13 +1,17 @@
 import {
   IonAvatar,
   IonButton,
+  IonGrid,
   IonHeader,
+  IonImg,
   IonItem,
   IonLabel,
   IonList,
   IonRefresher,
   IonRefresherContent,
+  IonRow,
   IonSearchbar,
+  IonSpinner,
   IonToast,
   IonToolbar,
   RefresherEventDetail,
@@ -29,6 +33,7 @@ export default function AddFriends(props: any) {
   const { token } = useContext(UserContext);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const { friendsList, setfriendsList } = props;
   let [results, setResults] = useState([...otherUsersList]);
 
@@ -49,6 +54,7 @@ export default function AddFriends(props: any) {
     );
   };
   async function loadAllUsers() {
+    setIsLoading(true);
     let result = await getAllUsers(token);
     if (result) {
       setotherUsersList(
@@ -59,6 +65,7 @@ export default function AddFriends(props: any) {
         )
       );
     }
+    setIsLoading(false);
   }
 
   useEffect(() => {
@@ -125,58 +132,79 @@ export default function AddFriends(props: any) {
           message={toastMessage}
           duration={3000}
         />
-        <IonList class="itemBackground">
-          {results.length > 0 ? (
-            results?.map((list: any) => {
-              return (
-                <IonItem class="itemBackground" key={list.EMAIL + props.title}>
-                  <IonAvatar slot="start">
-                    <img
-                      alt="Silhouette of a person's head"
-                      src="https://ionicframework.com/docs/img/demos/avatar.svg"
-                    />
-                  </IonAvatar>
-                  <IonLabel>
-                    <h2 className="ion-text-capitalize">
-                      <b>{list.FIRSTNAME + " " + list.LASTNAME} </b>
-                    </h2>
-                    <p>{list.EMAIL}</p>
-                  </IonLabel>
-                  <IonButton
-                    onClick={() =>
-                      presentAlert({
-                        header: "Are you sure?",
-                        cssClass: "custom-alert",
-                        mode: "ios",
-                        buttons: [
-                          {
-                            text: "Cancel",
-                            role: "Cancel",
-                            cssClass: "alert-button-cancel",
-                          },
-                          {
-                            text: "Yes",
-                            role: "confirm",
-                            cssClass: "alert-button-confirm",
-                            handler: () => {
-                              addFriendHandler(list);
-                            },
-                          },
-                        ],
-                      })
-                    }
+        {isLoading ? (
+          <IonSpinner name="crescent"></IonSpinner>
+        ) : (
+          <IonList class="itemBackground">
+            {results.length > 0 ? (
+              results?.map((list: any) => {
+                return (
+                  <IonItem
+                    class="itemBackground"
+                    key={list.EMAIL + props.title}
                   >
-                    Send Request
-                  </IonButton>
-                </IonItem>
-              );
-            })
-          ) : (
-            <p className="ion-text-center">
-              No users found, Try different query!
-            </p>
-          )}
-        </IonList>
+                    <IonAvatar slot="start">
+                      <img
+                        alt="Silhouette of a person's head"
+                        src="https://ionicframework.com/docs/img/demos/avatar.svg"
+                      />
+                    </IonAvatar>
+                    <IonLabel>
+                      <h2 className="ion-text-capitalize">
+                        <b>{list.FIRSTNAME + " " + list.LASTNAME} </b>
+                      </h2>
+                      <p>{list.EMAIL}</p>
+                    </IonLabel>
+                    <IonButton
+                      onClick={() =>
+                        presentAlert({
+                          header: "Are you sure?",
+                          cssClass: "custom-alert",
+                          mode: "ios",
+                          buttons: [
+                            {
+                              text: "Cancel",
+                              role: "Cancel",
+                              cssClass: "alert-button-cancel",
+                            },
+                            {
+                              text: "Yes",
+                              role: "confirm",
+                              cssClass: "alert-button-confirm",
+                              handler: () => {
+                                addFriendHandler(list);
+                              },
+                            },
+                          ],
+                        })
+                      }
+                    >
+                      Send Request
+                    </IonButton>
+                  </IonItem>
+                );
+              })
+            ) : (
+              <IonGrid>
+                <IonRow class="ion-justify-content-center">
+                  <IonImg
+                    class="icon-svg"
+                    src="assets/svg/friends.svg"
+                    alt="folder-empty"
+                  />
+                </IonRow>
+                <IonRow class="ion-justify-content-center">
+                  <h2 className="icon-svg">No Users Found!</h2>
+                </IonRow>
+                <IonRow class="ion-justify-content-center">
+                  <h4 className="icon-svg">
+                    Try Searching by different First name, Last name or Email
+                  </h4>
+                </IonRow>
+              </IonGrid>
+            )}
+          </IonList>
+        )}
       </IonHeader>
     </>
   );

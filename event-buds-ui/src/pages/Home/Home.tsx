@@ -8,11 +8,14 @@ import {
   IonCardSubtitle,
   IonCardTitle,
   IonContent,
+  IonGrid,
+  IonImg,
   IonItem,
   IonLabel,
   IonPage,
   IonRefresher,
   IonRefresherContent,
+  IonRow,
   IonSegment,
   IonSegmentButton,
   IonSpinner,
@@ -33,16 +36,14 @@ import { UserContext } from "../../context/UserContext";
 import { chevronDownCircleOutline } from "ionicons/icons";
 import {
   completedArraySortedByDateASC,
-  ongoingArraySortedByDateASC,
+  upcomingArraySortedByDateASC,
 } from "../../Utils/ArrayUtil";
 
 export default function Home() {
   const { user, token, userLoggedIn } = useContext(UserContext);
   const [events, setEvents] = useState([]);
   const accordionGroup = useRef<null | HTMLIonAccordionGroupElement>(null);
-  const [segment, setSegment] = useState<
-    "AssignedToMe" | "Ongoing" | "Completed"
-  >("AssignedToMe");
+  const [segment, setSegment] = useState<"Upcoming" | "Completed">("Upcoming");
   const [event, setEvent] = useState<any>({});
   const [guestsList, setGuestsList] = useState<any>([]);
   const [helpersList, setHelpersList] = useState<any>([]);
@@ -50,8 +51,11 @@ export default function Home() {
   const [acceptedhelpersList, setAcceptedHelpersList] = useState<any>([]);
   const [isHelperOrOwner, setIsHelperOROwner] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
-  var ongoingSegmentArray = ongoingArraySortedByDateASC(events);
+  const [toastMessage, setToastMessage] = useState("");
+
+  var upcomingSegmentArray = upcomingArraySortedByDateASC(events);
   var completedSegmentArray = completedArraySortedByDateASC(events);
+
   async function loadUserEvents() {
     setIsLoading(true);
     GetUserEvents(token).then((response: any) => {
@@ -59,12 +63,17 @@ export default function Home() {
       setIsLoading(false);
     });
   }
+  useIonViewWillEnter(() => {
+    if (userLoggedIn) {
+      loadUserEvents();
+    }
+  });
   useEffect(() => {
     if (userLoggedIn) {
       loadUserEvents();
     }
     // setEventStepper(0);
-  }, [user, userLoggedIn]);
+  }, [user, userLoggedIn, toastMessage]);
   function handleRefresh(event: CustomEvent<RefresherEventDetail>) {
     setTimeout(() => {
       loadUserEvents();
@@ -127,127 +136,178 @@ export default function Home() {
                   multiple={true}
                   value="Upcoming"
                 >
-                  <IonAccordion class="accord" value="Upcoming">
-                    <IonItem class="AccordTitle" slot="header">
-                      <IonLabel>Upcoming Events</IonLabel>
-                    </IonItem>
-                    <div className="ion-padding" slot="content">
-                      <IonSegment
-                        value={segment}
-                        onIonChange={(e: any) => {
-                          setSegment(e.detail.value);
-                        }}
-                        mode="ios"
-                      >
-                        <IonSegmentButton value="AssignedToMe">
-                          <IonLabel>Assigned to me</IonLabel>
-                        </IonSegmentButton>
+                  {events?.length === 0 ? (
+                    <IonGrid>
+                      <IonRow class="ion-justify-content-center">
+                        <IonImg
+                          class="icon-svg"
+                          src="assets/svg/folder.svg"
+                          alt="folder-empty"
+                        />
+                      </IonRow>
+                      <IonRow class="ion-justify-content-center">
+                        <h2 className="icon-svg">No Events Added!</h2>
+                      </IonRow>
+                      <IonRow class="ion-justify-content-center">
+                        <h4 className="icon-svg">
+                          click here to add new event
+                        </h4>
+                        <IonButton
+                          className="ion-padding"
+                          routerLink="/CreateEvent"
+                        >
+                          Create
+                        </IonButton>
+                      </IonRow>
+                    </IonGrid>
+                  ) : (
+                    <IonAccordion class="accord" value="Upcoming">
+                      <IonItem class="AccordTitle" slot="header">
+                        <IonLabel>Upcoming Events</IonLabel>
+                      </IonItem>
+                      <div className="ion-padding" slot="content">
+                        <IonSegment
+                          value={segment}
+                          onIonChange={(e: any) => {
+                            setSegment(e.detail.value);
+                          }}
+                          mode="ios"
+                        >
+                          <IonSegmentButton value="Upcoming">
+                            <IonLabel>Upcoming</IonLabel>
+                          </IonSegmentButton>
 
-                        <IonSegmentButton value="Ongoing">
-                          <IonLabel>Ongoing</IonLabel>
-                        </IonSegmentButton>
+                          <IonSegmentButton value="Completed">
+                            <IonLabel>Completed</IonLabel>
+                          </IonSegmentButton>
+                        </IonSegment>
 
-                        <IonSegmentButton value="Completed">
-                          <IonLabel>Completed</IonLabel>
-                        </IonSegmentButton>
-                      </IonSegment>
-
-                      {segment === "AssignedToMe" && (
-                        <IonCardContent class="seg eventCardsDiv">
-                          XYZ task for ABC event has been assigned to me
-                        </IonCardContent>
-                      )}
-                      {segment === "Ongoing" && (
-                        <IonCardContent class="seg eventCardsDiv">
-                          {ongoingSegmentArray?.map((list: any) => {
-                            return (
-                              <IonCard
-                                class={
-                                  list.ISPUBLIC
-                                    ? "PublicEventCard"
-                                    : "PrivateEventCard"
-                                }
-                                key={list.EVENTID}
-                              >
-                                <IonCardHeader>
-                                  <IonCardTitle className="ion-text-capitalize">
-                                    {list.EVENTTITLE}
-                                  </IonCardTitle>
-                                  <IonCardSubtitle>
-                                    Time:{" "}
-                                    {format(
-                                      parseJSON(list.STARTDATETIME),
-                                      "MMM d, yyyy, K:m a "
-                                    )}
-                                  </IonCardSubtitle>
-                                  <IonCardSubtitle>
-                                    Venue: {list.LOCATION}
-                                  </IonCardSubtitle>
-                                </IonCardHeader>
-                                <IonCardContent>
-                                  Description: {list.DESCRIPTION}
-                                </IonCardContent>
-                                <IonButton
-                                  fill="solid"
-                                  shape="round"
-                                  size="small"
-                                  onClick={() => viewEvent(list)}
+                        {segment === "Upcoming" && (
+                          <IonCardContent class="seg eventCardsDiv">
+                            {upcomingSegmentArray.length === 0 && (
+                              <IonGrid>
+                                <IonRow class="ion-justify-content-center">
+                                  <IonImg
+                                    class="icon-svg"
+                                    src="assets/svg/folder.svg"
+                                    alt="folder-empty"
+                                  />
+                                </IonRow>
+                                <IonRow class="ion-justify-content-center">
+                                  <h2 className="icon-svg">
+                                    No Upcoming Events
+                                  </h2>
+                                </IonRow>
+                                <IonRow class="ion-justify-content-center">
+                                  <h4 className="icon-svg">
+                                    Great! You are caught up with your events.
+                                  </h4>
+                                </IonRow>
+                              </IonGrid>
+                            )}
+                            {upcomingSegmentArray?.map((list: any) => {
+                              return (
+                                <IonCard
+                                  class={
+                                    list.ISPUBLIC
+                                      ? "PublicEventCard"
+                                      : "PrivateEventCard"
+                                  }
+                                  key={list.EVENTID}
                                 >
-                                  View
-                                </IonButton>
-                              </IonCard>
-                            );
-                          })}
-                        </IonCardContent>
-                      )}
-                      {segment === "Completed" && (
-                        <IonCardContent class="seg">
-                          {completedSegmentArray.length === 0 && (
-                            <p>No Completed Events to display</p>
-                          )}
-                          {completedSegmentArray?.map((list: any) => {
-                            return (
-                              <IonCard
-                                class={
-                                  list.ISPUBLIC
-                                    ? "PublicEventCard"
-                                    : "PrivateEventCard"
-                                }
-                                key={list.EVENTID}
-                              >
-                                <IonCardHeader>
-                                  <IonCardTitle className="ion-text-capitalize">
-                                    {list.EVENTTITLE}
-                                  </IonCardTitle>
-                                  <IonCardSubtitle>
-                                    Time:{" "}
-                                    {format(
-                                      parseJSON(list.STARTDATETIME),
-                                      "MMM d, yyyy, K:m a "
-                                    )}
-                                  </IonCardSubtitle>
-                                  <IonCardSubtitle>
-                                    Venue: {list.LOCATION}
-                                  </IonCardSubtitle>
-                                </IonCardHeader>
-                                <IonCardContent>
-                                  Description: {list.DESCRIPTION}
-                                </IonCardContent>
-                                <IonButton
-                                  fill="solid"
-                                  shape="round"
-                                  size="small"
-                                  onClick={() => viewEvent(list)}
+                                  <IonCardHeader>
+                                    <IonCardTitle className="ion-text-capitalize">
+                                      {list.EVENTTITLE}
+                                    </IonCardTitle>
+                                    <IonCardSubtitle>
+                                      Time:{" "}
+                                      {format(
+                                        parseJSON(list.STARTDATETIME),
+                                        "MMM d, yyyy, K:m a "
+                                      )}
+                                    </IonCardSubtitle>
+                                    <IonCardSubtitle>
+                                      Venue: {list.LOCATION}
+                                    </IonCardSubtitle>
+                                  </IonCardHeader>
+                                  <IonCardContent>
+                                    Description: {list.DESCRIPTION}
+                                  </IonCardContent>
+                                  <IonButton
+                                    fill="solid"
+                                    shape="round"
+                                    size="small"
+                                    onClick={() => viewEvent(list)}
+                                  >
+                                    View
+                                  </IonButton>
+                                </IonCard>
+                              );
+                            })}
+                          </IonCardContent>
+                        )}
+                        {segment === "Completed" && (
+                          <IonCardContent class="seg eventCardsDiv">
+                            {completedSegmentArray.length === 0 && (
+                              <IonGrid>
+                                <IonRow class="ion-justify-content-center">
+                                  <IonImg
+                                    class="icon-svg"
+                                    src="assets/svg/folder.svg"
+                                    alt="folder-empty"
+                                  />
+                                </IonRow>
+                                <IonRow class="ion-justify-content-center">
+                                  <h2 className="icon-svg">
+                                    No Completed Events found!
+                                  </h2>
+                                </IonRow>
+                              </IonGrid>
+                            )}
+                            {completedSegmentArray?.map((list: any) => {
+                              return (
+                                <IonCard
+                                  class={
+                                    list.ISPUBLIC
+                                      ? "PublicEventCard"
+                                      : "PrivateEventCard"
+                                  }
+                                  key={list.EVENTID}
                                 >
-                                  View
-                                </IonButton>
-                              </IonCard>
-                            );
-                          })}
-                        </IonCardContent>
-                      )}
-                    </div>
-                  </IonAccordion>
+                                  <IonCardHeader>
+                                    <IonCardTitle className="ion-text-capitalize">
+                                      {list.EVENTTITLE}
+                                    </IonCardTitle>
+                                    <IonCardSubtitle>
+                                      Time:{" "}
+                                      {format(
+                                        parseJSON(list.STARTDATETIME),
+                                        "MMM d, yyyy, K:m a "
+                                      )}
+                                    </IonCardSubtitle>
+                                    <IonCardSubtitle>
+                                      Venue: {list.LOCATION}
+                                    </IonCardSubtitle>
+                                  </IonCardHeader>
+                                  <IonCardContent>
+                                    Description: {list.DESCRIPTION}
+                                  </IonCardContent>
+                                  <IonButton
+                                    fill="solid"
+                                    shape="round"
+                                    size="small"
+                                    onClick={() => viewEvent(list)}
+                                  >
+                                    View
+                                  </IonButton>
+                                </IonCard>
+                              );
+                            })}
+                          </IonCardContent>
+                        )}
+                      </div>
+                    </IonAccordion>
+                  )}
 
                   <IonAccordion class="accord" value="Private">
                     {events?.filter((list: any) => !list.ISPUBLIC).length >
@@ -358,6 +418,10 @@ export default function Home() {
           isHelperOrOwner={isHelperOrOwner}
           helpersList={helpersList}
           guestsList={guestsList}
+          setHelpersList={setHelpersList}
+          setGuestsList={setGuestsList}
+          toastMessage={toastMessage}
+          setToastMessage={setToastMessage}
           acceptedhelpersList={acceptedhelpersList}
           setAcceptedhelpersList={setAcceptedHelpersList}
         />

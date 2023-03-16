@@ -1,16 +1,17 @@
 import {
   IonAvatar,
   IonButton,
-  IonButtons,
-  IonContent,
+  IonGrid,
   IonHeader,
+  IonImg,
   IonItem,
   IonLabel,
   IonList,
-  IonModal,
   IonRefresher,
   IonRefresherContent,
+  IonRow,
   IonSearchbar,
+  IonSpinner,
   IonToast,
   IonToolbar,
   RefresherEventDetail,
@@ -36,6 +37,7 @@ export default function MyFriends(props: any) {
   const [modalFriendData, setModalFriendData] = useState({});
   const [isOpen, setIsOpen] = useState(false);
   const modal = useRef<HTMLIonModalElement>(null);
+  const [isLoading, setIsLoading] = useState(false);
   let [results, setResults] = useState([...friendsList]);
 
   const handleChange = (ev: Event) => {
@@ -55,10 +57,12 @@ export default function MyFriends(props: any) {
   };
 
   async function loadFriends() {
+    setIsLoading(true);
     let result = await getFriends(token);
     if (result) {
       setfriendsList(result.data);
     }
+    setIsLoading(false);
   }
 
   function handleRefresh(event: CustomEvent<RefresherEventDetail>) {
@@ -134,83 +138,124 @@ export default function MyFriends(props: any) {
         list={modalFriendData}
         setIsOpen={setIsOpen}
       />
-      <IonList>
-        {friendsList.length === 0 ? (
-          <h5 className="ion-text-center labelColour">No Friends Added!</h5>
-        ) : friendsList.length >= 0 && results.length > 0 ? (
-          results?.map((list: any) => {
-            return (
-              <IonItem class="itemBackground" key={list.EMAIL + "_friendlist"}>
-                <IonAvatar
-                  slot="start"
-                  onClick={() => {
-                    setIsOpen(true);
-                    setModalFriendData(list);
-                  }}
+      {isLoading ? (
+        <IonSpinner name="crescent"></IonSpinner>
+      ) : (
+        <IonList>
+          {friendsList.length === 0 ? (
+            <IonGrid>
+              <IonRow class="ion-justify-content-center">
+                <IonImg
+                  class="icon-svg"
+                  src="assets/svg/friends.svg"
+                  alt="folder-empty"
+                />
+              </IonRow>
+              <IonRow class="ion-justify-content-center">
+                <h2 className="icon-svg">No Friends Added!</h2>
+              </IonRow>
+              <IonRow class="ion-justify-content-center">
+                <h4 className="icon-svg">click Add button to add friends</h4>
+                <IonButton
+                  className="ion-padding"
+                  onClick={() => props.setSegment("Add")}
                 >
-                  <img
-                    alt="Silhouette of a person's head"
-                    src="https://ionicframework.com/docs/img/demos/avatar.svg"
-                  />
-                </IonAvatar>
-
-                <IonLabel
-                  onClick={() => {
-                    setIsOpen(true);
-                    setModalFriendData(list);
-                  }}
+                  Add
+                </IonButton>
+              </IonRow>
+            </IonGrid>
+          ) : friendsList.length >= 0 && results.length > 0 ? (
+            results?.map((list: any) => {
+              return (
+                <IonItem
+                  class="itemBackground"
+                  key={list.EMAIL + "_friendlist"}
                 >
-                  <h6 className="labelColour ion-text-capitalize">
-                    {" "}
-                    <b className="labelColour">
-                      {list.FIRSTNAME + " " + list.LASTNAME}{" "}
-                    </b>
-                  </h6>
-                  <p>{list.EMAIL}</p>
-                </IonLabel>
-                {list.STATUS === "accepted" ? (
-                  <IonButton
-                    onClick={() =>
-                      presentAlert({
-                        header: "Are you sure?",
-                        cssClass: "custom-alert",
-                        mode: "ios",
-                        buttons: [
-                          {
-                            text: "Cancel",
-                            role: "Cancel",
-                            cssClass: "alert-button-cancel",
-                          },
-                          {
-                            text: "Yes",
-                            role: "confirm",
-                            cssClass: "alert-button-confirm",
-                            handler: () => {
-                              removeFriendHandler(list);
-                            },
-                          },
-                        ],
-                      })
-                    }
+                  <IonAvatar
+                    slot="start"
+                    onClick={() => {
+                      setIsOpen(true);
+                      setModalFriendData(list);
+                    }}
                   >
-                    Remove Friend
-                  </IonButton>
-                ) : (
-                  <div className="addChip">
-                    <IonButton disabled expand="full" shape="round">
-                      {list.STATUS}
+                    <img
+                      alt="Silhouette of a person's head"
+                      src="https://ionicframework.com/docs/img/demos/avatar.svg"
+                    />
+                  </IonAvatar>
+
+                  <IonLabel
+                    onClick={() => {
+                      setIsOpen(true);
+                      setModalFriendData(list);
+                    }}
+                  >
+                    <h6 className="labelColour ion-text-capitalize">
+                      {" "}
+                      <b className="labelColour">
+                        {list.FIRSTNAME + " " + list.LASTNAME}{" "}
+                      </b>
+                    </h6>
+                    <p>{list.EMAIL}</p>
+                  </IonLabel>
+                  {list.STATUS === "accepted" ? (
+                    <IonButton
+                      onClick={() =>
+                        presentAlert({
+                          header: "Are you sure?",
+                          cssClass: "custom-alert",
+                          mode: "ios",
+                          buttons: [
+                            {
+                              text: "Cancel",
+                              role: "Cancel",
+                              cssClass: "alert-button-cancel",
+                            },
+                            {
+                              text: "Yes",
+                              role: "confirm",
+                              cssClass: "alert-button-confirm",
+                              handler: () => {
+                                removeFriendHandler(list);
+                              },
+                            },
+                          ],
+                        })
+                      }
+                    >
+                      Remove Friend
                     </IonButton>
-                  </div>
-                )}
-              </IonItem>
-            );
-          })
-        ) : (
-          <p className="ion-text-center">
-            No friends found, Try different query!
-          </p>
-        )}
-      </IonList>
+                  ) : (
+                    <div className="addChip">
+                      <IonButton disabled expand="full" shape="round">
+                        {list.STATUS}
+                      </IonButton>
+                    </div>
+                  )}
+                </IonItem>
+              );
+            })
+          ) : (
+            <IonGrid>
+              <IonRow class="ion-justify-content-center">
+                <IonImg
+                  class="icon-svg"
+                  src="assets/svg/friends.svg"
+                  alt="folder-empty"
+                />
+              </IonRow>
+              <IonRow class="ion-justify-content-center">
+                <h2 className="icon-svg">No Friends Found!</h2>
+              </IonRow>
+              <IonRow class="ion-justify-content-center">
+                <h4 className="icon-svg">
+                  Try Searching by different First name, Last name or Email
+                </h4>
+              </IonRow>
+            </IonGrid>
+          )}
+        </IonList>
+      )}
     </>
   );
 }
