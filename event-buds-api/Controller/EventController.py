@@ -70,3 +70,19 @@ class EventController:
     @router.post("/createEvent", dependencies=[Depends(JWTBearer())])
     def createEvent(Event):
         return eventService.createEvent(Event)
+
+    @router.patch("/updateTaskAssignedNotification", dependencies=[Depends(JWTBearer())])
+    def updateTaskAssignedInvitation(invitation_id):
+        return eventInvitationService.updateTaskAssignedInvitation(invitation_id)
+
+    @router.patch("/updateTaskNotifed", dependencies=[Depends(JWTBearer())])
+    def updateInvitationNotified(invitation_id):
+        return eventInvitationService.updateInvitationNotified(invitation_id)
+
+    @router.patch("/updateEvent", dependencies=[Depends(JWTBearer())])
+    def updateEvent(event_id, status):
+        return eventService.UpdateEvent(event_id=event_id, status=status)
+
+    @router.get("/getEvent", dependencies=[Depends(JWTBearer())])
+    def getEvent(event_id):
+        return eventService.getEvent(event_id=event_id)

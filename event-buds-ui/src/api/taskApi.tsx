@@ -74,7 +74,7 @@ export async function updateTask(taskId: number, task: any, token: string) {
   const response: HttpResponse = await CapacitorHttp.patch(options)
     .then((response: any) => {
       if (response.status >= 200 && response.status < 300) {
-        return response.data;
+        return response;
       } else if (response.status > 300) {
         return response.data;
       }

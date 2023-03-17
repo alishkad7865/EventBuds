@@ -3,14 +3,17 @@ import {
   IonButton,
   IonButtons,
   IonContent,
+  IonGrid,
   IonHeader,
   IonIcon,
+  IonImg,
   IonItem,
   IonLabel,
   IonList,
   IonModal,
   IonRefresher,
   IonRefresherContent,
+  IonRow,
   IonTitle,
   IonToast,
   IonToolbar,
@@ -153,6 +156,28 @@ export default function NotificationModal(props: any) {
           message={toastMessage}
           duration={3000}
         />
+
+        {friendsList.filter((list: any) => list.STATUS === "requested")
+          .length === 0 &&
+          eventInvitations.length === 0 && (
+            <IonGrid>
+              <IonRow class="ion-justify-content-center">
+                <IonImg
+                  class="icon-svg"
+                  src="assets/svg/notificationBell.svg"
+                  alt="notifications"
+                />
+              </IonRow>
+              <IonRow class="ion-justify-content-center">
+                <h2 className="icon-svg">Hurray</h2>
+              </IonRow>
+              <IonRow class="ion-justify-content-center">
+                <h4 className="icon-svg">
+                  you don't have more notification to review.
+                </h4>
+              </IonRow>
+            </IonGrid>
+          )}
         <IonList>
           {friendsList.map((list: any) => {
             if (list.STATUS === "requested")

@@ -4,14 +4,16 @@ import AddMembers from "../../components/EventForm/AddMembers";
 import "./CreateEvent.css";
 import EventInfoForm from "../../components/EventForm/EventInfoForm";
 import { UserContext } from "../../context/UserContext";
+import { parseJSON } from "date-fns";
+import { LocaleDateTimeISOFormat } from "../../Utils/ArrayUtil";
 
 export default function CreateEvent(props: any) {
   let initialState = {
     step: 1,
     eventTitle: "",
-    lastRegDate: "",
-    eventStartTime: "",
-    eventEndTime: "",
+    lastRegDate: LocaleDateTimeISOFormat(new Date().toISOString()),
+    eventStartTime: LocaleDateTimeISOFormat(new Date().toISOString()),
+    eventEndTime: LocaleDateTimeISOFormat(new Date().toISOString()),
     location: "",
     eventType: undefined,
     description: "",
@@ -25,7 +27,23 @@ export default function CreateEvent(props: any) {
   const [helpers, setHelpers] = useState<any>([]);
   const [guests, setGuests] = useState<any>([]);
   const [toastMessage, setToastMessage] = useState("");
+  const [eventCreatedModal, setEventCreatedModal] = useState(false);
+  const [eventCreatedModalData, setEventCreatedModalData] = useState({
+    eventTitle: "",
+    eventtype: "",
+  });
+
   const { user, token } = useContext(UserContext);
+
+  // Validators states
+  const [isTouched, setIsTouched] = useState(false);
+  const [isTitleValid, setIsTitleValid] = useState<boolean>(false);
+  const [isDescriptionValid, setIsDescriptionValid] = useState<boolean>(false);
+  const [isStartDateValid, setIsStartDateValid] = useState<boolean>(false);
+  const [isEndDateValid, setIsEndDateValid] = useState<boolean>(false);
+  const [isEventTypeValid, setIsEventTypeValid] = useState<boolean>(false);
+  const [isLocationValid, setIsLocationValid] = useState<boolean>(false);
+
   useEffect(() => {
     if (user?.FRIENDS) {
       setFriends(user?.FRIENDS);
@@ -38,6 +56,88 @@ export default function CreateEvent(props: any) {
     }
     loadAllUsers();
   }, []);
+
+  function ValidateAllFields() {
+    return (
+      isTitleValid &&
+      isDescriptionValid &&
+      isEndDateValid &&
+      isStartDateValid &&
+      isLocationValid &&
+      isEventTypeValid
+    );
+  }
+  function SetAllValidatorsFalse() {
+    setIsTitleValid(false);
+    setIsDescriptionValid(false);
+    setIsEndDateValid(false);
+    setIsStartDateValid(false);
+    setIsLocationValid(false);
+    setIsEventTypeValid(false);
+  }
+  const validate = (ev: Event) => {
+    const { name, value } = ev.target as HTMLInputElement;
+    if (name === "eventTitle") {
+      if (value.trim() === "") {
+        setIsTitleValid(false);
+      } else {
+        setIsTitleValid(true);
+      }
+    }
+    if (name === "lastRegDate") {
+      setIsStartDateValid(false);
+
+      if (new Date(value) >= new Date(eventEndTime)) {
+        setIsEndDateValid(false);
+      } else if (new Date(value) >= new Date(eventStartTime))
+        setIsStartDateValid(false);
+    }
+    if (name === "eventStartTime") {
+      setIsStartDateValid(false);
+
+      if (new Date(value) >= new Date(eventEndTime)) {
+        setIsEndDateValid(false);
+      } else if (new Date(value) < new Date(lastRegDate)) {
+        setIsStartDateValid(false);
+      } else if (
+        new Date(value) < new Date(eventEndTime) &&
+        new Date(value) > new Date(lastRegDate)
+      ) {
+        setIsStartDateValid(true);
+        setIsEndDateValid(true);
+      }
+    }
+    if (name === "eventEndTime") {
+      setIsEndDateValid(false);
+      if (new Date(value) <= new Date(eventStartTime)) {
+        setIsStartDateValid(false);
+      } else if (new Date(value) < new Date(lastRegDate)) {
+        setIsEndDateValid(false);
+      } else if (
+        new Date(value) > new Date(eventStartTime) &&
+        new Date(value) > new Date(lastRegDate)
+      ) {
+        setIsStartDateValid(true);
+        setIsEndDateValid(true);
+      }
+    }
+    if (name === "description") {
+      value.trim() === "" || value === null
+        ? setIsDescriptionValid(false)
+        : setIsDescriptionValid(true);
+    }
+    if (name === "eventType") {
+      value !== undefined
+        ? setIsEventTypeValid(true)
+        : setIsEventTypeValid(false);
+    }
+    if (name === "location") {
+      value !== "" ? setIsLocationValid(true) : setIsLocationValid(false);
+    }
+  };
+  const markTouched = () => {
+    setIsTouched(true);
+  };
 
   const nextStep = () => {
     const { step } = state;
@@ -58,6 +158,7 @@ export default function CreateEvent(props: any) {
 
   const handleChange = (input: any) => (e: any) => {
     setState({ ...state, [input]: e.target.value });
+    validate(e);
   };
 
   const { step } = state;
@@ -83,6 +184,15 @@ export default function CreateEvent(props: any) {
     capacity,
     price,
   };
+
+  const validator = {
+    isTitleValid,
+    isDescriptionValid,
+    isEndDateValid,
+    isStartDateValid,
+    isLocationValid,
+    isEventTypeValid,
+  };
   switch (step) {
     case 1:
       return (
@@ -92,6 +202,15 @@ export default function CreateEvent(props: any) {
           values={values}
           toastMessage={toastMessage}
           setToastMessage={setToastMessage}
+          markTouched={markTouched}
+          isTouched={isTouched}
+          validate={validate}
+          ValidateAllFields={ValidateAllFields}
+          validator={validator}
+          eventCreatedModal={eventCreatedModal}
+          setEventCreatedModal={setEventCreatedModal}
+          eventCreatedModalData={eventCreatedModalData}
+          setEventCreatedModalData={setEventCreatedModalData}
         />
       );
     case 2:
@@ -114,6 +233,11 @@ export default function CreateEvent(props: any) {
           setModalData={setModalData}
           setToastMessage={setToastMessage}
           initialState={initialState}
+          ValidateAllFields={ValidateAllFields}
+          SetAllValidatorsFalse={SetAllValidatorsFalse}
+          eventCreatedModal={eventCreatedModal}
+          setEventCreatedModal={setEventCreatedModal}
+          setEventCreatedModalData={setEventCreatedModalData}
         />
       );
     default:

@@ -26,7 +26,11 @@ export default function ManageFriends(props: any) {
   function handleSegmentChange(value: any) {
     if (value === "Friends") {
       return (
-        <MyFriends setfriendsList={setfriendsList} friendsList={friendsList} />
+        <MyFriends
+          setfriendsList={setfriendsList}
+          friendsList={friendsList}
+          setSegment={setSegment}
+        />
       );
     } else if (value === "Add") {
       return (

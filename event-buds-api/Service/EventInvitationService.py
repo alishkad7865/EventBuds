@@ -33,8 +33,8 @@ class EventInvitationService:
     def getEventGuests(self, event_id=0):
         return self.repository.getEventGuests(event_id)
 
-    def insertOrUpdateEvent(self, event):
-        self.repository.insertOrUpdateEventInvitation(event)
+    def updateTaskAssignedInvitation(self, invitation_id):
+        return self.repository.updateTaskAssignedInvitation(invitation_id)
 
-    def deleteEvent(self, eventId):
-        self.repository.deleteEventInvitation(eventId)
+    def updateInvitationNotified(self, invitation_id):
+        return self.repository.updateInvitationNotified(invitation_id)

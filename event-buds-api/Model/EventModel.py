@@ -53,7 +53,7 @@ class UserSignUp(BaseModel):
 
     @validator("email")
     def email_regex_checker(cls, email):
-        if re.match("^[a-zA-Z0-9-_]+@[a-zA-Z0-9]+\.[a-z]{1,3}$", email):
+        if re.match("^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$", email):
             return email
         raise ValueError(f"Invalid email pattern")
 
@@ -125,7 +125,7 @@ class Task(BaseModel):
     eventId: int
     taskId: Optional[int] = None
     taskName: Optional[str] = ""
-    assignedTo: Optional[object] = {}
+    assignedTo: Optional[str] = ""
     startTime: Optional[datetime] = None
     endTime: Optional[datetime] = None
     notes: Optional[str] = ""

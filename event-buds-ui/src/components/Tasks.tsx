@@ -9,13 +9,17 @@ import {
   IonFabButton,
   IonIcon,
   IonItem,
+  IonLabel,
+  IonRadio,
+  IonRadioGroup,
+  IonRow,
   IonToast,
 } from "@ionic/react";
-import { add, trashBin } from "ionicons/icons";
+import { add, filterOutline, trashBin } from "ionicons/icons";
 import { useContext, useEffect, useRef, useState } from "react";
 import { deleteTask, getTasks } from "../api/taskApi";
 import TaskModal from "./Modal/TaskModal";
-import { format, parseJSON } from "date-fns";
+
 import UpdateTaskModal from "./Modal/UpdateTaskModal";
 import { enterAnimation, leaveAnimation } from "../Utils/ModalUtil";
 import { UserContext } from "../context/UserContext";
@@ -24,22 +28,37 @@ import {
   getAssignedUser,
   getFirstAndLastName,
 } from "../types/AssignedToUser";
+import {
+  completedTaskArraySortedByDateASC,
+  LocaleDateTimeISOFormat,
+  ongoingTaskArraySortedByDateASC,
+  parseDateToReadableFormat,
+  taskAssignedArraySortedByDateASC,
+} from "../Utils/ArrayUtil";
 export default function Task(props: any) {
-  const [taskList, setTaskList] = useState([]);
+  const { taskList, setTaskList } = props;
   const [task, setTask] = useState<any>({});
   const modal = useRef<HTMLIonModalElement>(null);
   const updateTaskModal = useRef<HTMLIonModalElement>(null);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
-  const { token } = useContext(UserContext);
+  const { token, user } = useContext(UserContext);
+  const [filter, setFilter] = useState("assignedToMe");
+  const [filterTaskList, setFilterTaskList] = useState([]);
+
+  const [showModal, setShowModal] = useState(false);
+  const [isTouched, setIsTouched] = useState(false);
+  const [isTaskNameValid, setIsTaskNameValid] = useState<boolean | false>();
+  const [isStartDateValid, setIsStartDateValid] = useState<boolean>(true);
+  const [isEndDateValid, setIsEndDateValid] = useState<boolean>(true);
 
   let initialState = {
     TASKNAME: "",
-    STARTTIME: "",
-    ENDTIME: "",
+    STARTTIME: LocaleDateTimeISOFormat(props.event.STARTDATETIME),
+    ENDTIME: LocaleDateTimeISOFormat(props.event.ENDDATETIME),
     DESCRIPTION: "",
     ASSIGNEDTO: defaultAssignedToUser,
-    TASKSTATUS: "",
+    TASKSTATUS: "Ongoing",
     NOTES: "",
   };
   const [state, setState] = useState(initialState);
@@ -47,6 +66,91 @@ export default function Task(props: any) {
     if (input === "ASSIGNEDTO") {
       setState({ ...state, [input]: getAssignedUser(e.target.value) });
     } else setState({ ...state, [input]: e.target.value });
+    validate(e);
+  };
+
+  useEffect(() => {
+    if (filter === "assignedToMe") {
+      setFilterTaskList(
+        taskAssignedArraySortedByDateASC(taskList, user.USERID)
+      );
+    } else if (filter === "ongoing") {
+      setFilterTaskList(ongoingTaskArraySortedByDateASC(taskList));
+    } else if (filter === "completed")
+      setFilterTaskList(completedTaskArraySortedByDateASC(taskList));
+  }, [filter, taskList]);
+  function ValidateAllFields(task: any) {
+    validateOnSubmit("TASKNAME", task.TASKNAME, task);
+    validateOnSubmit("startDate", task.STARTTIME, task);
+    validateOnSubmit("endDate", task.ENDTIME, task);
+    return isTaskNameValid && isEndDateValid && isStartDateValid;
+  }
+  function SetAllValidatorsFalse() {
+    setIsTaskNameValid(false);
+    setIsEndDateValid(false);
+    setIsStartDateValid(false);
+  }
+  const validateOnSubmit = (name: string, value: string, task: any) => {
+    if (name === "TASKNAME") {
+      if (value.trim() === "") {
+        setIsTaskNameValid(false);
+      } else {
+        setIsTaskNameValid(true);
+      }
+    }
+    if (name === "startDate") {
+      if (new Date(value) > new Date(task.ENDTIME)) {
+        setIsEndDateValid(false);
+        setIsStartDateValid(false);
+      } else {
+        setIsStartDateValid(true);
+        setIsEndDateValid(true);
+      }
+    }
+    if (name === "endDate") {
+      setIsStartDateValid(false);
+
+      if (new Date(value) < new Date(task.STARTTIME)) {
+        setIsEndDateValid(false);
+        setIsStartDateValid(false);
+      } else {
+        setIsStartDateValid(true);
+        setIsEndDateValid(true);
+      }
+    }
+  };
+  const validate = (ev: Event) => {
+    const { name, value } = ev.target as HTMLInputElement;
+    if (name === "TASKNAME") {
+      if (value.trim() === "") {
+        setIsTaskNameValid(false);
+      } else {
+        setIsTaskNameValid(true);
+      }
+    }
+    if (name === "startDate") {
+      if (new Date(value) > new Date(ENDTIME)) {
+        setIsEndDateValid(false);
+        setIsStartDateValid(false);
+      } else {
+        setIsStartDateValid(true);
+        setIsEndDateValid(true);
+      }
+    }
+    if (name === "endDate") {
+      setIsStartDateValid(false);
+
+      if (new Date(value) < new Date(STARTTIME)) {
+        setIsEndDateValid(false);
+        setIsStartDateValid(false);
+      } else {
+        setIsStartDateValid(true);
+        setIsEndDateValid(true);
+      }
+    }
+  };
+  const markTouched = () => {
+    setIsTouched(true);
   };
 
   const {
@@ -68,6 +172,11 @@ export default function Task(props: any) {
     NOTES,
   };
 
+  const validator = {
+    isTaskNameValid,
+    isEndDateValid,
+    isStartDateValid,
+  };
   useEffect(() => {
     if (toastMessage !== "") {
       setShowToast(true);
@@ -124,12 +233,40 @@ export default function Task(props: any) {
         duration={3000}
       />
       <IonFab slot="fixed" vertical="bottom" horizontal="end">
-        <IonFabButton id="task-modal">
+        <IonFabButton
+          id="task-modal"
+          disabled={props.event.STATUS === "Completed"}
+        >
           <IonIcon icon={add}></IonIcon>
         </IonFabButton>
       </IonFab>
+      <IonRow class="ion-justify-content-end">
+        <IonRadioGroup
+          value={filter}
+          onIonChange={(e: any) => {
+            setFilter(e.target.value);
+          }}
+        >
+          <p>
+            <IonIcon icon={filterOutline} class="ion-padding-end"></IonIcon>
+            Filter:
+          </p>
+          <IonLabel class="ion-padding">Assigned to Me</IonLabel>
+          <IonRadio slot="end" value="assignedToMe">
+            Assigned to Me
+          </IonRadio>
+          <IonLabel class="ion-padding">Ongoing</IonLabel>
+          <IonRadio slot="end" value="ongoing">
+            Ongoing
+          </IonRadio>
+          <IonLabel class="ion-padding">Completed</IonLabel>
+          <IonRadio slot="end" value="completed">
+            Completed
+          </IonRadio>
+        </IonRadioGroup>
+      </IonRow>
       <div className="eventCardsDiv">
-        {taskList?.map((task: any) => {
+        {filterTaskList?.map((task: any) => {
           return (
             <>
               <IonCard
@@ -174,27 +311,15 @@ export default function Task(props: any) {
                   <p>
                     <b>Start Period:</b>
                     {task.STARTTIME
-                      ? format(
-                          parseJSON(task.STARTTIME.toString()),
-                          "MMM d, yyyy, K:m a "
-                        )
-                      : format(
-                          parseJSON(task.startTime.toString()),
-                          "MMM d, yyyy, K:m a "
-                        )}
+                      ? parseDateToReadableFormat(task.STARTTIME.toString())
+                      : parseDateToReadableFormat(task.startTime.toString())}
                   </p>
 
                   <p>
                     <b>Completion Date:</b>{" "}
                     {task.ENDTIME
-                      ? format(
-                          parseJSON(task.ENDTIME.toString()),
-                          "MMM d, yyyy, K:m a "
-                        )
-                      : format(
-                          parseJSON(task.endTime.toString()),
-                          "MMM d, yyyy, K:m a "
-                        )}
+                      ? parseDateToReadableFormat(task.ENDTIME.toString())
+                      : parseDateToReadableFormat(task.endTime.toString())}
                   </p>
                 </IonCardContent>
                 <IonButton
@@ -205,40 +330,46 @@ export default function Task(props: any) {
                   // onIonFocus={(e) => setupdateModalTriggerId(e.target.id)}
                   onClick={(e: any) => {
                     setTask(task);
+                    setShowModal(true);
                     // setModalTitle("Update Task");
                     // setupdateModalTriggerId(e.target.id);
                   }}
+                  disabled={props.event.STATUS === "Completed"}
                 >
                   Edit
                 </IonButton>
               </IonCard>
-              <UpdateTaskModal
-                token={token}
-                triggerId={"taskUpdate-modal" + task?.TASKID}
-                modal={updateTaskModal}
-                setState={setState}
-                event={props.event}
-                // handleUpdateChange={handleUpdateChange}
-                helpers={props.helpers}
-                dismiss={dismiss}
-                task={task}
-                setTask={setTask}
-                taskList={taskList}
-                setTaskList={setTaskList}
-                setToastMessage={setToastMessage}
-                modalTitle={"Update Task"}
-                enterAnimation={enterAnimation}
-                leaveAnimation={leaveAnimation}
-              />
             </>
           );
         })}
       </div>
-
+      <UpdateTaskModal
+        token={token}
+        triggerId={"taskUpdate-modal" + task?.TASKID}
+        modal={updateTaskModal}
+        setState={setState}
+        event={props.event}
+        showModal={showModal}
+        setShowModal={setShowModal}
+        // handleUpdateChange={handleUpdateChange}
+        helpers={props.helpers}
+        dismiss={dismiss}
+        task={task}
+        setTask={setTask}
+        taskList={taskList}
+        setTaskList={setTaskList}
+        setToastMessage={setToastMessage}
+        modalTitle={"Update Task"}
+        enterAnimation={enterAnimation}
+        leaveAnimation={leaveAnimation}
+        isTouched={isTouched}
+        markTouched={markTouched}
+      />
       <TaskModal
         token={token}
         triggerId={"task-modal"}
         modal={modal}
+        initialState={initialState}
         setState={setState}
         event={props.event}
         handleChange={handleChange}
@@ -252,6 +383,12 @@ export default function Task(props: any) {
         modalTitle={"Add Task"}
         enterAnimation={enterAnimation}
         leaveAnimation={leaveAnimation}
+        ValidateAllFields={ValidateAllFields}
+        SetAllValidatorsFalse={SetAllValidatorsFalse}
+        validator={validator}
+        validate={validate}
+        isTouched={isTouched}
+        markTouched={markTouched}
       />
     </>
   );
