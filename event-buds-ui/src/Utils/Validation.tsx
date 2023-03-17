@@ -1,5 +1,5 @@
 export const validateEmail = (email: string) => {
-  return email.match(/^[a-zA-Z0-9-_]+@[a-zA-Z0-9]+\.[a-z]{1,3}$/);
+  return email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
 };
 export const validatePassword = (password: string) => {
   return password.length >= 5 && password !== "";
