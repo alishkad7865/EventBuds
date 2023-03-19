@@ -17,7 +17,7 @@ import { UserContext } from "../../context/UserContext";
 import { userLogin } from "../../api/userApi";
 import { validateEmail, validatePassword } from "../../Utils/Validation";
 import { useHistory } from "react-router";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 export default function Login() {
   const [showToast, setShowToast] = useState(false);
@@ -75,7 +75,7 @@ export default function Login() {
       }
     });
   }
-  return (
+  return !userLoggedIn ? (
     <IonPage>
       <IonToast
         isOpen={showToast}
@@ -159,5 +159,7 @@ export default function Login() {
         </IonLabel>
       </IonContent>
     </IonPage>
+  ) : (
+    <></>
   );
 }

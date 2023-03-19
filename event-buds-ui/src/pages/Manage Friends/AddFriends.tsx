@@ -96,7 +96,7 @@ export default function AddFriends(props: any) {
     let new_friend = add_friend_status(friend, "sent");
     await addFriend(token, new_friend).then((response: any) => {
       if (response.status >= 200 && response.status < 300) {
-        setToastMessage(response.data);
+        setToastMessage(response.data.message);
         setfriendsList([...friendsList, new_friend]);
       } else {
         setToastMessage("Request Failed, Try Again!");

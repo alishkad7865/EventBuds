@@ -154,7 +154,7 @@ export default function Signup() {
       setToastMessage("One or more validation failed. Check your fields!");
     }
   }
-  return (
+  return !userLoggedIn ? (
     <IonPage>
       <IonToast
         isOpen={showToast}
@@ -409,5 +409,7 @@ export default function Signup() {
         <br />
       </IonContent>
     </IonPage>
+  ) : (
+    <></>
   );
 }

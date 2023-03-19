@@ -1,6 +1,6 @@
 from fastapi.security import OAuth2PasswordBearer
 from Auth.AuthBearer import JWTBearer, decodeJWT
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException,  status
 from Service.EventService import EventService
 from Repository.EventRepository import EventRepository
 from Service.EventInvitationService import EventInvitationService
@@ -67,7 +67,7 @@ class EventController:
     def getAllPublicEvents(token=Depends(oauth2_scheme)):
         return eventService.getAllPublicEvents()
 
-    @router.post("/createEvent", dependencies=[Depends(JWTBearer())])
+    @router.post("/createEvent", dependencies=[Depends(JWTBearer())], status_code=status.HTTP_200_OK)
     def createEvent(Event):
         return eventService.createEvent(Event)
 

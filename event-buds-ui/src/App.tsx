@@ -29,7 +29,7 @@ import "@ionic/react/css/display.css";
 
 /* Theme variables */
 import "./theme/variables.css";
-import { Route } from "react-router";
+import { Redirect, Route } from "react-router";
 import Login from "./pages/Login SignUp/Login";
 import Home from "./pages/Home/Home";
 import Signup from "./pages/Login SignUp/Signup";
@@ -76,13 +76,13 @@ const App: React.FC = () => {
             <Route exact path="/Login" component={Login} />
 
             <Route exact path="/Signup" component={Signup} />
-            <Route
-              exact
-              path="/"
-              component={() => {
-                return !userLoggedIn ? <Login /> : <Home />;
-              }}
-            />
+            <Route exact path="/">
+              {userLoggedIn ? (
+                <Redirect to="/Home" />
+              ) : (
+                <Redirect to="/Login" />
+              )}
+            </Route>
           </IonRouterOutlet>
 
           {userLoggedIn ? (

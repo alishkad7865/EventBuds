@@ -95,7 +95,7 @@ export default function MyFriends(props: any) {
     //set api endpoint to update friend
     await removeFriend(token, friend).then((response: any) => {
       if (response.status >= 200 && response.status < 300) {
-        setToastMessage(response.data);
+        setToastMessage(response.data.message);
       } else {
         setToastMessage("Request Failed, Try Again!");
       }

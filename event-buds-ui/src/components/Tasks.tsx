@@ -214,7 +214,7 @@ export default function Task(props: any) {
   }
   async function deleteTaskHandler(taskId: any) {
     let result = await deleteTask(taskId, token);
-    if (result === "Success") {
+    if (result.message === "Success") {
       const newTask = taskList.filter((task: any) => task.TASKID !== taskId);
       setTaskList([...newTask]);
       setToastMessage("task deleted!");
@@ -280,6 +280,7 @@ export default function Task(props: any) {
                       slot="end"
                       size="default"
                       onClick={() => deleteTaskHandler(task.TASKID)}
+                      disabled={props.event.STATUS === "Completed"}
                     >
                       Remove
                       <IonIcon slot="end" icon={trashBin}></IonIcon>

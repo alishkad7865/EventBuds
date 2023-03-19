@@ -94,7 +94,7 @@ class UserRepository:
                 user_data = [str(json.dumps(user_friends)), user.USERID]
                 cursor.execute(update_user_query, user_data)
                 self.connection.commit()
-                return "Friend Request Sent!"
+                return {"message": "Friend Request Sent!"}
         except NameError as e:
             return e
 
@@ -120,7 +120,7 @@ class UserRepository:
                 user_data = [str(json.dumps(user_friends)), int(user_id)]
                 cursor.execute(update_user_query, user_data)
                 self.connection.commit()
-                return "Friend Request Accepted!"
+                return {"message": "Friend Request Accepted!"}
         except NameError as e:
             return e
 
@@ -146,7 +146,7 @@ class UserRepository:
                 user_data = [str(json.dumps(user_friends)), int(user_id)]
                 cursor.execute(update_user_query, user_data)
                 self.connection.commit()
-                return "Friend Request Declined or Removed!"
+                return {"message": "Friend Request Declined or Removed!"}
         except NameError as e:
             return e
 

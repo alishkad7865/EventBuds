@@ -66,7 +66,7 @@ class EventInvitationRepository:
                     message), invitation_id=int(invitation_id), respond_date=datetime.now())
                 cursor.execute(update_invitation_row, invitation_data)
                 self.connection.commit()
-                return "Invitation " + message+"!"
+                return {"message": "Invitation " + message+"!"}
         except NameError as e:
             return e
 
@@ -77,7 +77,7 @@ class EventInvitationRepository:
                 invitation_data = dict(invitation_id=int(invitation_id), )
                 cursor.execute(update_invitation_row, invitation_data)
                 self.connection.commit()
-                return "Notification Sent!"
+                return {"message": "Notification Sent!"}
         except NameError as e:
             return e
 
@@ -88,7 +88,7 @@ class EventInvitationRepository:
                 invitation_data = dict(invitation_id=int(invitation_id),)
                 cursor.execute(update_invitation_row, invitation_data)
                 self.connection.commit()
-                return "Notifications Updated!"
+                return {"message": "Notifications Updated!"}
         except NameError as e:
             return e
 
