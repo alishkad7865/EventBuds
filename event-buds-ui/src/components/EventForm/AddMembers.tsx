@@ -64,11 +64,11 @@ export default function AddMembers(props: any) {
           if (response.status >= 200 && response.status < 300) {
             props.setGuests([]);
             props.setToastMessage("Event Created Successfully!");
-            props.setEventCreatedModal(true);
             props.setEventCreatedModalData({
               eventTitle: eventTitle,
               eventType: eventType,
             });
+            props.setEventCreatedModal(true);
             props.setState(props.initialState);
             props.SetAllValidatorsFalse();
             // history.push("/");

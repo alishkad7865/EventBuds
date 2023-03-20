@@ -46,7 +46,9 @@ export default function CreateEvent(props: any) {
 
   useEffect(() => {
     if (user?.FRIENDS) {
-      setFriends(user?.FRIENDS);
+      setFriends(
+        user?.FRIENDS?.filter((user: any) => user.STATUS === "accepted")
+      );
     }
     async function loadAllUsers() {
       let result = await getAllUsers(token);

@@ -24,7 +24,7 @@ class TaskService:
 
         try:
             self.repository.createTask(task)
-            return "Success"
+            return {"message": "Success"}
         except NameError as e:
             return e
 
@@ -37,13 +37,13 @@ class TaskService:
                           taskStatus=parsedTask["taskStatus"])
         try:
             self.repository.UpdateTask(task_id, task)
-            return "Success"
+            return {"message": "Success"}
         except NameError as e:
             return e
 
     def deleteTask(self, task_id):
         try:
             self.repository.deleteTask(task_id)
-            return "Success"
+            return {"message": "Success"}
         except NameError as e:
             return e

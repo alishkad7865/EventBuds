@@ -76,7 +76,7 @@ export default function NotificationModal(props: any) {
     let new_friend = add_friend_status(friend, "sent");
     await acceptFriendRequest(token, new_friend).then((response: any) => {
       if (response.status >= 200 && response.status < 300) {
-        setToastMessage(response.data);
+        setToastMessage(response.data.message);
         setfriendsList([...friendsList, new_friend]);
       } else {
         setToastMessage("Request Failed, Try Again!");
@@ -94,7 +94,7 @@ export default function NotificationModal(props: any) {
     //set api endpoint to update friend
     await removeFriend(token, friend).then((response: any) => {
       if (response.status >= 200 && response.status < 300) {
-        setToastMessage(response.data);
+        setToastMessage(response.data.message);
       } else {
         setToastMessage("Request Failed, Try Again!");
       }
@@ -103,7 +103,7 @@ export default function NotificationModal(props: any) {
   async function declineInvitationHandler(invitationId: number) {
     await rejectEventInvitations(token, invitationId).then((response: any) => {
       if (response !== null) {
-        setToastMessage(response);
+        setToastMessage(response.message);
       } else {
         setToastMessage("Request Failed, Try Again!");
       }
@@ -113,7 +113,7 @@ export default function NotificationModal(props: any) {
   async function acceptInvitationHandler(invitationId: number) {
     await acceptEventInvitations(token, invitationId).then((response: any) => {
       if (response !== null) {
-        setToastMessage(response);
+        setToastMessage(response.message);
       } else {
         setToastMessage("Request Failed, Try Again!");
       }

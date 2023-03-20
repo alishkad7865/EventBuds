@@ -17,7 +17,7 @@ class EventRepository:
                 event_data = dict(event_id=int(event_id), status=str(status))
                 cursor.execute(update_event,  event_data)
                 self.connection.commit()
-                return "Event Updated!"
+                return {"message": "Event Updated!"}
         except NameError as e:
             return e
 

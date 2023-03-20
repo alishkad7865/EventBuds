@@ -32,7 +32,7 @@ export default function EventText(props: any) {
   async function submitStatus() {
     setIsLoading(true);
     await updateEvent(token, event.EVENTID, status).then((response: any) => {
-      if (response === "Event Updated!") {
+      if (response.message === "Event Updated!") {
         setToastMessage("Event Status Updated!");
         setIsEditMode(false);
       } else {

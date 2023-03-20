@@ -66,7 +66,7 @@ class EventService:
 
             self.invitation_service.sendEventInvitation(
                 owner_invitation)
-            return "Success"
+            return {"message": "Success"}
         except NameError as e:
             return e
 
