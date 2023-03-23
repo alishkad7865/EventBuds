@@ -5,7 +5,6 @@ from Auth.AuthHandler import signJWT
 from Model.EventModel import User, Friend
 from Repository.UserRepository import UserRepository
 import sys
-import json
 sys.path.append('')
 
 
@@ -13,8 +12,8 @@ class UserService:
     def __init__(self):
         self.repository = UserRepository()
 
-    async def getUser(self, userId):
-        return await self.repository.getUser(userId)
+    def getUser(self, userId):
+        return self.repository.getUser(userId)
 
     async def getAllUsers(self):
         return await self.repository.getAllUsers()
@@ -22,8 +21,8 @@ class UserService:
     async def editUser(self, userId, user):
         self.repository.editUser(userId, user)
 
-    async def getLoggedInUser(self, email):
-        return await self.repository.getLoggedInUser(email)
+    def getLoggedInUser(self, email):
+        return self.repository.getLoggedInUser(email)
 
     async def getFriends(self, token: str):
         payload = decodeJWT(token)
@@ -46,13 +45,13 @@ class UserService:
         user = Friend.convert_payload_friend(payload=payload)
         return await self.repository.accept_friend_request(friend_id=friend.USERID, user_id=user.USERID)
 
-    async def createUser(self, user):
+    def createUser(self, user):
         try:
-            accountExists = await self.verifyExistAccount(
+            accountExists = self.verifyExistAccount(
                 user.userName, user.email)
             if accountExists == False:
-                user_login_id = await self.repository.register_user(user=user)
-                user_id = await self.repository.add_user(
+                user_login_id = self.repository.register_user(user=user)
+                user_id = self.repository.add_user(
                     user=user, user_id=int(user_login_id))
                 return signJWT(user_id, user.userName, user.email, first_name=user.firstName, last_name=user.lastName)
             else:
@@ -60,5 +59,5 @@ class UserService:
         except NameError as e:
             return e
 
-    async def verifyExistAccount(self, user_name, email):
-        return await self.repository.verifyExistAccount(user_name=user_name, email=email)
+    def verifyExistAccount(self, user_name, email):
+        return self.repository.verifyExistAccount(user_name=user_name, email=email)

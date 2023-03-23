@@ -8,6 +8,7 @@ import {
   IonNote,
   IonButton,
   IonIcon,
+  IonSpinner,
 } from "@ionic/react";
 import { eye, eyeOff, logInOutline } from "ionicons/icons";
 import { useState, useContext, useEffect } from "react";
@@ -16,8 +17,7 @@ import "./Login.css";
 import { UserContext } from "../../context/UserContext";
 import { userLogin } from "../../api/userApi";
 import { validateEmail, validatePassword } from "../../Utils/Validation";
-import { createBrowserHistory } from "history";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 export default function Login() {
   const [showToast, setShowToast] = useState(false);
@@ -29,6 +29,7 @@ export default function Login() {
   const [isEmailValid, setIsEmailValid] = useState<boolean>();
   const [isPasswordValid, setIsPasswordValid] = useState<boolean>();
   const [passwordType, setPasswordType] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const togglePassword = () => {
     if (passwordType === "password") {
       setPasswordType("text");
@@ -36,10 +37,10 @@ export default function Login() {
     }
     setPasswordType("password");
   };
-  let history = createBrowserHistory({ forceRefresh: true });
+  let history = useHistory();
   useEffect(() => {
     if (userLoggedIn) {
-      history.push("/Home");
+      history.replace("/Home");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userLoggedIn]);
@@ -68,6 +69,7 @@ export default function Login() {
   };
 
   async function LoginRequest() {
+    setIsLoading(true);
     await userLogin(email, password).then((response: any) => {
       if (response.status >= 200 && response.status < 300) {
         setToken(response.data.access_token);
@@ -76,6 +78,7 @@ export default function Login() {
         setToastMessage(response.detail);
       }
     });
+    setIsLoading(false);
   }
   return !userLoggedIn ? (
     <IonPage>
@@ -151,9 +154,11 @@ export default function Login() {
           expand="full"
           onClick={LoginRequest}
           className="addSpaceAbove"
+          disabled={isLoading}
         >
           Login
           <IonIcon slot="start" icon={logInOutline}></IonIcon>
+          {isLoading && <IonSpinner name="crescent"></IonSpinner>}
         </IonButton>
         <br />
         <IonLabel className="labelColour">

@@ -31,8 +31,8 @@ class UserController:
         self.service = service
 
     @staticmethod
-    async def authenticate_user(email: str, password: str):
-        user = await UserController.getCurrentUser(
+    def authenticate_user(email: str, password: str):
+        user = UserController.getCurrentUser(
             UserController, email=email)
         if not user:
             return False
@@ -40,12 +40,12 @@ class UserController:
             return False
         return user
 
-    async def getCurrentUser(self, email) -> UserLogin:
-        return await userService.getLoggedInUser(email)
+    def getCurrentUser(self, email) -> UserLogin:
+        return userService.getLoggedInUser(email)
 
     @router.get("/getUser", dependencies=[Depends(JWTBearer())])
-    async def getUser(userId):
-        return await userService.getUser(userId)
+    def getUser(userId):
+        return userService.getUser(userId)
 
     @router.get("/getAllUsers", dependencies=[Depends(JWTBearer())])
     async def getAllUsers():
@@ -72,10 +72,10 @@ class UserController:
         return await userService.editUser(userId, user)
 
     @router.post("/createUser")
-    async def createUser(user: UserSignUp):
-        return await userService.createUser(user)
+    def createUser(user: UserSignUp):
+        return userService.createUser(user)
 
-    async def get_current_user(token: str = Depends(oauth2_scheme)):
+    def get_current_user(token: str = Depends(oauth2_scheme)):
         credentials_exception = HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Could not validate credentials",
@@ -88,18 +88,18 @@ class UserController:
                 raise credentials_exception
         except JWTError:
             raise credentials_exception
-        user = await UserController.getUser(userId=user_id)
+        user = UserController.getUser(userId=user_id)
         if user is None:
             raise credentials_exception
         return user
 
     @router.get("/me")
-    async def read_users_me(current_user: User = Depends(get_current_user)):
+    def read_users_me(current_user: User = Depends(get_current_user)):
         return current_user
 
     @router.post("/login")
-    async def userLogin(user: UserLogin):
-        logged_user = await UserController.authenticate_user(
+    def userLogin(user: UserLogin):
+        logged_user = UserController.authenticate_user(
             user.email, user.password)
         if logged_user:
             return signJWT(logged_user["USERID"], logged_user["USERNAME"], logged_user["EMAIL"], logged_user["FIRSTNAME"], logged_user["LASTNAME"])

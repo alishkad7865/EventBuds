@@ -33,6 +33,7 @@ export const UserProvider = (props) => {
       if (!result) {
         setToken(null);
         setUserLoggedIn(false);
+        return;
       }
       localStorage.setItem("eventBudsToken", token);
       setUser(result.data);

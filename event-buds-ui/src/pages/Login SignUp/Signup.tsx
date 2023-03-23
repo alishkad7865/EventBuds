@@ -11,13 +11,13 @@ import {
   IonTextarea,
   IonButton,
   IonIcon,
+  IonSpinner,
 } from "@ionic/react";
 import { arrowForwardCircle, eye, eyeOff } from "ionicons/icons";
 import { useState, useEffect, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { userSignUp } from "../../api/userApi";
 import Menu from "../../components/Menu";
-import { createBrowserHistory } from "history";
 import { UserContext } from "../../context/UserContext";
 import {
   validateEmail,
@@ -48,6 +48,7 @@ export default function Signup() {
   const [isFirstNameValid, setIsFirstNameValid] = useState<boolean>(false);
   const [isLastNameValid, setIsLastNameValid] = useState<boolean>(false);
   const [passwordType, setPasswordType] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const togglePassword = () => {
     if (passwordType === "password") {
       setPasswordType("text");
@@ -56,7 +57,7 @@ export default function Signup() {
     setPasswordType("password");
   };
 
-  let history = createBrowserHistory({ forceRefresh: true });
+  let history = useHistory();
 
   useEffect(() => {
     if (toastMessage) {
@@ -66,7 +67,7 @@ export default function Signup() {
 
   useEffect(() => {
     if (userLoggedIn) {
-      history.push("/Home");
+      history.replace("/Home");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userLoggedIn]);
@@ -136,6 +137,7 @@ export default function Signup() {
     });
 
     if (ValidateAllFields() === true) {
+      setIsLoading(true);
       await userSignUp(newUser).then((response: any) => {
         if (response.status >= 200 && response.status < 300) {
           setToken(response.data.access_token);
@@ -157,6 +159,7 @@ export default function Signup() {
           }
         }
       });
+      setIsLoading(false);
     } else {
       setShowToast(true);
       setToastMessage("One or more validation failed. Check your fields!");
@@ -404,9 +407,11 @@ export default function Signup() {
           expand="full"
           onClick={SignUpRequest}
           className="addSpaceAbove"
+          disabled={isLoading}
         >
           Signup
           <IonIcon slot="start" icon={arrowForwardCircle}></IonIcon>
+          {isLoading && <IonSpinner name="crescent"></IonSpinner>}
         </IonButton>
         <br />
         <IonLabel className="labelColour">

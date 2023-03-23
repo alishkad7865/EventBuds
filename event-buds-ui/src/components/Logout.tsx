@@ -24,8 +24,8 @@ export default function Logout(props: any) {
   function handleLogout() {
     setToken(null);
     setUser(initialUser);
-    history.push("/Login");
     setUserLoggedIn(false);
+    history.replace("/Login");
   }
   return userLoggedIn ? (
     <>

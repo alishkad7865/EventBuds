@@ -10,7 +10,7 @@ class UserRepository:
     def __init__(self):
         self.connection = connection()
 
-    async def getUser(self, userId=0):
+    def getUser(self, userId=0):
         try:
             cursor = self.connection.cursor()
             query = """ SELECT * FROM "ADMIN"."USER" WHERE USERID = :userId """
@@ -150,7 +150,7 @@ class UserRepository:
         except NameError as e:
             return e
 
-    async def getLoggedInUser(self, email):
+    def getLoggedInUser(self, email):
         try:
             query = """ SELECT * FROM "ADMIN"."USERLOGIN", "ADMIN"."USER"  WHERE "ADMIN"."USERLOGIN"."EMAIL" = "ADMIN"."USER"."EMAIL" AND "ADMIN"."USERLOGIN"."EMAIL"= :email """
             with self.connection.cursor() as cursor:
@@ -168,7 +168,7 @@ class UserRepository:
         except NameError as e:
             return e
 
-    async def register_user(self, user: UserSignUp):
+    def register_user(self, user: UserSignUp):
         try:
             registration_query = 'INSERT INTO "ADMIN"."USERLOGIN" (USERNAME, PASSWORD, EMAIL, AUTHENTICATED) VALUES(:userName, :passWord, :email, :authenticated)'
             get_userid_query = 'SELECT "ADMIN"."USERLOGIN"."ROW_ID" FROM "ADMIN"."USERLOGIN" WHERE "ADMIN"."USERLOGIN"."EMAIL" = :email AND "ADMIN"."USERLOGIN"."USERNAME" = :userName '
@@ -186,7 +186,7 @@ class UserRepository:
         except NameError as e:
             return e
 
-    async def add_user(self, user: User, user_id):
+    def add_user(self, user: User, user_id):
         try:
             query = 'INSERT INTO "ADMIN"."USER" (USERNAME, EMAIL, FIRSTNAME, LASTNAME, ADDRESS, SEX, BIO, ISACTIVE, FRIENDS, USER_ROWID) VALUES(:userName, :email, :firstName, :lastName, :address, :sex, :bio, :isActive, :friends, :userRowId)'
             get_userid_query = 'SELECT "ADMIN"."USER"."USERID" FROM "ADMIN"."USER" WHERE "ADMIN"."USER"."EMAIL" = :email AND "ADMIN"."USER"."USERNAME" = :userName '
@@ -205,7 +205,7 @@ class UserRepository:
         except NameError as e:
             return e
 
-    async def verifyExistAccount(self, user_name, email):
+    def verifyExistAccount(self, user_name, email):
         try:
             query = """ SELECT * FROM "ADMIN"."USER" WHERE EMAIL = :email OR USERNAME = :user_name"""
             with self.connection.cursor() as cursor:

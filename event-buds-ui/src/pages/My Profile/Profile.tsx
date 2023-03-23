@@ -16,6 +16,7 @@ import {
 import { chevronDownCircleOutline } from "ionicons/icons";
 import { useContext, useEffect, useState } from "react";
 import { GetUserEvents } from "../../api/eventApi";
+import { getFriends } from "../../api/userApi";
 import Menu from "../../components/Menu";
 import { UserContext } from "../../context/UserContext";
 import "./profile.css";
@@ -32,10 +33,10 @@ export default function Profile(props: any) {
     }
   }
   async function loadFriendsCount() {
-    user?.FRIENDS &&
-      setFriendsCount(
-        user?.FRIENDS?.filter((user: any) => user.STATUS === "accepted").length
-      );
+    let friends = await getFriends(token);
+    setFriendsCount(
+      friends.data?.filter((user: any) => user.STATUS === "accepted").length
+    );
   }
   useEffect(() => {
     loadFriendsCount();
