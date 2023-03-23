@@ -48,13 +48,13 @@ class UserService:
 
     async def createUser(self, user):
         try:
-            accountExists = self.verifyExistAccount(
+            accountExists = await self.verifyExistAccount(
                 user.userName, user.email)
             if accountExists == False:
                 user_login_id = await self.repository.register_user(user=user)
                 user_id = await self.repository.add_user(
                     user=user, user_id=int(user_login_id))
-                return await signJWT(user_id, user.userName, user.email, first_name=user.firstName, last_name=user.lastName)
+                return signJWT(user_id, user.userName, user.email, first_name=user.firstName, last_name=user.lastName)
             else:
                 raise HTTPException(status_code=403, detail=accountExists)
         except NameError as e:

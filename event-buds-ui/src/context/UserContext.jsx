@@ -33,8 +33,9 @@ export const UserProvider = (props) => {
       if (!result) {
         setToken(null);
         setUserLoggedIn(false);
-      } else setUser(result.data);
+      }
       localStorage.setItem("eventBudsToken", token);
+      setUser(result.data);
     };
     fetchloggedUser();
   }, [token]);
