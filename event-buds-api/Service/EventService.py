@@ -18,22 +18,22 @@ class EventService:
         self.repository = EventRepository()
         self.invitation_service = EventInvitationService.EventInvitationService()
 
-    def getAllPublicEvents(self):
-        return self.repository.getAllPublicEvents()
+    async def getAllPublicEvents(self):
+        return await self.repository.getAllPublicEvents()
 
-    def getUserEvents(self, token: str):
+    async def getUserEvents(self, token: str):
         payload = decodeJWT(token)
         user_id: str = payload.get("user_id")
-        events = self.repository.getUserEvent(user_id)
+        events = await self.repository.getUserEvent(user_id)
         return events
 
-    def getOtherPublicEvents(self, token: str):
+    async def getOtherPublicEvents(self, token: str):
         payload = decodeJWT(token)
         user_id: str = payload.get("user_id")
-        events = self.repository.getOtherPublicEvents(user_id)
+        events = await self.repository.getOtherPublicEvents(user_id)
         return events
 
-    def createEvent(self, rawEvent):
+    async def createEvent(self, rawEvent):
         parsedEvent = json.loads(rawEvent)
         eventId = int(round(time.time() * 1000))
         event: Event = Event(eventId=eventId, eventTitle=parsedEvent["eventTitle"], eventStartDateTime=parsedEvent["eventStartTime"], eventEndDateTime=parsedEvent["eventEndTime"], location=parsedEvent["location"],  isPublic=parsedEvent["eventType"],
@@ -47,31 +47,32 @@ class EventService:
                              eventRegEndDateTime=parsedEvent["lastRegDate"])
 
         try:
-            self.repository.createEvent(event)
+            await self.repository.createEvent(event)
             for guest in parsedEvent["guests"]:
                 invitation: EventInvitation = EventInvitation(
                     eventId=eventId, inviteId=int(round(time.time() * 1000)), invitationResponse="sent", isHelper=0, Notified=0, ownerId=int(parsedEvent["ownerId"]), RespondDate=None, userId=guest['USERID'])
-                self.invitation_service.sendEventInvitation(
+                await self.invitation_service.sendEventInvitation(
                     invitation)
 
             for helper in parsedEvent["helpers"]:
                 invitation: EventInvitation = EventInvitation(
                     eventId=eventId, inviteId=int(round(time.time() * 1000)), invitationResponse="sent", isHelper=1, Notified=0, ownerId=int(parsedEvent["ownerId"]), RespondDate=None, userId=helper['USERID'])
 
-                self.invitation_service.sendEventInvitation(
+                await self.invitation_service.sendEventInvitation(
                     invitation)
 
             owner_invitation: EventInvitation = EventInvitation(
                 eventId=eventId, inviteId=int(round(time.time() * 1000)), invitationResponse="accepted", isHelper=1, Notified=0, ownerId=int(parsedEvent["ownerId"]), RespondDate=None, userId=int(parsedEvent["ownerId"]))
 
-            self.invitation_service.sendEventInvitation(
+            await self.invitation_service.sendEventInvitation(
                 owner_invitation)
             return {"message": "Success"}
         except NameError as e:
             return e
 
-    def UpdateEvent(self, event_id, status):
-        return self.repository.UpdateEvent(event_id=event_id, status=status)
+    async def UpdateEvent(self, event_id, status):
+        return await self.repository.UpdateEvent(event_id=event_id, status=status)
 
-    def getEvent(self, event_id):
-        return self.repository.Get_Event(event_id=event_id)[0]
+    async def getEvent(self, event_id):
+        results = await self.repository.Get_Event(event_id=event_id)
+        return results[0]

@@ -31,8 +31,8 @@ class UserController:
         self.service = service
 
     @staticmethod
-    def authenticate_user(email: str, password: str):
-        user = UserController.getCurrentUser(
+    async def authenticate_user(email: str, password: str):
+        user = await UserController.getCurrentUser(
             UserController, email=email)
         if not user:
             return False
@@ -40,40 +40,40 @@ class UserController:
             return False
         return user
 
-    def getCurrentUser(self, email) -> UserLogin:
-        return userService.getLoggedInUser(email)
+    async def getCurrentUser(self, email) -> UserLogin:
+        return await userService.getLoggedInUser(email)
 
     @router.get("/getUser", dependencies=[Depends(JWTBearer())])
-    def getUser(userId):
-        return userService.getUser(userId)
+    async def getUser(userId):
+        return await userService.getUser(userId)
 
     @router.get("/getAllUsers", dependencies=[Depends(JWTBearer())])
-    def getAllUsers():
-        return userService.getAllUsers()
+    async def getAllUsers():
+        return await userService.getAllUsers()
 
     @router.get("/getFriends", dependencies=[Depends(JWTBearer())])
-    def getFriends(token=Depends(oauth2_scheme)):
-        return userService.getFriends(token)
+    async def getFriends(token=Depends(oauth2_scheme)):
+        return await userService.getFriends(token)
 
     @router.patch("/addFriend", dependencies=[Depends(JWTBearer())])
-    def add_friend(friend: Friend, token=Depends(oauth2_scheme)):
-        return userService.add_friend(friend=friend, token=token)
+    async def add_friend(friend: Friend, token=Depends(oauth2_scheme)):
+        return await userService.add_friend(friend=friend, token=token)
 
     @router.patch("/acceptFriendRequest", dependencies=[Depends(JWTBearer())])
-    def accept_friend_request(friend: Friend, token=Depends(oauth2_scheme)):
-        return userService.accept_friend_request(friend=friend, token=token)
+    async def accept_friend_request(friend: Friend, token=Depends(oauth2_scheme)):
+        return await userService.accept_friend_request(friend=friend, token=token)
 
     @router.patch("/removeFriend", dependencies=[Depends(JWTBearer())])
-    def remove_friend(friend: Friend, token=Depends(oauth2_scheme)):
-        return userService.remove_friend(friend=friend, token=token)
+    async def remove_friend(friend: Friend, token=Depends(oauth2_scheme)):
+        return await userService.remove_friend(friend=friend, token=token)
 
     @router.post("/editUser", dependencies=[Depends(JWTBearer())])
-    def editUser(userId, user):
-        return userService.editUser(userId, user)
+    async def editUser(userId, user):
+        return await userService.editUser(userId, user)
 
     @router.post("/createUser")
-    def createUser(user: UserSignUp):
-        return userService.createUser(user)
+    async def createUser(user: UserSignUp):
+        return await userService.createUser(user)
 
     async def get_current_user(token: str = Depends(oauth2_scheme)):
         credentials_exception = HTTPException(
@@ -88,7 +88,7 @@ class UserController:
                 raise credentials_exception
         except JWTError:
             raise credentials_exception
-        user = UserController.getUser(userId=user_id)
+        user = await UserController.getUser(userId=user_id)
         if user is None:
             raise credentials_exception
         return user
@@ -99,7 +99,7 @@ class UserController:
 
     @router.post("/login")
     async def userLogin(user: UserLogin):
-        logged_user = UserController.authenticate_user(
+        logged_user = await UserController.authenticate_user(
             user.email, user.password)
         if logged_user:
             return signJWT(logged_user["USERID"], logged_user["USERNAME"], logged_user["EMAIL"], logged_user["FIRSTNAME"], logged_user["LASTNAME"])

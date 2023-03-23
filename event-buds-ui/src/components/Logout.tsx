@@ -22,10 +22,10 @@ export default function Logout(props: any) {
   } = useContext(UserContext);
   let history = useHistory();
   function handleLogout() {
-    setUserLoggedIn(false);
-    setUser(initialUser);
     setToken(null);
+    setUser(initialUser);
     history.push("/Login");
+    setUserLoggedIn(false);
   }
   return userLoggedIn ? (
     <>

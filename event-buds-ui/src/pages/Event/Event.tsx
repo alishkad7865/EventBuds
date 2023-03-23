@@ -6,28 +6,34 @@ import {
   IonLabel,
   IonSegment,
   IonSegmentButton,
-  useIonViewWillLeave,
   IonRefresher,
   IonRefresherContent,
   RefresherEventDetail,
 } from "@ionic/react";
 import { arrowBack, chevronDownCircleOutline } from "ionicons/icons";
 import { useContext, useEffect, useState } from "react";
-import { GetEvent } from "../../api/eventApi";
+import { GetEvent, GetEventGuests, GetEventHelpers } from "../../api/eventApi";
 import { getTasks } from "../../api/taskApi";
 
-import EventText from "../../components/EventText";
+import EventInfo from "../../components/EventInformation/EventInfo";
 import Menu from "../../components/Menu";
-import Task from "../../components/Tasks";
+import Task from "../../components/Task/Tasks";
 import { UserContext } from "../../context/UserContext";
 import "./Event.css";
 
 export default function Event(props: any) {
   const [segment, setSegment] = useState("eventInfo");
   const [taskList, setTaskList] = useState([]);
-  const { toastMessage, setToastMessage } = props;
+  const {
+    toastMessage,
+    setToastMessage,
+    setHelpersList,
+    setAcceptedHelpersList,
+    setGuestsList,
+    setIsHelperOROwner,
+  } = props;
   const [status, setStatus] = useState(props.event.STATUS);
-  const { token } = useContext(UserContext);
+  const { token, user } = useContext(UserContext);
   const [event, setEvent] = useState(props.event);
   async function loadEvent() {
     GetEvent(token, props.event.EVENTID).then((response: any) => {
@@ -42,13 +48,13 @@ export default function Event(props: any) {
   }
   useEffect(() => {
     loadEvent();
-    // setEventStepper(0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toastMessage]);
 
   function handleSegmentChange(value: any) {
     if (value === "eventInfo") {
       return (
-        <EventText
+        <EventInfo
           event={event}
           helpers={props.helpersList}
           status={status}
@@ -70,17 +76,33 @@ export default function Event(props: any) {
       );
     }
   }
-  function handleRefresh(event: CustomEvent<RefresherEventDetail>) {
+  function handleRefresh(e: CustomEvent<RefresherEventDetail>) {
     setTimeout(() => {
       loadEvent();
       loadTasks();
-      event.detail.complete();
+      async function loadEventInvitations(eventId: number) {
+        let helpers = await GetEventHelpers(eventId, token);
+        if (helpers) {
+          setHelpersList(helpers.helpersList);
+          setAcceptedHelpersList(helpers.acceptedhelpersList);
+          if (
+            helpers.acceptedhelpersList.find(
+              (list: any) => list.USERID === user.USERID
+            )
+          ) {
+            setIsHelperOROwner(true);
+          } else setIsHelperOROwner(false);
+        }
+        let guests = await GetEventGuests(eventId, token);
+        if (guests) {
+          setGuestsList(guests);
+        }
+      }
+      loadEventInvitations(event?.EVENTID);
+      e.detail.complete();
     }, 3000);
   }
 
-  useIonViewWillLeave(() => {
-    props.setAcceptedHelpersList([]);
-  });
   return (
     <IonPage>
       <Menu page={"event"} />

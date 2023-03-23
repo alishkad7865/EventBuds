@@ -14,9 +14,10 @@ import {
 } from "@ionic/react";
 import { arrowForwardCircle, eye, eyeOff } from "ionicons/icons";
 import { useState, useEffect, useContext } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { userSignUp } from "../../api/userApi";
 import Menu from "../../components/Menu";
+import { createBrowserHistory } from "history";
 import { UserContext } from "../../context/UserContext";
 import {
   validateEmail,
@@ -55,7 +56,7 @@ export default function Signup() {
     setPasswordType("password");
   };
 
-  let history = useHistory();
+  let history = createBrowserHistory({ forceRefresh: true });
 
   useEffect(() => {
     if (toastMessage) {
@@ -67,6 +68,7 @@ export default function Signup() {
     if (userLoggedIn) {
       history.push("/Home");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userLoggedIn]);
 
   function ValidateAllFields() {
@@ -144,9 +146,15 @@ export default function Signup() {
           );
         } else {
           setShowToast(true);
-          setToastMessage(
-            `${response.detail[0].loc[1]}, ${response.detail[0].msg}`
-          );
+          if (typeof response.detail === "string") {
+            setToastMessage(`${response.detail}`);
+          } else {
+            setToastMessage(
+              `${response.detail[0]?.loc[1] ?? "error"}, ${
+                response.detail[0]?.msg ?? response.detail
+              }`
+            );
+          }
         }
       });
     } else {

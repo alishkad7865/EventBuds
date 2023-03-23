@@ -30,6 +30,8 @@ pip3.9 install PyJWT python-decouple
 uvicorn main:app --reload
 
 uvicorn main:app --port 8000 --host 0.0.0.0  --ssl-keyfile '/path/to/keyfile' --ssl-certfile '/path/to/certfile'
+
+uvicorn main:app --port 8000 --host 0.0.0.0  --ssl-keyfile 'E:\Ense 400 Capstone\Cloud\cert files\privkey.pem'  --ssl-certfile 'E:\Ense 400 Capstone\Cloud\cert files\fullchain.pem' --reload
 ```
 
 ---

@@ -40,6 +40,7 @@ export default function Profile(props: any) {
   useEffect(() => {
     loadFriendsCount();
     loadUserEvents();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userLoggedIn]);
 
   function handleRefresh(event: CustomEvent<RefresherEventDetail>) {

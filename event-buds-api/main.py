@@ -14,9 +14,9 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-app = FastAPI()
-# app = FastAPI(ssl_keyfile="E:\Ense 400 Capstone\Cloud\cert files\privkey.pem",
-#               ssl_certfile="E:\Ense 400 Capstone\Cloud\cert files\fullchain.pem")
+# app = FastAPI()
+app = FastAPI(ssl_keyfile="E:\Ense 400 Capstone\Cloud\cert files\privkey.pem",
+              ssl_certfile="E:\Ense 400 Capstone\Cloud\cert files\fullchain.pem")
 
 origins = ["*"]
 

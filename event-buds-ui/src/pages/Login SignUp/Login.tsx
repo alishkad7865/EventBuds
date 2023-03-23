@@ -16,8 +16,8 @@ import "./Login.css";
 import { UserContext } from "../../context/UserContext";
 import { userLogin } from "../../api/userApi";
 import { validateEmail, validatePassword } from "../../Utils/Validation";
-import { useHistory } from "react-router";
-import { Link, Redirect } from "react-router-dom";
+import { createBrowserHistory } from "history";
+import { Link } from "react-router-dom";
 
 export default function Login() {
   const [showToast, setShowToast] = useState(false);
@@ -36,12 +36,14 @@ export default function Login() {
     }
     setPasswordType("password");
   };
-  let history = useHistory();
+  let history = createBrowserHistory({ forceRefresh: true });
   useEffect(() => {
     if (userLoggedIn) {
       history.push("/Home");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userLoggedIn]);
+
   const validate = (ev: Event) => {
     const { name, value } = ev.target as HTMLInputElement;
     if (name === "email") {

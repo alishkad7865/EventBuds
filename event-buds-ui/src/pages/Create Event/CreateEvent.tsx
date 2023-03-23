@@ -1,11 +1,11 @@
-import { useContext, useEffect, useState } from "react";
-import { getAllUsers } from "../../api/userApi";
+import { useContext, useState } from "react";
+import { getAllUsers, getFriends } from "../../api/userApi";
 import AddMembers from "../../components/EventForm/AddMembers";
 import "./CreateEvent.css";
 import EventInfoForm from "../../components/EventForm/EventInfoForm";
 import { UserContext } from "../../context/UserContext";
-import { parseJSON } from "date-fns";
 import { LocaleDateTimeISOFormat } from "../../Utils/ArrayUtil";
+import { useIonViewWillEnter } from "@ionic/react";
 
 export default function CreateEvent(props: any) {
   let initialState = {
@@ -44,11 +44,14 @@ export default function CreateEvent(props: any) {
   const [isEventTypeValid, setIsEventTypeValid] = useState<boolean>(false);
   const [isLocationValid, setIsLocationValid] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (user?.FRIENDS) {
-      setFriends(
-        user?.FRIENDS?.filter((user: any) => user.STATUS === "accepted")
-      );
+  useIonViewWillEnter(() => {
+    async function loadFriends() {
+      let result = await getFriends(token);
+      if (result) {
+        setFriends(
+          result.data?.filter((user: any) => user.STATUS === "accepted")
+        );
+      }
     }
     async function loadAllUsers() {
       let result = await getAllUsers(token);
@@ -56,9 +59,9 @@ export default function CreateEvent(props: any) {
         setAllUsers(result);
       }
     }
+    loadFriends();
     loadAllUsers();
-  }, []);
-
+  });
   function ValidateAllFields() {
     return (
       isTitleValid &&

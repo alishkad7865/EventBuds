@@ -72,7 +72,7 @@ export default function Home() {
     if (userLoggedIn) {
       loadUserEvents();
     }
-    // setEventStepper(0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, userLoggedIn, toastMessage]);
   function handleRefresh(event: CustomEvent<RefresherEventDetail>) {
     setTimeout(() => {
@@ -107,6 +107,7 @@ export default function Home() {
     if (event.EVENTID) {
       loadEventInvitations(event.EVENTID);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [event]);
 
   switch (eventStepper) {

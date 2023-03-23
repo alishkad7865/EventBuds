@@ -24,65 +24,65 @@ class EventController:
         self.service = service
 
     @router.get("/getUserEvents", dependencies=[Depends(JWTBearer())])
-    def getUserEvent(token=Depends(oauth2_scheme)):
-        return eventService.getUserEvents(token)
+    async def getUserEvent(token=Depends(oauth2_scheme)):
+        return await eventService.getUserEvents(token)
 
     @router.get("/eventInvitations", dependencies=[Depends(JWTBearer())])
-    def getEventInvitation(event_id):
-        return eventInvitationService.getEventInvitations(event_id)
+    async def getEventInvitation(event_id):
+        return await eventInvitationService.getEventInvitations(event_id)
 
     @router.get("/userEventInvitations", dependencies=[Depends(JWTBearer())])
-    def getUserEventInvitation(token=Depends(oauth2_scheme)):
-        return eventInvitationService.getUserInvitations(token=token)
+    async def getUserEventInvitation(token=Depends(oauth2_scheme)):
+        return await eventInvitationService.getUserInvitations(token=token)
 
     @router.patch("/acceptEventInvitations", dependencies=[Depends(JWTBearer())])
-    def acceptEventInvitation(invitation_id):
-        return eventInvitationService.updateEventInvitation(invitation_id=invitation_id, message="accepted")
+    async def acceptEventInvitation(invitation_id):
+        return await eventInvitationService.updateEventInvitation(invitation_id=invitation_id, message="accepted")
 
     @router.patch("/rejectEventInvitations", dependencies=[Depends(JWTBearer())])
-    def rejectEventInvitation(invitation_id):
-        return eventInvitationService.updateEventInvitation(invitation_id=invitation_id, message="rejected")
+    async def rejectEventInvitation(invitation_id):
+        return await eventInvitationService.updateEventInvitation(invitation_id=invitation_id, message="rejected")
 
     @router.get("/eventHelpers", dependencies=[Depends(JWTBearer())])
-    def getEventHelpers(event_id):
-        return eventInvitationService.getEventHelpers(event_id)
+    async def getEventHelpers(event_id):
+        return await eventInvitationService.getEventHelpers(event_id)
 
     @router.get("/acceptEventInvitation", dependencies=[Depends(JWTBearer())])
-    def acceptEventInvitation(invitation_id):
-        return eventInvitationService.updateEventInvitation(invitation_id=invitation_id, message="accepted")
+    async def acceptEventInvitation(invitation_id):
+        return await eventInvitationService.updateEventInvitation(invitation_id=invitation_id, message="accepted")
 
     @router.get("/declineEventInvitation", dependencies=[Depends(JWTBearer())])
-    def acceptEventInvitation(invitation_id):
-        return eventInvitationService.updateEventInvitation(invitation_id=invitation_id, message="rejected")
+    async def acceptEventInvitation(invitation_id):
+        return await eventInvitationService.updateEventInvitation(invitation_id=invitation_id, message="rejected")
 
     @router.get("/eventGuests", dependencies=[Depends(JWTBearer())])
-    def getEventGuests(event_id):
-        return eventInvitationService.getEventGuests(event_id)
+    async def getEventGuests(event_id):
+        return await eventInvitationService.getEventGuests(event_id)
 
     @router.get("/getPublicEvents", dependencies=[Depends(JWTBearer())])
-    def getOtherPublicEvents(token=Depends(oauth2_scheme)):
-        return eventService.getOtherPublicEvents(token)
+    async def getOtherPublicEvents(token=Depends(oauth2_scheme)):
+        return await eventService.getOtherPublicEvents(token)
 
     @router.get("/getAllPublicEvents", dependencies=[Depends(JWTBearer())])
-    def getAllPublicEvents(token=Depends(oauth2_scheme)):
-        return eventService.getAllPublicEvents()
+    async def getAllPublicEvents(token=Depends(oauth2_scheme)):
+        return await eventService.getAllPublicEvents()
 
     @router.post("/createEvent", dependencies=[Depends(JWTBearer())], status_code=status.HTTP_200_OK)
-    def createEvent(Event):
-        return eventService.createEvent(Event)
+    async def createEvent(Event):
+        return await eventService.createEvent(Event)
 
     @router.patch("/updateTaskAssignedNotification", dependencies=[Depends(JWTBearer())])
-    def updateTaskAssignedInvitation(invitation_id):
-        return eventInvitationService.updateTaskAssignedInvitation(invitation_id)
+    async def updateTaskAssignedInvitation(invitation_id):
+        return await eventInvitationService.updateTaskAssignedInvitation(invitation_id)
 
     @router.patch("/updateTaskNotifed", dependencies=[Depends(JWTBearer())])
-    def updateInvitationNotified(invitation_id):
-        return eventInvitationService.updateInvitationNotified(invitation_id)
+    async def updateInvitationNotified(invitation_id):
+        return await eventInvitationService.updateInvitationNotified(invitation_id)
 
     @router.patch("/updateEvent", dependencies=[Depends(JWTBearer())])
-    def updateEvent(event_id, status):
-        return eventService.UpdateEvent(event_id=event_id, status=status)
+    async def updateEvent(event_id, status):
+        return await eventService.UpdateEvent(event_id=event_id, status=status)
 
     @router.get("/getEvent", dependencies=[Depends(JWTBearer())])
-    def getEvent(event_id):
-        return eventService.getEvent(event_id=event_id)
+    async def getEvent(event_id):
+        return await eventService.getEvent(event_id=event_id)

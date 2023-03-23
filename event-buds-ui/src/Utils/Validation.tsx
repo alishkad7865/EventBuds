@@ -1,4 +1,5 @@
 export const validateEmail = (email: string) => {
+  // eslint-disable-next-line no-useless-escape
   return email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
 };
 export const validatePassword = (password: string) => {

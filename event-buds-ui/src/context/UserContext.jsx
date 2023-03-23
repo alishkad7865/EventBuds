@@ -16,7 +16,7 @@ export const UserProvider = (props) => {
   };
   const [user, setUser] = useState(inititalUser);
   useEffect(() => {
-    if (user) {
+    if (user?.USERID !== 0) {
       if (
         token !== "null" &&
         token !== null &&
@@ -26,16 +26,15 @@ export const UserProvider = (props) => {
         setUserLoggedIn(true);
       }
     }
-  }, [user]);
+  }, [user, token]);
   useEffect(() => {
     const fetchloggedUser = async () => {
       let result = await getLoggedUser(token);
       if (!result) {
         setToken(null);
         setUserLoggedIn(false);
-      }
+      } else setUser(result.data);
       localStorage.setItem("eventBudsToken", token);
-      setUser(result.data);
     };
     fetchloggedUser();
   }, [token]);
