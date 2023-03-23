@@ -49,7 +49,7 @@ export default function Home() {
   const [helpersList, setHelpersList] = useState<any>([]);
   const [eventStepper, setEventStepper] = useState(1);
   const [acceptedhelpersList, setAcceptedHelpersList] = useState<any>([]);
-  const [isHelperOrOwner, setIsHelperOROwner] = useState<boolean>(false);
+  const [isHelperOrOwner, setIsHelperOrOwner] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
 
@@ -96,8 +96,8 @@ export default function Home() {
             (list: any) => list.USERID === user.USERID
           )
         ) {
-          setIsHelperOROwner(true);
-        } else setIsHelperOROwner(false);
+          setIsHelperOrOwner(true);
+        } else setIsHelperOrOwner(false);
       }
       let guests = await GetEventGuests(eventId, token);
       if (guests) {
@@ -405,6 +405,7 @@ export default function Home() {
         <Event
           event={event}
           setEventStepper={setEventStepper}
+          setIsHelperOrOwner={setIsHelperOrOwner}
           isHelperOrOwner={isHelperOrOwner}
           helpersList={helpersList}
           guestsList={guestsList}
@@ -413,7 +414,7 @@ export default function Home() {
           toastMessage={toastMessage}
           setToastMessage={setToastMessage}
           acceptedhelpersList={acceptedhelpersList}
-          setAcceptedhelpersList={setAcceptedHelpersList}
+          setAcceptedHelpersList={setAcceptedHelpersList}
         />
       );
     default:

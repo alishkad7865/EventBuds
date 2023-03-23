@@ -30,7 +30,7 @@ export default function Event(props: any) {
     setHelpersList,
     setAcceptedHelpersList,
     setGuestsList,
-    setIsHelperOROwner,
+    setIsHelperOrOwner,
   } = props;
   const [status, setStatus] = useState(props.event.STATUS);
   const { token, user } = useContext(UserContext);
@@ -90,8 +90,8 @@ export default function Event(props: any) {
               (list: any) => list.USERID === user.USERID
             )
           ) {
-            setIsHelperOROwner(true);
-          } else setIsHelperOROwner(false);
+            setIsHelperOrOwner(true);
+          } else setIsHelperOrOwner(false);
         }
         let guests = await GetEventGuests(eventId, token);
         if (guests) {
