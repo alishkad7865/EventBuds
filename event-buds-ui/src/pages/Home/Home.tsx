@@ -36,6 +36,8 @@ import { UserContext } from "../../context/UserContext";
 import { chevronDownCircleOutline } from "ionicons/icons";
 import {
   completedArraySortedByDateASC,
+  PrivateEventSortedByDateASC,
+  PublicEventSortedByDateASC,
   upcomingArraySortedByDateASC,
 } from "../../Utils/ArrayUtil";
 
@@ -53,8 +55,10 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
 
-  var upcomingSegmentArray = upcomingArraySortedByDateASC(events);
-  var completedSegmentArray = completedArraySortedByDateASC(events);
+  let upcomingSegmentArray = upcomingArraySortedByDateASC(events);
+  let completedSegmentArray = completedArraySortedByDateASC(events);
+  let publicEventArray = PublicEventSortedByDateASC(events);
+  let privateEventArray = PrivateEventSortedByDateASC(events);
 
   async function loadUserEvents() {
     setIsLoading(true);
@@ -306,92 +310,88 @@ export default function Home() {
                 )}
 
                 <IonAccordion class="accord" value="Private">
-                  {events?.filter((list: any) => !list.ISPUBLIC).length > 0 && (
+                  {privateEventArray.length > 0 && (
                     <IonItem class="AccordTitle" slot="header">
                       <IonLabel>My Private Events</IonLabel>
                     </IonItem>
                   )}
 
                   <div className="ion-padding eventCardsDiv" slot="content">
-                    {events?.map((list: any) => {
-                      if (!list.ISPUBLIC) {
-                        return (
-                          <IonCard class="PrivateEventCard" key={list.EVENTID}>
-                            <IonCardHeader>
-                              <IonCardTitle className="ion-text-capitalize">
-                                {list.EVENTTITLE}
-                              </IonCardTitle>
-                              <IonCardSubtitle>
-                                Time:{" "}
-                                {format(
-                                  parseJSON(list.STARTDATETIME),
-                                  "MMM d, yyyy, K:m a "
-                                )}
-                              </IonCardSubtitle>
-                              <IonCardSubtitle>
-                                Venue: {list.LOCATION}
-                              </IonCardSubtitle>
-                            </IonCardHeader>
-                            <IonCardContent>
-                              Description: {list.DESCRIPTION}
-                            </IonCardContent>
-                            <IonButton
-                              fill="solid"
-                              shape="round"
-                              size="small"
-                              onClick={() => viewEvent(list)}
-                            >
-                              View
-                            </IonButton>
-                          </IonCard>
-                        );
-                      } else return "";
+                    {privateEventArray?.map((list: any) => {
+                      return (
+                        <IonCard class="PrivateEventCard" key={list.EVENTID}>
+                          <IonCardHeader>
+                            <IonCardTitle className="ion-text-capitalize">
+                              {list.EVENTTITLE}
+                            </IonCardTitle>
+                            <IonCardSubtitle>
+                              Time:{" "}
+                              {format(
+                                parseJSON(list.STARTDATETIME),
+                                "MMM d, yyyy, K:m a "
+                              )}
+                            </IonCardSubtitle>
+                            <IonCardSubtitle>
+                              Venue: {list.LOCATION}
+                            </IonCardSubtitle>
+                          </IonCardHeader>
+                          <IonCardContent>
+                            Description: {list.DESCRIPTION}
+                          </IonCardContent>
+                          <IonButton
+                            fill="solid"
+                            shape="round"
+                            size="small"
+                            onClick={() => viewEvent(list)}
+                          >
+                            View
+                          </IonButton>
+                        </IonCard>
+                      );
                     })}
                   </div>
                 </IonAccordion>
 
                 {/*  START OF PUBLIC EVENT SECTION */}
                 <IonAccordion class="accord" value="Public">
-                  {events?.filter((list: any) => list.ISPUBLIC).length > 0 && (
+                  {publicEventArray.length > 0 && (
                     <IonItem class="AccordTitle" slot="header">
                       <IonLabel>My Public Events</IonLabel>
                     </IonItem>
                   )}
                   <div className="ion-padding eventCardsDiv" slot="content">
-                    {events?.map((list: any) => {
-                      if (list.ISPUBLIC) {
-                        return (
-                          <IonCard class="PublicEventCard" key={list.EVENTID}>
-                            <IonCardHeader>
-                              <IonCardTitle className="ion-text-capitalize">
-                                {list.EVENTTITLE}
-                              </IonCardTitle>
-                              <IonCardSubtitle>
-                                Time:{" "}
-                                {format(
-                                  parseJSON(list.STARTDATETIME),
-                                  "MMM d, yyyy, K:m a "
-                                )}
-                              </IonCardSubtitle>
-                              <IonCardSubtitle>
-                                Venue: {list.LOCATION}
-                              </IonCardSubtitle>
-                            </IonCardHeader>
+                    {publicEventArray?.map((list: any) => {
+                      return (
+                        <IonCard class="PublicEventCard" key={list.EVENTID}>
+                          <IonCardHeader>
+                            <IonCardTitle className="ion-text-capitalize">
+                              {list.EVENTTITLE}
+                            </IonCardTitle>
+                            <IonCardSubtitle>
+                              Time:{" "}
+                              {format(
+                                parseJSON(list.STARTDATETIME),
+                                "MMM d, yyyy, K:m a "
+                              )}
+                            </IonCardSubtitle>
+                            <IonCardSubtitle>
+                              Venue: {list.LOCATION}
+                            </IonCardSubtitle>
+                          </IonCardHeader>
 
-                            <IonCardContent>
-                              Description: {list.DESCRIPTION}
-                            </IonCardContent>
-                            <IonButton
-                              fill="solid"
-                              shape="round"
-                              size="small"
-                              onClick={() => viewEvent(list)}
-                            >
-                              View
-                            </IonButton>
-                          </IonCard>
-                        );
-                      } else return "";
+                          <IonCardContent>
+                            Description: {list.DESCRIPTION}
+                          </IonCardContent>
+                          <IonButton
+                            fill="solid"
+                            shape="round"
+                            size="small"
+                            onClick={() => viewEvent(list)}
+                          >
+                            View
+                          </IonButton>
+                        </IonCard>
+                      );
                     })}
                   </div>
                 </IonAccordion>

@@ -134,7 +134,7 @@ export default function EventInfo(props: any) {
           )}
           {isLoading && <IonSpinner name="crescent"></IonSpinner>}
           {event.STATUS !== "Completed" &&
-            user.USERID === event.OWNERID &&
+            user?.USERID === event.OWNERID &&
             (!isEditMode && !isLoading ? (
               <IonButton
                 fill="outline"
