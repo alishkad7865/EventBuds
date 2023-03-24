@@ -10,11 +10,11 @@ class TaskService:
     def __init__(self):
         self.repository = TaskRepository.TaskRepository()
 
-    def getTasks(self, event_id):
-        tasks = self.repository.getTasks(event_id)
+    async def getTasks(self, event_id):
+        tasks = await self.repository.getTasks(event_id)
         return tasks
 
-    def createTask(self, rawTask):
+    async def createTask(self, rawTask):
         parsedTask = json.loads(rawTask)
         task: Task = Task(eventId=parsedTask["eventId"], taskName=parsedTask["taskName"], description=parsedTask["description"], assignedTo=parsedTask["assignedTo"],
                           notes=parsedTask["notes"],
@@ -23,12 +23,12 @@ class TaskService:
                           taskStatus=parsedTask["taskStatus"])
 
         try:
-            self.repository.createTask(task)
+            await self.repository.createTask(task)
             return {"message": "Success"}
         except NameError as e:
             return e
 
-    def updateTask(self, task_id, rawTask):
+    async def updateTask(self, task_id, rawTask):
         parsedTask = json.loads(rawTask)
         task: Task = Task(eventId=parsedTask["eventId"], taskName=parsedTask["taskName"], description=parsedTask["description"], assignedTo=parsedTask["assignedTo"],
                           notes=parsedTask["notes"],
@@ -36,14 +36,14 @@ class TaskService:
                           startTime=parsedTask["startTime"],
                           taskStatus=parsedTask["taskStatus"])
         try:
-            self.repository.UpdateTask(task_id, task)
+            await self.repository.UpdateTask(task_id, task)
             return {"message": "Success"}
         except NameError as e:
             return e
 
-    def deleteTask(self, task_id):
+    async def deleteTask(self, task_id):
         try:
-            self.repository.deleteTask(task_id)
+            await self.repository.deleteTask(task_id)
             return {"message": "Success"}
         except NameError as e:
             return e

@@ -5,7 +5,6 @@ from Auth.AuthHandler import signJWT
 from Model.EventModel import User, Friend
 from Repository.UserRepository import UserRepository
 import sys
-import json
 sys.path.append('')
 
 
@@ -16,35 +15,35 @@ class UserService:
     def getUser(self, userId):
         return self.repository.getUser(userId)
 
-    def getAllUsers(self):
-        return self.repository.getAllUsers()
+    async def getAllUsers(self):
+        return await self.repository.getAllUsers()
 
-    def editUser(self, userId, user):
+    async def editUser(self, userId, user):
         self.repository.editUser(userId, user)
 
     def getLoggedInUser(self, email):
         return self.repository.getLoggedInUser(email)
 
-    def getFriends(self, token: str):
+    async def getFriends(self, token: str):
         payload = decodeJWT(token)
         user_id = payload.get("user_id")
-        friends = self.repository.getFriends(user_id)
+        friends = await self.repository.getFriends(user_id)
         return ast.literal_eval(str(friends))
 
-    def add_friend(self, friend: Friend, token: str):
+    async def add_friend(self, friend: Friend, token: str):
         payload = decodeJWT(token)
         user = Friend.convert_payload_friend(payload=payload)
-        return self.repository.add_friend(friend=friend, user=user)
+        return await self.repository.add_friend(friend=friend, user=user)
 
-    def remove_friend(self, friend: Friend, token: str):
+    async def remove_friend(self, friend: Friend, token: str):
         payload = decodeJWT(token)
         user = Friend.convert_payload_friend(payload=payload)
-        return self.repository.remove_friend(friend_id=friend.USERID, user_id=user.USERID)
+        return await self.repository.remove_friend(friend_id=friend.USERID, user_id=user.USERID)
 
-    def accept_friend_request(self, friend: Friend, token: str):
+    async def accept_friend_request(self, friend: Friend, token: str):
         payload = decodeJWT(token)
         user = Friend.convert_payload_friend(payload=payload)
-        return self.repository.accept_friend_request(friend_id=friend.USERID, user_id=user.USERID)
+        return await self.repository.accept_friend_request(friend_id=friend.USERID, user_id=user.USERID)
 
     def createUser(self, user):
         try:

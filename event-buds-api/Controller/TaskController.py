@@ -18,17 +18,17 @@ class TaskController:
         self.service = taskService
 
     @router.get("/getTasks", dependencies=[Depends(JWTBearer())])
-    def getTasks(event_id):
-        return taskService.getTasks(event_id)
+    async def getTasks(event_id):
+        return await taskService.getTasks(event_id)
 
     @router.patch("/updateTask", dependencies=[Depends(JWTBearer())])
-    def updateTask(task_id, task):
-        return taskService.updateTask(task_id, task)
+    async def updateTask(task_id, task):
+        return await taskService.updateTask(task_id, task)
 
     @router.delete("/deleteTask", dependencies=[Depends(JWTBearer())])
-    def deleteTask(task_id):
-        return taskService.deleteTask(task_id)
+    async def deleteTask(task_id):
+        return await taskService.deleteTask(task_id)
 
     @router.post("/createTask", dependencies=[Depends(JWTBearer())])
-    def createTask(task):
-        return taskService.createTask(task)
+    async def createTask(task):
+        return await taskService.createTask(task)

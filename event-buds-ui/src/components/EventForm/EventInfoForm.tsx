@@ -19,7 +19,6 @@ import { arrowForwardCircle } from "ionicons/icons";
 import { useEffect, useRef, useState } from "react";
 import Menu from "../Menu";
 import "../../pages/Create Event/CreateEvent.css";
-import { parseISO, parseJSON } from "date-fns";
 import { LocaleDateTimeISOFormat } from "../../Utils/ArrayUtil";
 import EventCreationModal from "../Modal/EventCreationModal";
 
@@ -48,6 +47,7 @@ export default function EventInfoForm(props: any) {
     if (ValidateAllFields() === false) {
       setAllFieldValid(false);
     } else setAllFieldValid(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [validator]);
   return (
     <IonPage>
@@ -79,6 +79,7 @@ export default function EventInfoForm(props: any) {
         />
         <IonItem
           fill="solid"
+          counter={true}
           className={`addSpaceAbove ${validator.isTitleValid && "ion-valid"} ${
             validator.isTitleValid === false && "ion-invalid"
           } ${isTouched && "ion-touched"}`}
@@ -89,6 +90,7 @@ export default function EventInfoForm(props: any) {
           <IonInput
             clearInput={true}
             placeholder="Enter event title"
+            maxlength={50}
             onIonChange={handleChange("eventTitle")}
             onIonBlur={() => markTouched()}
             defaultValue={values.eventTitle}

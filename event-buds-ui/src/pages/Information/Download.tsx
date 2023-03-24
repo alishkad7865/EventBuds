@@ -2,11 +2,11 @@ import { IonPage, IonContent, IonButton, IonRow } from "@ionic/react";
 import Menu from "../../components/Menu";
 
 export default function Download() {
-  const apk_url = "./EventbudsV1.4.apk";
+  const apk_url = "./EventBudsV1.4.apk";
   const download_APK = () => {
     const aTag = document.createElement("a");
     aTag.href = apk_url;
-    aTag.setAttribute("download", "EventBudV1.4.apk");
+    aTag.setAttribute("download", "EventBudsV1.4.apk");
     document.body.appendChild(aTag);
     aTag.click();
     aTag.remove();

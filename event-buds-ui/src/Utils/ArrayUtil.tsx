@@ -85,6 +85,7 @@ function nextweek() {
 }
 
 export function LocaleDateTimeISOFormat(date: string) {
+  // eslint-disable-next-line no-useless-concat
   return format(parseJSON(date), "yyyy-MM-dd" + "'T'" + "HH:mm:ss");
 }
 

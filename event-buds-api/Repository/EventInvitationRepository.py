@@ -10,7 +10,7 @@ class EventInvitationRepository:
     def __init__(self):
         self.connection = connection()
 
-    def sendEventInvitation(self, invitation: EventInvitation):
+    async def sendEventInvitation(self, invitation: EventInvitation):
         try:
             query = 'INSERT INTO "ADMIN"."EVENTINVITATION" (EVENTID, USERID, OWNERID, INVITATIONRESPONSE, NOTIFIED, ISHELPER) VALUES(:eventId, :userId, :ownerId, :invitationResponse, :Notified, :isHelper)'
 
@@ -22,7 +22,7 @@ class EventInvitationRepository:
         except NameError as e:
             return e
 
-    def getEventInvitation(self, event_id):
+    async def getEventInvitation(self, event_id):
         try:
             query = """ SELECT * FROM "ADMIN"."EVENTINVITATION" WHERE EVENTID = :event_id """
             with self.connection.cursor() as cursor:
@@ -40,7 +40,7 @@ class EventInvitationRepository:
         except NameError as e:
             return e
 
-    def getUserInvitation(self, user_id):
+    async def getUserInvitation(self, user_id):
         try:
             query = """ SELECT  "ADMIN"."EVENTINVITATION"."INVITEID", "ADMIN"."EVENTINVITATION"."USERID",  "ADMIN"."EVENTINVITATION"."OWNERID",  "ADMIN"."EVENTINVITATION"."SENTDATE",  "ADMIN"."EVENTINVITATION"."ISHELPER",  "ADMIN"."EVENTINVITATION"."TASKASSIGNED",  "ADMIN"."EVENT"."EVENTTITLE", "ADMIN"."USER"."USERNAME", "ADMIN"."USER"."EMAIL", "ADMIN"."USER"."FIRSTNAME", "ADMIN"."USER"."LASTNAME",  "ADMIN"."EVENTINVITATION"."EVENTID"  FROM "ADMIN"."EVENTINVITATION" left join "ADMIN"."EVENT" on "ADMIN"."EVENTINVITATION"."EVENTID" = "ADMIN"."EVENT"."EVENTID" left join "ADMIN"."USER" on "ADMIN"."EVENTINVITATION"."OWNERID" = "ADMIN"."USER"."USERID" WHERE "ADMIN"."EVENTINVITATION"."USERID" =:user_id AND "ADMIN"."EVENTINVITATION"."INVITATIONRESPONSE"= 'sent' """
             with self.connection.cursor() as cursor:
@@ -58,7 +58,7 @@ class EventInvitationRepository:
         except NameError as e:
             return e
 
-    def updateInvitation(self, invitation_id, message):
+    async def updateInvitation(self, invitation_id, message):
         try:
             update_invitation_row = 'UPDATE "ADMIN"."EVENTINVITATION" SET "ADMIN"."EVENTINVITATION"."INVITATIONRESPONSE" =:message, "ADMIN"."EVENTINVITATION"."RESPONDDATE"=:respond_date WHERE "ADMIN"."EVENTINVITATION"."INVITEID" = :invitation_id'
             with self.connection.cursor() as cursor:
@@ -70,7 +70,7 @@ class EventInvitationRepository:
         except NameError as e:
             return e
 
-    def updateTaskAssignedInvitation(self, invitation_id):
+    async def updateTaskAssignedInvitation(self, invitation_id):
         try:
             update_invitation_row = 'UPDATE "ADMIN"."EVENTINVITATION" SET "ADMIN"."EVENTINVITATION"."TASKASSIGNED" = 1, "ADMIN"."EVENTINVITATION"."NOTIFIED"=0 WHERE "ADMIN"."EVENTINVITATION"."INVITEID" = :invitation_id'
             with self.connection.cursor() as cursor:
@@ -81,7 +81,7 @@ class EventInvitationRepository:
         except NameError as e:
             return e
 
-    def updateInvitationNotified(self, invitation_id):
+    async def updateInvitationNotified(self, invitation_id):
         try:
             update_invitation_row = 'UPDATE "ADMIN"."EVENTINVITATION" SET "ADMIN"."EVENTINVITATION"."NOTIFIED"=1 WHERE "ADMIN"."EVENTINVITATION"."INVITEID" = :invitation_id'
             with self.connection.cursor() as cursor:
@@ -92,7 +92,7 @@ class EventInvitationRepository:
         except NameError as e:
             return e
 
-    def getEventHelpers(self, event_id):
+    async def getEventHelpers(self, event_id):
         try:
             query = """SELECT * FROM "ADMIN"."EVENTINVITATION" left join "ADMIN"."USER" on "ADMIN"."EVENTINVITATION"."USERID" = "ADMIN"."USER"."USERID" WHERE "ADMIN"."EVENTINVITATION"."ISHELPER" = 1 AND "ADMIN"."EVENTINVITATION"."EVENTID" = :event_id """
             with self.connection.cursor() as cursor:
@@ -114,7 +114,7 @@ class EventInvitationRepository:
         except NameError as e:
             return e
 
-    def getEventGuests(self, event_id):
+    async def getEventGuests(self, event_id):
         try:
             query = """SELECT * FROM "ADMIN"."EVENTINVITATION" left join "ADMIN"."USER" on "ADMIN"."EVENTINVITATION"."USERID" = "ADMIN"."USER"."USERID" WHERE "ADMIN"."EVENTINVITATION"."ISHELPER" = 0 AND "ADMIN"."EVENTINVITATION"."EVENTID" = :event_id"""
             with self.connection.cursor() as cursor:
@@ -132,7 +132,7 @@ class EventInvitationRepository:
         except NameError as e:
             return e
 
-    def getEventOwner(self, event_id):
+    async def getEventOwner(self, event_id):
         try:
             query = """SELECT * FROM "ADMIN"."EVENT" left join "ADMIN"."USER" on "ADMIN"."EVENT"."OWNERID" = "ADMIN"."USER"."USERID" WHERE "ADMIN"."EVENT"."EVENTID" = :event_id """
             with self.connection.cursor() as cursor:

@@ -11,7 +11,7 @@ class TaskRepository:
     def __init__(self):
         self.connection = connection()
 
-    def UpdateTask(self, task_id, task: Task):
+    async def UpdateTask(self, task_id, task: Task):
         try:
             query = """ UPDATE "ADMIN"."TASK" SET "ADMIN"."TASK"."TASKNAME" =:taskName , "ADMIN"."TASK"."DESCRIPTION" = :description , "ADMIN"."TASK"."ASSIGNEDTO"= :assignedTo , "ADMIN"."TASK"."STARTTIME" = :startTime , "ADMIN"."TASK"."ENDTIME"= :endTime , "ADMIN"."TASK"."NOTES" = :notes , "ADMIN"."TASK"."TASKSTATUS" = :taskStatus WHERE "ADMIN"."TASK"."TASKID" = :taskId """
             data = [task.taskName, task.description,
@@ -22,7 +22,7 @@ class TaskRepository:
         except NameError as e:
             return e
 
-    def createTask(self, task: Task):
+    async def createTask(self, task: Task):
         try:
             query = 'INSERT INTO "ADMIN"."TASK" (EVENTID, TASKNAME, DESCRIPTION, ASSIGNEDTO, STARTTIME ,ENDTIME, NOTES, TASKSTATUS) VALUES(:eventId, :taskName, :description, :assignedTo, :startTime , :endTime, :notes, :taskStatus)'
 
@@ -34,7 +34,7 @@ class TaskRepository:
         except NameError as e:
             return e
 
-    def deleteTask(self, task_id):
+    async def deleteTask(self, task_id):
         try:
             query = """ DELETE FROM "ADMIN"."TASK"
                             WHERE "ADMIN"."TASK"."TASKID" = :task_id """
@@ -45,7 +45,7 @@ class TaskRepository:
         except NameError as e:
             return e
 
-    def getTasks(self, event_id):
+    async def getTasks(self, event_id):
         try:
             query = """ SELECT * FROM "ADMIN"."TASK" WHERE EVENTID= :event_id """
             with self.connection.cursor() as cursor:

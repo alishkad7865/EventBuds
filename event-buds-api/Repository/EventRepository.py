@@ -10,7 +10,7 @@ class EventRepository:
     def __init__(self):
         self.connection = connection()
 
-    def UpdateEvent(self, event_id, status):
+    async def UpdateEvent(self, event_id, status):
         try:
             update_event = 'UPDATE "ADMIN"."EVENT" SET "ADMIN"."EVENT"."STATUS" = :status WHERE "ADMIN"."EVENT"."EVENTID" = :event_id'
             with self.connection.cursor() as cursor:
@@ -21,7 +21,7 @@ class EventRepository:
         except NameError as e:
             return e
 
-    def createEvent(self, event: Event):
+    async def createEvent(self, event: Event):
         try:
             query = 'INSERT INTO "ADMIN"."EVENT" (EVENTID, EVENTTITLE, DESCRIPTION, CREATEDBY, REGENDDATE,STARTDATETIME, ENDDATETIME, LOCATION, ISPUBLIC, CAPACITY, PRICE, OWNERID, STATUS, HELPERS) VALUES(:eventId, :eventTitle, :description, :createdBy, :regEndDate, :startDateTime, :endDateTime, :location, :isPublic, :capacity, :price, :ownerId, :status, :helpers)'
 
@@ -33,7 +33,7 @@ class EventRepository:
         except NameError as e:
             return e
 
-    def deleteEvent(self, eventId):
+    async def deleteEvent(self, eventId):
         try:
             query = """ DELETE FROM click
                             WHERE click = %s """
@@ -44,7 +44,7 @@ class EventRepository:
         except NameError as e:
             return e
 
-    def Get_Event(self, event_id):
+    async def Get_Event(self, event_id):
         try:
             query = """ SELECT * FROM "ADMIN"."EVENT" WHERE "ADMIN"."EVENT"."EVENTID" = :event_id """
             with self.connection.cursor() as cursor:
@@ -63,7 +63,7 @@ class EventRepository:
         except NameError as e:
             return e
 
-    def getUserEvent(self, userId):
+    async def getUserEvent(self, userId):
         try:
             query = """ SELECT Distinct "ADMIN"."EVENTINVITATION"."TASKASSIGNED", "ADMIN"."EVENT"."EVENTID", "ADMIN"."EVENT"."DESCRIPTION", "ADMIN"."EVENT"."CREATIONDATE", "ADMIN"."EVENT"."CREATEDBY", "ADMIN"."EVENT"."REGENDDATE", "ADMIN"."EVENT"."STARTDATETIME", "ADMIN"."EVENT"."ENDDATETIME", "ADMIN"."EVENT"."LOCATION", "ADMIN"."EVENT"."ISPUBLIC", "ADMIN"."EVENT"."CAPACITY", "ADMIN"."EVENT"."PRICE", "ADMIN"."EVENT"."STATUS", "ADMIN"."EVENT"."OWNERID", "ADMIN"."EVENT"."HELPERS", "ADMIN"."EVENT"."EVENTTITLE" ,"ADMIN"."EVENTINVITATION"."TASKASSIGNED" FROM "ADMIN"."EVENT", "ADMIN"."EVENTINVITATION" WHERE "ADMIN"."EVENT"."OWNERID" =:userId  OR ("ADMIN"."EVENT"."EVENTID"= "ADMIN"."EVENTINVITATION"."EVENTID" AND ("ADMIN"."EVENTINVITATION"."USERID" =:userId AND "ADMIN"."EVENTINVITATION"."INVITATIONRESPONSE" ='accepted'))"""
             # query = """ SELECT * FROM "ADMIN"."EVENT" WHERE "ADMIN"."EVENT"."EVENTID"= (select DISTINCT admin.eventinvitation.eventid from admin.eventinvitation where admin.eventinvitation.userid=:userId and admin.eventinvitation.ishelper=1 and admin.eventinvitation.invitationresponse ='accepted') or admin.event.ownerid=:userId"""
@@ -82,7 +82,7 @@ class EventRepository:
         except NameError as e:
             return e
 
-    def getOtherPublicEvents(self, userId):
+    async def getOtherPublicEvents(self, userId):
         try:
             query = """ SELECT * FROM "ADMIN"."EVENT" WHERE :userId NOT IN OWNERID AND ISPUBLIC=1 """
             with self.connection.cursor() as cursor:
@@ -100,7 +100,7 @@ class EventRepository:
         except NameError as e:
             return e
 
-    def getAllPublicEvents(self):
+    async def getAllPublicEvents(self):
         try:
             query = """ SELECT * FROM "ADMIN"."EVENT" WHERE ISPUBLIC=1 """
             with self.connection.cursor() as cursor:
