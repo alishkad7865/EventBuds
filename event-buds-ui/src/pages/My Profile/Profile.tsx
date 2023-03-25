@@ -126,7 +126,7 @@ export default function Profile(props: any) {
                 <IonCard style={{ minWidth: "300px" }}>
                   <IonCardHeader>
                     <IonCardTitle>
-                      <h2>Total Events </h2>
+                      <h2>Events Participated</h2>
                     </IonCardTitle>
                   </IonCardHeader>
 

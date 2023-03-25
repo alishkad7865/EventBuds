@@ -53,8 +53,8 @@ export default function AddMembers(props: any) {
       location: location,
       eventType: eventType,
       description: description,
-      capacity: capacity,
-      price: price,
+      capacity: capacity === "" ? 0 : parseInt(capacity),
+      price: price === "" ? 0 : parseInt(price),
       createdBy: props.user.EMAIL,
       ownerId: props.user.USERID,
       helpers: props.helpers,
@@ -227,7 +227,7 @@ export default function AddMembers(props: any) {
             placeholder="000"
             onIonChange={props.handleChange("capacity")}
             defaultValue={capacity}
-            value={capacity}
+            value={capacity === 0 ? "" : capacity}
           ></IonInput>
         </IonItem>
 
@@ -241,7 +241,7 @@ export default function AddMembers(props: any) {
             placeholder="000"
             onIonChange={props.handleChange("price")}
             defaultValue={price}
-            value={price}
+            value={price === 0 ? "" : price}
           >
             <IonIcon icon={logoUsd} slot="start" />
           </IonInput>
