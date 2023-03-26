@@ -17,7 +17,7 @@ import {
   IonImg,
   IonRow,
 } from "@ionic/react";
-import { format, parseJSON } from "date-fns";
+import { compareDesc, format, parseJSON } from "date-fns";
 import { chevronDownCircleOutline } from "ionicons/icons";
 import { useContext, useEffect, useState } from "react";
 import { GetPublicEvents } from "../../api/eventApi";
@@ -39,7 +39,11 @@ function PublicEvents() {
     let result = await GetPublicEvents(token);
     if (result) {
       setPublicEvents(
-        result.filter((event: any) => new Date(event.REGENDDATE) > new Date())
+        result
+          .filter((event: any) => new Date(event.REGENDDATE) > new Date())
+          .sort((a: any, b: any) =>
+            compareDesc(new Date(b?.STARTTIME), new Date(a?.STARTTIME))
+          )
       );
     }
     setIsLoading(false);

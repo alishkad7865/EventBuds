@@ -273,7 +273,7 @@ export default function Task(props: any) {
             <>
               <IonCard
                 class={getTaskCardCSS(task.TASKSTATUS ?? task.taskStatus)}
-                key={task.TASKID}
+                key={`${task.TASKID}_${filter}`}
               >
                 <IonCardHeader>
                   <IonItem class="item-backgroundColor">

@@ -171,27 +171,20 @@ export default function MyFriends(props: any) {
               return (
                 <IonItem
                   class="itemBackground"
+                  onClick={() => {
+                    setIsOpen(true);
+                    setModalFriendData(list);
+                  }}
                   key={list.EMAIL + "_friendlist"}
                 >
-                  <IonAvatar
-                    slot="start"
-                    onClick={() => {
-                      setIsOpen(true);
-                      setModalFriendData(list);
-                    }}
-                  >
+                  <IonAvatar slot="start">
                     <img
                       alt="Silhouette of a person's head"
                       src="https://ionicframework.com/docs/img/demos/avatar.svg"
                     />
                   </IonAvatar>
 
-                  <IonLabel
-                    onClick={() => {
-                      setIsOpen(true);
-                      setModalFriendData(list);
-                    }}
-                  >
+                  <IonLabel>
                     <h6 className="labelColour ion-text-capitalize">
                       {" "}
                       <b className="labelColour">

@@ -1,9 +1,11 @@
 import {
   IonButton,
   IonButtons,
+  IonCol,
   IonContent,
   IonHeader,
   IonModal,
+  IonRow,
   IonTitle,
   IonToolbar,
   setupIonicReact,
@@ -13,7 +15,11 @@ setupIonicReact();
 
 export default function FriendsModal(props: any) {
   return (
-    <IonModal isOpen={props.isOpen} ref={props.modal}>
+    <IonModal
+      isOpen={props.isOpen}
+      ref={props.modal}
+      onIonModalWillDismiss={() => props.setIsOpen(false)}
+    >
       <IonHeader>
         <IonToolbar>
           <IonTitle>Profile</IonTitle>
@@ -23,24 +29,32 @@ export default function FriendsModal(props: any) {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <div className="GiantAvatar">
-          {" "}
-          <img
-            style={{
-              height: "200px",
-              borderRadius: "50%",
-            }}
-            alt="Silhouette of a person's head"
-            src="https://ionicframework.com/docs/img/demos/avatar.svg"
-          />
-        </div>
+        <IonRow class="ion-justify-content-center">
+          <IonCol className=" ion-justify-content-center GiantAvatar">
+            <img
+              style={{
+                height: "200px",
+                borderRadius: "50%",
+              }}
+              alt="Silhouette of a person's head"
+              src="https://ionicframework.com/docs/img/demos/avatar.svg"
+            />
+          </IonCol>
+        </IonRow>
         <h1 className="ion-text-center ion-text-capitalize">
           {" "}
-          <b className="ion-text-center ion-text-capitalize">
+          <p className="ion-text-center ion-text-capitalize">
             {props.list.FIRSTNAME + " " + props.list.LASTNAME}{" "}
-          </b>
+          </p>
         </h1>
-        <h6 className="ion-text-center"> Email: {props.list.EMAIL} </h6>
+        <h3 className="ion-text-center">
+          {" "}
+          <b>user name:</b> {props.list.USERNAME}{" "}
+        </h3>
+        <h3 className="ion-text-center">
+          {" "}
+          <b>email:</b> {props.list.EMAIL}{" "}
+        </h3>
       </IonContent>
     </IonModal>
   );
