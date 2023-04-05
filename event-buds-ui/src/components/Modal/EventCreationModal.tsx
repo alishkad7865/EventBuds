@@ -8,7 +8,7 @@ import {
   IonFooter,
   IonHeader,
 } from "@ionic/react";
-
+import { createBrowserHistory } from "history";
 export default function EventCreationModal(props: any) {
   function dismiss() {
     props.setOpen(false);
@@ -16,6 +16,7 @@ export default function EventCreationModal(props: any) {
     setEventCreatedModalData({ eventTitle: "", eventType: "" });
   }
   const { eventType, eventTitle, setEventCreatedModalData } = props;
+  let history = createBrowserHistory({ forceRefresh: true });
   return (
     <IonModal
       id="eventCreation-modal"
@@ -53,8 +54,10 @@ export default function EventCreationModal(props: any) {
             className="saveModalButton"
             expand="block"
             shape="round"
-            onClick={() => props.setOpen(false)}
-            routerLink="/Home"
+            onClick={() => {
+              history.push("/Home");
+              props.setOpen(false);
+            }}
           >
             Go to My Events
           </IonButton>

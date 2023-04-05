@@ -28,7 +28,7 @@ class UserRepository:
         except NameError as e:
             return e
 
-    def getAllUsers(self):
+    async def getAllUsers(self):
         try:
             cursor = self.connection.cursor()
             query = """ SELECT * FROM "ADMIN"."USER" """
@@ -48,7 +48,7 @@ class UserRepository:
         except NameError as e:
             return e
 
-    def editUser(self, userId, user):
+    async def editUser(self, userId, user):
         try:
             query = """ SELECT FROM "ADMIN"."USER" WHERE USERID = :userId """
             data = (user,)
@@ -58,7 +58,7 @@ class UserRepository:
         except NameError as e:
             return e
 
-    def getFriends(self, userId) -> list:
+    async def getFriends(self, userId) -> list:
         try:
             query = """ SELECT FRIENDS FROM "ADMIN"."USER" WHERE USERID = :userId """
             with self.connection.cursor() as cursor:
@@ -69,12 +69,12 @@ class UserRepository:
         except NameError as e:
             return e
 
-    def add_friend(self, user: Friend, friend: Friend):
+    async def add_friend(self, user: Friend, friend: Friend):
         try:
             update_friend_query = 'UPDATE "ADMIN"."USER" SET "ADMIN"."USER"."FRIENDS" =:friend_friends WHERE "ADMIN"."USER"."USERID" = :friendId '
             update_user_query = 'UPDATE "ADMIN"."USER" SET "ADMIN"."USER"."FRIENDS" =:user_friends WHERE "ADMIN"."USER"."USERID" = :userId'
 
-            user_friends: list = self.getFriends(user.USERID)
+            user_friends: list = await self.getFriends(user.USERID)
             friend_request_exists = any(
                 item in user_friends for item in user_friends if item["USERID"] == friend.USERID)
             if friend_request_exists == True:
@@ -82,7 +82,7 @@ class UserRepository:
 
             user_friends.append(friend.dict())
 
-            friend_friends: list = self.getFriends(friend.USERID)
+            friend_friends: list = await self.getFriends(friend.USERID)
             request_object = Friend.add_status_friend(
                 friend=user.dict(), message="requested")
             friend_friends.append(
@@ -94,22 +94,22 @@ class UserRepository:
                 user_data = [str(json.dumps(user_friends)), user.USERID]
                 cursor.execute(update_user_query, user_data)
                 self.connection.commit()
-                return "Friend Request Sent!"
+                return {"message": "Friend Request Sent!"}
         except NameError as e:
             return e
 
-    def accept_friend_request(self, user_id: int, friend_id: int):
+    async def accept_friend_request(self, user_id: int, friend_id: int):
         try:
             update_friend_query = 'UPDATE "ADMIN"."USER" SET "ADMIN"."USER"."FRIENDS" =:friend_friends WHERE "ADMIN"."USER"."USERID" = :friendId '
             update_user_query = 'UPDATE "ADMIN"."USER" SET "ADMIN"."USER"."FRIENDS" =:user_friends WHERE "ADMIN"."USER"."USERID" = :userId'
 
-            user_friends: list = self.getFriends(user_id)
+            user_friends: list = await self.getFriends(user_id)
             update_users_status = list(
                 filter(lambda obj: obj['USERID'] == friend_id, user_friends))[0]
 
             update_users_status['STATUS'] = "accepted"
 
-            friend_friends: list = self.getFriends(friend_id)
+            friend_friends: list = await self.getFriends(friend_id)
             update_friends_status = list(
                 filter(lambda obj: obj['USERID'] == user_id, friend_friends))[0]
             update_friends_status['STATUS'] = "accepted"
@@ -120,21 +120,21 @@ class UserRepository:
                 user_data = [str(json.dumps(user_friends)), int(user_id)]
                 cursor.execute(update_user_query, user_data)
                 self.connection.commit()
-                return "Friend Request Accepted!"
+                return {"message": "Friend Request Accepted!"}
         except NameError as e:
             return e
 
-    def remove_friend(self, user_id: int, friend_id: int):
+    async def remove_friend(self, user_id: int, friend_id: int):
         try:
             update_friend_query = 'UPDATE "ADMIN"."USER" SET "ADMIN"."USER"."FRIENDS" =:friend_friends WHERE "ADMIN"."USER"."USERID" = :friendId '
             update_user_query = 'UPDATE "ADMIN"."USER" SET "ADMIN"."USER"."FRIENDS" =:user_friends WHERE "ADMIN"."USER"."USERID" = :userId'
 
-            user_friends: list = self.getFriends(user_id)
+            user_friends: list = await self.getFriends(user_id)
             remove_friend = list(
                 filter(lambda obj: obj['USERID'] == friend_id, user_friends))[0]
             user_friends.remove(remove_friend)
 
-            friend_friends: list = self.getFriends(friend_id)
+            friend_friends: list = await self.getFriends(friend_id)
             remove_user = list(
                 filter(lambda obj: obj['USERID'] == user_id, friend_friends))[0]
             friend_friends.remove(remove_user)
@@ -146,7 +146,7 @@ class UserRepository:
                 user_data = [str(json.dumps(user_friends)), int(user_id)]
                 cursor.execute(update_user_query, user_data)
                 self.connection.commit()
-                return "Friend Request Declined or Removed!"
+                return {"message": "Friend Request Declined or Removed!"}
         except NameError as e:
             return e
 

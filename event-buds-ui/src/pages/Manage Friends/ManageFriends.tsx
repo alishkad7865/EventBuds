@@ -13,8 +13,8 @@ import "@ionic/react/css/core.css";
 import "@ionic/react/css/normalize.css";
 import "@ionic/react/css/structure.css";
 import "@ionic/react/css/typography.css";
-import MyFriends from "./MyFriends";
-import AddFriends from "./AddFriends";
+import MyFriends from "../../components/Friends/MyFriends";
+import AddFriends from "../../components/Friends/AddFriends";
 import Menu from "../../components/Menu";
 import { UserContext } from "../../context/UserContext";
 

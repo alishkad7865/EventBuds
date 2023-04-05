@@ -19,7 +19,7 @@ import {
 import { useContext, useRef } from "react";
 import { UserContext } from "../context/UserContext";
 import Logout from "./Logout";
-import NotificationModal from "./NotificationModal";
+import NotificationModal from "./Modal/NotificationModal";
 
 function Menu(props: any) {
   const { userLoggedIn } = useContext(UserContext);

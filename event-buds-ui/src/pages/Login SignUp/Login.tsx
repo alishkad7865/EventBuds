@@ -8,6 +8,7 @@ import {
   IonNote,
   IonButton,
   IonIcon,
+  IonSpinner,
 } from "@ionic/react";
 import { eye, eyeOff, logInOutline } from "ionicons/icons";
 import { useState, useContext, useEffect } from "react";
@@ -16,8 +17,7 @@ import "./Login.css";
 import { UserContext } from "../../context/UserContext";
 import { userLogin } from "../../api/userApi";
 import { validateEmail, validatePassword } from "../../Utils/Validation";
-import { useHistory } from "react-router";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 export default function Login() {
   const [showToast, setShowToast] = useState(false);
@@ -29,6 +29,7 @@ export default function Login() {
   const [isEmailValid, setIsEmailValid] = useState<boolean>();
   const [isPasswordValid, setIsPasswordValid] = useState<boolean>();
   const [passwordType, setPasswordType] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const togglePassword = () => {
     if (passwordType === "password") {
       setPasswordType("text");
@@ -39,9 +40,11 @@ export default function Login() {
   let history = useHistory();
   useEffect(() => {
     if (userLoggedIn) {
-      history.push("/Home");
+      history.replace("/Home");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userLoggedIn]);
+
   const validate = (ev: Event) => {
     const { name, value } = ev.target as HTMLInputElement;
     if (name === "email") {
@@ -66,6 +69,7 @@ export default function Login() {
   };
 
   async function LoginRequest() {
+    setIsLoading(true);
     await userLogin(email, password).then((response: any) => {
       if (response.status >= 200 && response.status < 300) {
         setToken(response.data.access_token);
@@ -74,8 +78,9 @@ export default function Login() {
         setToastMessage(response.detail);
       }
     });
+    setIsLoading(false);
   }
-  return (
+  return !userLoggedIn ? (
     <IonPage>
       <IonToast
         isOpen={showToast}
@@ -149,9 +154,11 @@ export default function Login() {
           expand="full"
           onClick={LoginRequest}
           className="addSpaceAbove"
+          disabled={isLoading}
         >
           Login
           <IonIcon slot="start" icon={logInOutline}></IonIcon>
+          {isLoading && <IonSpinner name="crescent"></IonSpinner>}
         </IonButton>
         <br />
         <IonLabel className="labelColour">
@@ -159,5 +166,7 @@ export default function Login() {
         </IonLabel>
       </IonContent>
     </IonPage>
+  ) : (
+    <></>
   );
 }

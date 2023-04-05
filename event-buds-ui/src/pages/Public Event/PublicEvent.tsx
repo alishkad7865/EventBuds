@@ -17,12 +17,12 @@ import {
   IonImg,
   IonRow,
 } from "@ionic/react";
-import { format, parseJSON } from "date-fns";
+import { compareDesc, format, parseJSON } from "date-fns";
 import { chevronDownCircleOutline } from "ionicons/icons";
 import { useContext, useEffect, useState } from "react";
 import { GetPublicEvents } from "../../api/eventApi";
 import Menu from "../../components/Menu";
-import PublicEventInfo from "../../components/PublicEventInfo";
+import PublicEventInfo from "../../components/EventInformation/PublicEventInfo";
 import { UserContext } from "../../context/UserContext";
 
 import "./publicEvent.css";
@@ -38,7 +38,13 @@ function PublicEvents() {
     setIsLoading(true);
     let result = await GetPublicEvents(token);
     if (result) {
-      setPublicEvents(result);
+      setPublicEvents(
+        result
+          .filter((event: any) => new Date(event.REGENDDATE) > new Date())
+          .sort((a: any, b: any) =>
+            compareDesc(new Date(b?.STARTTIME), new Date(a?.STARTTIME))
+          )
+      );
     }
     setIsLoading(false);
   }
@@ -47,13 +53,13 @@ function PublicEvents() {
     const target = ev.target as HTMLIonSearchbarElement;
 
     query = target.value!.toLowerCase();
-
     setResults(
       publicEvents?.filter(
         (event: any) =>
-          event.EVENTTITLE?.toLowerCase().indexOf(query) > -1 ||
-          event?.DESCRIPTION?.toLowerCase().indexOf(query) > -1 ||
-          event.LOCATION?.toLowerCase().indexOf(query) > -1
+          new Date(event.REGENDDATE) > new Date() &&
+          (event.EVENTTITLE?.toLowerCase().indexOf(query) > -1 ||
+            event?.DESCRIPTION?.toLowerCase().indexOf(query) > -1 ||
+            event.LOCATION?.toLowerCase().indexOf(query) > -1)
       )
     );
   };
@@ -61,6 +67,7 @@ function PublicEvents() {
     if (userLoggedIn) {
       loadPublicEvents();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userLoggedIn]);
 
   useEffect(() => {

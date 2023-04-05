@@ -9,6 +9,7 @@ import {
   IonItem,
   IonLabel,
   IonPage,
+  IonSpinner,
 } from "@ionic/react";
 import { arrowBack, closeCircle, logoUsd } from "ionicons/icons";
 import { useRef, useState } from "react";
@@ -21,6 +22,7 @@ export default function AddMembers(props: any) {
   const [title, setTitle] = useState("");
   const [triggerId, setTriggerId] = useState("");
   const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const {
     eventTitle,
     lastRegDate,
@@ -51,27 +53,27 @@ export default function AddMembers(props: any) {
       location: location,
       eventType: eventType,
       description: description,
-      capacity: capacity,
-      price: price,
+      capacity: capacity === "" ? 0 : parseInt(capacity),
+      price: price === "" ? 0 : parseInt(price),
       createdBy: props.user.EMAIL,
       ownerId: props.user.USERID,
       helpers: props.helpers,
       guests: props.guests,
     };
     if (props.ValidateAllFields() === true) {
+      setIsLoading(true);
       await CreateEvent(JSON.stringify(Event), props.token).then(
         (response: any) => {
           if (response.status >= 200 && response.status < 300) {
             props.setGuests([]);
             props.setToastMessage("Event Created Successfully!");
-            props.setEventCreatedModal(true);
             props.setEventCreatedModalData({
               eventTitle: eventTitle,
               eventType: eventType,
             });
+            props.setEventCreatedModal(true);
             props.setState(props.initialState);
             props.SetAllValidatorsFalse();
-            // history.push("/");
           } else if (response.status >= 500) {
             props.setShowToast(true);
             props.setToastMessage(
@@ -85,6 +87,7 @@ export default function AddMembers(props: any) {
           }
         }
       );
+      setIsLoading(false);
     } else {
       props.setShowToast(true);
       props.setToastMessage(
@@ -224,7 +227,7 @@ export default function AddMembers(props: any) {
             placeholder="000"
             onIonChange={props.handleChange("capacity")}
             defaultValue={capacity}
-            value={capacity}
+            value={capacity === 0 ? "" : capacity}
           ></IonInput>
         </IonItem>
 
@@ -238,7 +241,7 @@ export default function AddMembers(props: any) {
             placeholder="000"
             onIonChange={props.handleChange("price")}
             defaultValue={price}
-            value={price}
+            value={price === 0 ? "" : price}
           >
             <IonIcon icon={logoUsd} slot="start" />
           </IonInput>
@@ -251,8 +254,10 @@ export default function AddMembers(props: any) {
             expand="block"
             shape="round"
             onClick={SubmitEvent}
+            disabled={isLoading}
           >
             Submit
+            {isLoading && <IonSpinner name="crescent"></IonSpinner>}
           </IonButton>
         </div>
       </IonContent>
